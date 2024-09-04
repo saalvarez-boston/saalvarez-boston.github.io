@@ -1,0 +1,281 @@
+<html>
+<head>
+<title>Discovering Patterns in Sleep Data</title>
+</head>
+<!--
+<body bgcolor="E0E0A0">
+-->
+<body bgcolor="F0F0D0">
+
+<p> <hr> <p>
+
+<h2>Modeling and Discovery of Patterns in Human Sleep</h2>
+
+This research project aims to develop machine learning
+techniques for modeling and automated discovery of meaningful patterns
+in human sleep data. 
+In recent work in this direction, we developed a deep convolutional neural 
+network approach to sleep stage classification with interpretation of the 
+emergent internal features (Paisarnsrisomsuk et al, 2020, 2018; 
+Sokolovsky et al, 2019, 2018). 
+
+In prior work, we demonstrated
+<a href="SleepTypes/">discovery of naturally occurring subgroups of sleep 
+studies</a>, or "sleep types", based on the stage composition of sleep
+(Khasawneh et al, 2010 and 2011).
+Our earlier work yielded an association mining approach for exploratory 
+analysis of sleep data (Laxminarayan et al, 2005),
+including tight bounds on the false discovery rate
+(Laxminarayan et al, 2006), and
+construction of a terabyte-scale database of anonymized 
+polysomnographic recordings and health histories. 
+
+<h3>Sleep Dynamics</h3>
+Our work has also included modeling of the dynamics of sleep. 
+An initial step in this direction is presented in (Usher et al, 2012). 
+A major challenge to dynamical modeling of sleep is the scarcity
+of dynamical stage-transition events within a single all-night sleep 
+recording for a given person. 
+The paper (Alvarez and Ruiz, 2013) presents a general E-M framework 
+for dynamical modeling of time series data (sleep in particular) that 
+contain limited dynamical information. Subsequent work (Wang et al, 2014)
+applied this general approach to sleep using partially observable Markov
+models as the class of dynamical models.
+<!--
+The approach, Collective Dynamical Modeling-Clustering (CDMC),
+operates on a collection of sleep recordings for a population of persons,
+simultaneously grouping them by dynamical similarity and developing a
+dynamical model for each similarity group. Selective aggregation of
+multiple records in this way provides an increased sample size for
+dynamical modeling that reduces random variation in the resulting models.
+-->
+<!--, and development of techniques 
+for multiscale analysis of sleep data.-->
+
+<p> <hr> <p>
+
+<h3>Selected publications (asterisks denote student co-authors)</h3>
+
+<ul>
+
+<p><li>
+S. Paisarnsrisomsuk*, C. Ruiz, and S. A. Alvarez .
+Improved deep learning classification of human sleep stages,
+<i>IEEE Computer-Based Medical Systems (CBMS 2020)</i>,
+Mayo Clinic, Rochester, MN, July 28-30, 2020
+
+<p><li>
+M. Sokolovsky*, F. Guerrero*, S. Paisarnsrisomsuk*, C. Ruiz, and S. A. Alvarez.
+Deep learning for automated feature discovery and classification of sleep stages, <i>IEEE / ACM Transactions on Computational Biology and Bioinformatics</i>, 
+online early access, Apr. 2019
+<br>
+<a href="https://ieeexplore.ieee.org/document/8695777">
+doi:10.1109/TCBB.2019.2912955</a>
+<br>
+Near-final version available <a href="http://cs.bc.edu/~alvarez/Sleep/TCBB2912955.pdf">here</a>.
+
+
+<p><li>
+S. Paisarnsrisomsuk*, M. Sokolovsky*, F. Guerrero*, C. Ruiz, and S. A. Alvarez.
+Deep Sleep: convolutional neural networks for predictive modeling of human 
+sleep time-signals, <i>KDD 2018 Deep Learning Day</i>, <i>2018 ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD 2018)</i>, London, UK,
+ Aug. 2018
+
+<p><li>
+M. Sokolovsky*, F. Guerrero*, S. Paisarnsrisomsuk*, C. Ruiz, and S. A. Alvarez.
+Human expert-level automated sleep stage prediction and feature discovery by
+deep convolutional neural networks, full paper, <i>BIOKDD 2018</i>, in 
+conjunction with the <i>2018 ACM SIGKDD International Conference on 
+Knowledge Discovery and Data Mining (KDD 2018)</i>, London, UK, Aug. 2018
+
+<!--
+<p><li>C. Wang*, S.A. Alvarez, C. Ruiz, and M. Moonis (2017). Modeling and 
+Clustering of Human Sleep Time Series using Dynamic Time Warping: 
+Sequential and Distributed Implementations. In <i>Biomedical Engineering Systems and Technologies,
+Ninth International Joint Conference, BIOSTEC 2016, Rome, Italy, February 2016,
+Revised Selected Papers (A. Fred and H. Gamboa, eds.)</i>, Communications in 
+Computer and Information Science, Volume 690, Springer, 2017.
+ISBN: 978-3-319-54716-9
+
+<p><li>
+A. Kabir*, C. Ruiz, S. A. Alvarez, and M. Moonis.
+Predicting outcome of ischemic stroke patients using bootstrap aggregating with
+M5 model trees,
+full paper, <i>Proc. Tenth International Conference on Health Informatics
+(HEALTHINF 2017)</i>, in conjunction with the <i>Tenth International Joint
+Conference on Biomedical Engineering Systems and Technologies 
+(BIOSTEC 2017)</i>,
+Porto, Portugal, Feb. 21-23, 2017
+
+<p><li>
+C. Wang*, S. A. Alvarez, C. Ruiz, and M. Moonis.
+Deviation-based dynamic time warping for clustering human sleep,
+<i>Proc. Ninth International Conference on Bio-inspired Systems
+and Signal Processing (BIOSIGNALS 2016)</i>,
+in conjunction with the <i>Ninth International Joint Conference on
+Biomedical Engineering Systems and Technologies (BIOSTEC 2016)</i>,
+Rome, Italy, Feb. 21-23, 2016
+
+-->
+<!--
+<p><li>
+S. A. Alvarez, E. Winner, A. Hawley-Dolan, L. Snapper*.
+What gaze fixation and pupil dilation can tell us about perceived differences be
+tween abstract art by artists vs. by children and animals,
+<i>Perception</i>, 44(11): 1310-1331 (Nov. 2015)
+<br>
+doi:10.1177/0301006615596899
+<br>
+Near-final version available <a href="http://www.cs.bc.edu/~alvarez/EyeTracking/
+EyeGazePupilDilationAbstractExpressionism.pdf">here</a>.
+
+<p><li>
+A. Kabir*, C. Ruiz, S. A. Alvarez, and M. Moonis.
+Model-based clustering of ischemic stroke patients,
+full paper, <i>Proc. Eighth International Conference on Health Informatics
+(HEALTHINF 2015)</i>, in conjunction with the <i>Eighth International Joint
+Conference on Biomedical Engineering Systems and Technologies (BIOSTEC 2015)</i>
+,
+Lisbon, Portugal, Jan. 12-15, 2015
+
+<p><li>
+Fern&aacute;ndez-Chimeno, M., Fernandes, P.L., Alvarez, S.,A.
+Stacey, D., Sol&eacute;-Casals, J., Fred, A., Gamboa, H. (Eds.).
+<i>Biomedical Engineering Systems and Technologies,
+6th International Joint Conference, BIOSTEC 2013, Barcelona, Spain, February 11-
+14, 2013, Revised Selected Papers</i>,
+Communications in Computer and Information Science, vol. 452,
+Springer, 2014.
+DOI 10.1007/978-3-662-44485-6,
+ISBN 978-3-662-44485-6
+-->
+
+<p><li>
+C. Wang*, S. A. Alvarez, C. Ruiz, and M. Moonis.
+Semi-Markov modeling-clustering of human sleep with efficient
+initialization and stopping, full paper,
+<i>Proc. Seventh International Conference on Bio-inspired Systems
+and Signal Processing (BIOSIGNALS 2014)</i>, in conjunction with the <i>Seventh
+International Joint Conference on Biomedical Engineering Systems and
+Technologies (BIOSTEC 2014)</i>, Angers, France, Mar. 3-6, 2014
+
+<!--
+<p><li>
+C. Wang*, F. W. Usher*, S. A. Alvarez, C. Ruiz, and M. Moonis.
+Clustering of human sleep recordings using a quantile representation of stage
+bout durations, in Gabriel, J., Schier, J., Van Huffel, S., Conchon, E., Correia
+, C., Fred, A., Gamboa, H. (Eds.),
+<i>Biomedical Engineering Systems and Technologies
+5th International Joint Conference, BIOSTEC 2012, Vilamoura, Portugal, February
+1-4, 2012, Revised Selected Papers</i>,
+Communications in Computer and Information Science, Volume 357,
+Springer, 2013.
+ISBN 978-3-642-38256-7
+-->
+
+<p><li>
+S. A. Alvarez and C. Ruiz.
+"Collective Probabilistic Dynamical Modeling of Sleep Stage Transitions",
+short paper, <i>Proc. Sixth International Conference on Bio-inspired Systems
+and Signal Processing (BIOSIGNALS 2013)</i>, in conjunction with the <i>Sixth
+International Joint Conference on Biomedical Engineering Systems and
+Technologies (BIOSTEC 2013)</i>, Barcelona, Catalunya, Spain, Feb. 11-14, 2013
+
+<!--
+<p><li>
+C. Wang*, S. A. Alvarez, C. Ruiz, and M. Moonis.
+"Computational Modeling of Sleep Stage Dynamics using Weibull semi-Markov Chains",
+full paper, <i>Proc. Sixth International Conference on Health Informatics
+(HEALTHINF 2013)</i>, in conjunction with the <i>Sixth International Joint
+Conference on Biomedical Engineering Systems and Technologies (BIOSTEC 2013)</i>,
+Barcelona, Catalunya, Spain, Feb. 11-14, 2013
+
+<p><li>
+A. Khasawneh*, S. A. Alvarez, C. Ruiz, S. Misra*, and M. Moonis. 
+"Similarity Grouping of Human Sleep Recordings Using EEG and ECG", in 
+<i>Biomedical Engineering Systems and Technologies</i> 
+(A. Fred, J. Filipe, H. Gamboa, eds.), 
+Communications in Computer and Information Science, Volume 273, pp 380-394, 
+Springer, 2013
+
+<p><li>
+F. W. Usher*, C. Wang*, S. A. Alvarez, C. Ruiz, and M. Moonis.
+"Machine Learning of Human Sleep Patterns based on Stage Bout Durations",
+full paper (acceptance rate: 65/522 = 12.5%),
+<i>Proc. HEALTHINF 2012 (Fifth International Conference on Health 
+Informatics)</i>,
+in conjunction with BIOSTEC 2012, Vilamoura, Portugal, Feb. 1-4, 2012
+-->
+
+<p><li>
+A. Khasawneh*, S. A. Alvarez, C. Ruiz, S. Misra*, and M. Moonis.
+"EEG and ECG Characteristics of Human Sleep Composition Types",
+full paper (acceptance rate: 48/538 = 8.9%), <b>Best Paper Award</b>,
+<i>Proc. HEALTHINF 2011 (Fourth International Conference on Health 
+Informatics)</i>,
+in conjunction with BIOSTEC 2011, Rome, Italy, Jan. 26-29, 2011, 97-106
+
+<p><li>
+A. Khasawneh*, S. A. Alvarez, C. Ruiz, S. Misra*, and M. Moonis.
+"Discovery of Sleep Composition Types using Expectation-Maximization",
+<i>Proc. 23rd IEEE International Symposium on Computer-Based Medical Systems
+(CBMS 2010)</i>, Perth, Australia, Oct. 12-15, 2010
+
+<p><li>
+Laxminarayan*, P., Alvarez, S.A., Ruiz, C., Moonis, M.,<br>
+"Mining Statistically Significant Associations for Exploratory Analysis
+of Human Sleep Data",
+<i>IEEE Transactions on Information Technology in Biomedicine</i>,
+vol 10, no 3 (July 2006), 440-450
+
+<p><li>
+Laxminarayan*, P., Ruiz, C., Alvarez, S.A., Moonis, M.,<br>
+"Mining Associations over Human Sleep Time Series",
+<i>Proc. 18th IEEE International Symposium on Computer-Based
+Medical Systems</i> (A. Tsymbal and P. Cunningham, eds.), 
+IEEE Computer Society Press, Dublin, Ireland, June 2005, 323-328
+</ul>
+
+<p> <hr> <p>
+
+<h3>Project Personnel</h3>
+
+<h4>Faculty</h4>
+
+<ul>
+<li>Sergio A. Alvarez, Ph.D. (Boston College)
+<!--
+<p><img src="http://www.cs.bc.edu/~alvarez/sergio.alvarez.suit.small.2.jpg">
+-->
+<li>Carolina Ruiz, Ph.D. (Worcester Polytechnic Institute)
+<!--
+<p><img src="http://web.cs.wpi.edu/~ruiz/Pictures/ruiz.jpg">
+-->
+<li>Majaz Moonis, M.D. (U. of Massachusetts Medical School and Day Kimball Hospital)
+<!--
+<p><img src="http://160.79.139.43/ummhc/find/drpics/M1992J62.jpg">
+-->
+</ul>
+
+<h4>Current Students</h4>
+
+<ul>
+<li>Sarun Paisarnsrisomsuk
+</ul>
+
+<h4>Former group members</h4>
+
+<ul>
+<li>Mike Sokolovsky, M.S.
+<li>Francisco Guerrero, M.S.
+<li>Chiying Wang, Ph.D.
+<li>Amro Khasawneh
+<li>Shivin Misra, M.S.
+<li>Parameshvyas Laxminarayan, M.S. 
+<!--(currently a Ph.D. student at Boston University)-->
+</ul>
+
+<p> <hr> <p>
+
+</BODY>
+</HTML>
