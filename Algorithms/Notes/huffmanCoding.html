@@ -1,0 +1,231 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Greedy prefix codes
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Greedy compression: Huffman coding
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+<h3>Another computational task: efficient coding (as in file compression)</h3>
+
+   Given: an "alphabet" of symbols to be stored or transmitted, together with their relative frequencies (probabilities)
+
+   Objective: to find an encoding of each symbol as a binary string so that the average length of the coding strings is minimized
+
+
+<h3>Example</h3>
+
+   Alphabet = {x, y, z}
+
+   P(x)=0.45, P(y)=0.2, P(z)=0.35
+
+   A standard binary encoding for these 3 symbols uses 2 bits per symbol:
+
+	x -&gt; 00
+	y -&gt; 01
+	z -&gt; 10
+
+   A better variable-length encoding is the following:
+
+   code(x) = 0   code(y) = 10   code(z) = 11
+
+   Notice that the most frequent symbol is coded with the shortest bit string
+
+   The expected (average) number of bits per symbol for this encoding is the following weighted average:
+
+   E(length) = length(code(x))*P(x) 
+             + length(code(y))*P(y) 
+             + length(code(z))*P(z)
+             = 1*0.45 + 2*0.2 + 2*0.35 = 1.55
+
+   This shows that the selected encoding is more efficient than using 2 bits
+
+
+<h3>Shannon's coding theorem</h3>
+
+	The lower limit on the average number of bits needed per symbol to 
+	compress a message (file) is given by a theorem due to Claude Shannon
+
+	The limit is called the entropy of the set of symbol probabilities
+
+		entropy = sum over symbols xi of P(xi)*log2(1/P(xi))
+
+	Entropy is a convex function of the probabilities; it peaks at the
+	point where all of the probabilities are the same, and decreases to
+	zero if all but one of the probabilities are zero
+
+
+<h3>Example</h3>
+
+	For an alphabet consisting of two symbols A and B with probabilities
+
+                P(A) = 127/128, P(B) = 1/128
+
+	the entropy can be calculated to be
+
+		1/128*log2(128) + 127/128*log2(128/127) = 0.07 (approx.)
+
+	By Shannon's theorem, there are encodings of messages over this
+	alphabet that use roughly 1/14th of a bit per symbol on average
+
+
+<h3>How is it possible to use less than 1 bit per symbol?!?</h3>
+
+	The answer is that one can compress several symbols at a time,
+	taking advantage of knowledge of the symbol probabilities
+
+	Since A is so much more common than B in the above example,
+	strings consisting of multiple A's in a row are common
+
+	One could code such "A-only runs" in a compact way
+
+	For example, here is an outline of such a coding strategy:
+
+        	have an arbitrary start symbol, say 000
+
+        	code the unlikely symbol B as 001
+
+        	follow each such occurrence by a code for the *length*
+        	of the subsequent A-only run
+
+        	use e.g. usual binary positional notation for length,
+        	but avoid the special subsequence 001
+
+        	on average, the rare symbol occurs every 128 places;
+        	frequent symbol string length is about log2(128) bits
+        	thus, the code uses about
+
+        		(1/128)*(3 + log2(128)) = .08 bits per symbol
+
+
+<h3>Finding optimal prefix codes</h3>
+
+   It is desirable that a code have the "no prefix property": 
+
+         no coding string is a prefix of another
+   
+   This allows unambiguous decoding of a file 
+
+	the first codeword is easy to delimit
+
+   It turns out that optimal prefix codes can be found by a greedy algorithm
+
+
+<h3>Huffman's greedy algorithm for optimal prefix codes</h3>
+
+   Generates efficient prefix codes as paths in a binary tree
+
+   The tree is constructed using a greedy approach
+
+   The symbols and their probabilities are stored in a sorted queue,
+      with the least likely symbols having highest priority
+
+   On each pass, 
+      a node is created with the two least likely symbols as children
+      the sum of the children's probabilities becomes the node's probability
+      the node is inserted into the priority queue
+
+   This is repeated a total of n-1 times, until only a single node remains
+
+   The final node is the root of the tree
+
+   Huffman(set S) {
+      n = number of symbols in the alphabet C
+      sorted queue Q = C (ordered according to P[])
+      for i = 1 to n-1 {
+         z = new Node
+         x = left(z) = ExtractMin(Q)	// return and remove smallest-P element
+         y = right(z) = ExtractMin(Q)
+         P[z] = P[x] + P[y]
+         insert z into Q		// Q is automatically sorted by P again
+      }
+      return ExtractMin(Q)  (root node of tree)
+   }
+
+
+<h3>Example</h3>
+
+   Return to the preceding example:
+
+   Alphabet = {x, y, z}
+   P(x)=0.45, P(y)=0.2, P(z)=0.35
+
+
+             Tree			               Queue
+        				          (front -&gt; rear)
+
+
+            empty			    (y,0.2), (z,0.35), (x,0.45)
+
+
+          (y+z,0.55)
+            /   \                               (x,0.45), (y+z,0.55)
+       (y,0.2) (z,0.35)
+
+
+         (x+y+z,1.0)
+           /     \
+      (x,0.45) (y+z,0.55)                           (x+y+z,1.0)
+                 /   \                               
+            (y,0.2) (z,0.35)
+
+
+<h3>Does Huffman coding reach the Shannon coding limit?</h3>
+
+	Sometimes it does, e.g. the following probabilities:
+
+                (1/2, 1/4, 1/8, 1/8): best code is Huffman code;
+                bits per symbol = 7/4 = 1.75
+
+	Sometimes it doesn't; for the (1/128, 127/128) example above,
+	Huffman coding uses 1 bit per symbol, while the Shannon limit
+	is about 1/14 bit per symbol
+
+	The point is that the best prefix code is not always optimal
+
+
+<h3>Running time analysis</h3>
+
+   Running time for Huffman depends on the data structure used for the queue
+
+   We'll assume that the main data structure is a sorted array
+
+   There is a faster choice, based on heaps, which we'll discuss later
+
+   Initialization:
+      time O(n) if inverted heap used    time O(n log n) for sorted array
+
+   Iterative loop: O(n) passes
+      on each pass: O(1) time for binary tree changes
+         + O(log n) time for reheapifying (O(n log n) time for array sorting)
+         
+   Total time for loop:
+      O(n log n) for heap version        O(n^2 log n) for sorted array version
+</pre>
+
+</font>
+
+</body>
+</html>

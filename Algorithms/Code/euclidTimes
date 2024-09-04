@@ -1,0 +1,25 @@
+[alvarez@cslabgw1 Time]$ euclid
+This program tests Euclid's gcd algorithm on random data
+WARNING: the C++ pseudorandom number generator on the current
+platform limits the effective maximum digit count to 9.
+Greater digit counts will yield incorrect test results.
+Enter maximum number of digits to be used: 9
+For 1-digit numbers:
+Time in seconds averaged over 1000000 tests: 2.9e-07
+For 2-digit numbers:
+Time in seconds averaged over 1000000 tests: 3.7e-07
+For 3-digit numbers:
+Time in seconds averaged over 1000000 tests: 4.4e-07
+For 4-digit numbers:
+Time in seconds averaged over 1000000 tests: 5.1e-07
+For 5-digit numbers:
+Time in seconds averaged over 1000000 tests: 5.8e-07
+For 6-digit numbers:
+Time in seconds averaged over 1000000 tests: 6.5e-07
+For 7-digit numbers:
+Time in seconds averaged over 1000000 tests: 7.2e-07
+For 8-digit numbers:
+Time in seconds averaged over 1000000 tests: 7.9e-07
+For 9-digit numbers:
+Time in seconds averaged over 1000000 tests: 8.6e-07
+[alvarez@cslabgw1 Time]$

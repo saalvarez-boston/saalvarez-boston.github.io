@@ -1,0 +1,341 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Dynamic Programming
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Dynamic Programming
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+<h3>Dynamic Programming</h3>
+
+   A powerful design technique
+
+   Objective is to avoid redundant processing of subproblems
+
+
+<h3>Example: n choose k</h3>
+
+   Useful for many problems involving independent events, like counting equipment failures over time
+
+   Question: what is the number of different k-member teams that can be formed among n potential players?
+
+<h4>Straightforward recursive solution:</h4>
+
+   Based on the following recurrence relation for (n,k) = "n choose k":
+
+         (n,k) = (n-1, k-1) + (n-1, k)
+
+   we can write the following recursive algorithm to compute (n,k):
+
+   nChooseK(n, k) {
+      if (k = 0 or k = n)
+         return 1
+      else 
+         return nChooseK(n-1, k-1) + nChooseK(n-1, k)
+   }
+
+<h3>Running time for the straight recursive version</h3>
+
+	We drew the recursion tree in class
+
+	Depth of tree is n (not uniformly, just the longest branches)
+
+	Branching factor is 2
+
+	Size could be the order 2^n - very slow!
+	(we can do a more precise analysis as in HW1, and determine that the 
+	size is indeed exponential in n, but with a base slightly less than 2)
+
+
+<h3>Source of the inefficiency of the straight recursive solution</h3>
+
+	Problem is that there are many repeated invocations of nChooseK
+
+	For example, in order to compute nChooseK(5,3), we recurse as follows:
+
+		nChooseK(4,2)				nChooseK(4,3)
+
+	nChooseK(3,1)  nChooseK(3,2)		nChooseK(3,2)	nChooseK(3,3)
+
+	Already at this level, the invocation nChooseK(3,2) occurs twice
+
+	The redundancy gets worse as you get deeper into the recursion tree
+
+	We're not being smart about the order in which the invocations are carried out
+
+
+<h3>The dynamic programming approach</h3>
+
+	Draw the (n,k) plane
+
+	The value of nChooseK(n,k) depends on the values of nChooseK at points 
+	within a limited (cone-shaped in this case) "domain of dependence"
+
+	Compute the values within the domain of dependence in a smart order
+
+	Initialize the values along the boundaries:
+
+		nChooseK(i, 0) = 1 for all i between 0 and n
+		nChooseK(j, j) = 1 for all j between 0 and n
+
+	Scan the domain of dependence along paths such that any necessary
+	quantities will be available before they are needed:
+
+		for i=1 to n
+			for j=1 to k-(n-i)
+				nChooseK(i,j) = nCK(i-1,j-1) + nCK(i-1,j)
+
+	
+<h3>Exercise</h3>
+
+	Compute nChooseK(5,3) following the above dynamic programming approach
+
+
+<h3>Running time of the dynamic programming solution</h3>
+
+	Initialization takes time Theta(n)
+
+	Updating takes time Theta(n^2)
+
+	Total time is Theta(n^2)
+
+	Much, much better than 2^n !
+
+
+<h3>Summary so far: Dynamic Programming</h3>
+
+   	A powerful design technique
+
+   	Improves on divide and conquer by avoiding redundant processing of subproblems that may occur in a direct divide and conquer approach
+
+   	We studied the computation of n choose k as an example
+
+
+<h3>Basic steps required for a Dynamic Programming solution</h3>
+
+	Cast the task as optimization of some specific objective function
+
+		over a hierarchy of subproblems of increasing size
+
+	Write down a recurrence relation for the optimized objective function
+
+	Determine the domain of dependence of each point
+
+	Determine the initial conditions at the boundary of the domain
+
+	Scan the domain in a smart order so that necessary quantities will 
+	be available when they are needed to update the objective values
+
+
+<h3>Making change</h3>
+
+   Recall the task of "making change", that is, breaking down a given quantity as a
+   sum of "tokens" of predetermined "denominations" 
+
+   We cast this as an optimization task
+ 
+   One seeks a solution (bag of tokens with a certain total value) that 
+   is minimal relative to the given objective function (number of tokens)
+
+   We saw that a greedy approach doesn't always produce optimal solutions
+
+   I'll illustrate how to use dynamic programming for this task
+
+
+<h3>Expressing the objective function</h3>
+
+   The objective function is the function to be optimized
+
+   For making change, we wish to minimize the total number of tokens
+
+   Choosing the right variables helps a lot
+
+   Order the denominations from smallest to largest
+
+   Choose i = highest denomination to be used (i=1,2,3,...)
+          j = amount to be decomposed in terms of token values
+
+   c(i,j) = minimum number of tokens needed for total amount j if only token types 1..i are used
+
+
+<h3>Towards a recurrence relation for making change</h3>
+
+   For dynamic programming to work, one needs a recurrence relation for the optimized objective function
+
+   Now analyze what the optimal way to make change is if denominations 1...i are allowed ( as opposed to just 1...i-1):
+   
+   Case 1. You don't use any tokens ("coins") of the largest denomination:
+	then the optimal number of tokens is just c(i-1,j)
+
+   Case 2. You do use tokens of the largest denomination d(i):
+	then the optimal number of tokens is 1 + c(i,j-d(i))
+
+	*notice that the right-hand side allows d(i) to be used again*
+
+   The minimum number of tokens is the best you can do across both cases
+
+   The recurrence relation is therefore:
+
+      c(i,j) = min( c(i-1,j), 1 + c(i,j-d(i)) )
+
+
+<h3>Dynamic programming solution</h3>
+
+   Draw diagram of (i,j) plane
+
+   Boundary cases are 
+      c[i,0] = 0  for i&gt;=1
+      c[i,&lt;0] = infinity  for i&gt;=1
+      c[0,j] = infinity  for j&gt;=1
+
+   Domain of dependence for (i,j) is contained in rectangle
+
+   Scan by rows, from left to right
+
+
+<h3>Pseudocode</h3>
+
+   coins(N) {
+      for i = 1 to n=# of denominations {
+         c[i,0] = 0
+         for j = -1 downto d[n] {
+            c[i,j] = infinity
+         }
+      }
+      for j = 1 to N=target quantity {
+         c[0,j] = infinity
+      }
+      for i = 1 to n {
+         for j = 1 to N {
+            c[i,j] = min( c[i-1,j],  1 + c[i,j-d[i]] )
+         }
+      }
+   }
+
+
+<h3>Recovering the optimal token bag for a given quantity</h3>
+
+   Given target c[n, q], construct the optimal token bag as follows:
+
+   Run coins algorithm to fill in table
+
+   Compare c[n,q] with c[n-1,q]; if they're the same, then
+   no n-tokens should be used, and one should restart at c[n-1,q]; 
+   otherwise, put one n-token in the bag and recur on c[n,q-d[n]]
+
+   Continue as above until c[0,0] is reached
+
+
+<h3>Analysis</h3>
+
+   Running time is O(number of cells examined) = O(n*N)
+
+
+<h3>Knapsack problem ("0/1 version")</h3>
+
+   Given: n objects, where object i has weight wi and value vi (both positive),
+      and a knapsack with a weight capacity W
+
+   Objective: select some of the objects to fill the knapsack so as to
+      maximize the total value, without violating the weight constraint
+
+
+<h3>Greediness fails for the 0/1 knapsack problem</h3>
+
+   Two possible greedy heuristics:
+
+      * maximize value without regard for weight:
+         pack most valuable objects first
+
+      * maximize value per unit weight
+         pack objects in decreasing order of value/weight ratio
+
+<h4>Examples</h4>
+
+      W=100; 
+      v1=100, w1=80  (v1/w1=1.25)
+      v2=90, w2=50  (v2/w2=1.80)
+      v3=80, w3=50  (v3/w3=1.60)
+
+      Here, greedy by value chooses object 1 and stops; total value=100
+      Greedy by value/weight chooses objects 2, 3; total value=170 (optimal)
+
+      W=100; 
+      v1=100, w1=80 (v1/w1=1.25)
+      v2=130, w2=65 (v2/w2=2.0)
+      v3=80, w3=50 (v3/w3=1.60)
+      v4=90, w4=50 (v4/w4=1.80)
+
+      Here, greedy by value chooses object 2 and stops; total value=130
+      Greedy by value/weight chooses object 2 also; total value=130
+      Optimal solution is to chopose objects 3, 4; total value=170
+
+
+<h3>Side remark: greedy by value/weight actually works for the
+"fractional" version of the knapsack problem</h3>
+
+   If you can split objects into pieces without loss of value,
+   then it's best to pack in decreasing order of value/weight
+
+
+<h3>Dynamic programming approach to the 0/1 knapsack problem</h3>
+
+   As usual, first cast as an optimization problem:
+
+      Let xi=1 if object i is packed, xi=0 otherwise
+
+      Maximize sum of xi*vi subject to the constraint that sum of xi*wi &lt;= W
+
+   Next, write a recurrence relation for the objective function:
+
+      Let V(I, W) = maximum total value for weight limit W,
+         using only objects indexed by I or less
+
+      Then since object I is either in the optimal packing or not,
+         and since there is only one copy of object I (unlike making change):
+
+         V(I, W) = max( V(I-1, W), vI + V(I-1, W-wI) )
+
+      Boundary values: V(1,W) = 0 if w1 &gt; W;  V(1,W) = v1 if w1 &lt;= W
+         V(I,0) = 0;   V(I,&lt;0) = -infinity
+
+
+<h3>Example</h3>
+
+   We'll discuss the following example in class
+
+      (W=100)
+
+         weight limit:   0  10  20  30  40  50  60  70  80  90  100
+      v1=100, w1=80      0   0   0   0   0   0   0   0 100 100  100   
+      v2=130, w2=60      0   0   0   0   0   0 130 130 130 130  130  
+      v3=80,  w3=50      0   0   0   0   0  80 130 130 130 130  130
+      v4=90,  w4=50      0   0   0   0   0  90 130 130 130 130  170
+</pre>
+
+</font>
+
+</body>
+</html>

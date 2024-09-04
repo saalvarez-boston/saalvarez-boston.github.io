@@ -1,0 +1,197 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Dynamic Time Warping
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Dynamic Time Warping
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+<h3>Dynamic Programming</h3>
+
+   A powerful design technique that improves on divide and conquer by avoiding redundant processing of subproblems
+
+	We've discussed several Dynamic Programming case studies
+
+	I'll describe the application of dynamic programming to sequence similarity
+
+
+<h3>Sequence Similarity</h3>
+
+	Given: two sequences a1...an and b1...bm (think of index as time)
+	for which a notion of distance between elements is defined
+
+	Seek: a notion of distance between the two sequences
+
+	Assume, e.g., that individual elements are numbers
+
+		|ai-bi| is the distance between the i-th elements of the two sequences
+
+	A distance between the sequences can be defined easily:
+
+		d(a,b) = sum_i |ai-bi|
+
+
+<h3>Some problems with the cumulative elementwise distance</h3>
+
+	What if the sequences aren't the same length?
+
+	What if the sequences display similar structure but on a different "time" scale?
+
+
+<h3>Time-Warped Distance</h3>
+
+	Time warping allows matching elements with different indices
+
+	A distance may be computed "through" the warping
+
+	A warping is just a set of index pairs
+
+	(i,j) is in the set if the warping associates a[i] with b[j]
+
+	The warped distance is the sum of the elementwise distances |ai-bj| over all pairs (i,j) in the given warping
+
+
+<h3>Example</h3>
+
+	a: 2, 1, 2
+	b: 2, 2, 1, 2, 2
+
+	A nice warping here associates the following pairs of indices:
+		(1,1)
+		(1,2)
+		(2,3)
+		(3,4)
+		(3,5)
+
+	The "warped distance" is actually 0 here, since the match is perfect
+
+
+<h3>Warping Paths</h3>
+
+	The key issue is: how does one compute a good warping?
+
+	You wish to map the index set 1...n of the first sequence to the index set 1...m of the second sequence
+
+		(1,1) should be paired
+		(n,m) should be paired
+		
+	The warping itself can be interpreted as a path in (n,m)-space
+
+
+<h3>Recurrence Relation</h3>
+
+	You can construct a warping path recursively
+
+	Start at the high end and ask: 
+	what index pair would have been visited immediately prior to (n,m)?
+
+	Only options if we require "continuity" of the path are (n-1,m), (n,m-1), and (n-1,m-1)
+
+	The value function V is the optimal (minimal) cost of pairing n with m (optimal over pairs of prior indices)
+
+		V(n,m) = |an-bm| + min(V(n-1,m), V(n,m-1), V(n-1,m-1))
+	
+	There are natural boundary conditions:
+
+		V(n,0) = infinity = V(0,m) for nonzero values of n and m
+		V(0,0) = 0
+
+
+<h3>Updating the value table</h3>
+
+	Straightforward!
+
+	Scan either by rows or columns as in previous DP examples
+
+	Time for initialization is Theta(n + m)
+
+	Time for updates is Theta(n*m)
+
+	Total running time is Theta(n*m)
+
+
+<h3>Sample dynamic time warping run</h3>
+
+[alvarez@cslabgw1 DynProg]$ dtw
+This program computes the warped distance between two
+floating point sequences using dynamic time warping
+Enter length of first sequence: 5
+Enter first[1] 0
+Enter first[2] 2
+Enter first[3] 1
+Enter first[4] 1
+Enter first[5] 1
+Enter length of second sequence: 6
+Enter second[1] 0
+Enter second[2] 0
+Enter second[3] 2
+Enter second[4] 1.5
+Enter second[5] 1
+Enter second[6] 1
+values[1,1] = |a[1] - b[1]| + min( values[0,1], values[1,0], values[0,0] ) = 0
+values[2,1] = |a[2] - b[1]| + min( values[1,1], values[2,0], values[1,0] ) = 2
+values[3,1] = |a[3] - b[1]| + min( values[2,1], values[3,0], values[2,0] ) = 3
+values[4,1] = |a[4] - b[1]| + min( values[3,1], values[4,0], values[3,0] ) = 4
+values[5,1] = |a[5] - b[1]| + min( values[4,1], values[5,0], values[4,0] ) = 5
+values[1,2] = |a[1] - b[2]| + min( values[0,2], values[1,1], values[0,1] ) = 0
+values[2,2] = |a[2] - b[2]| + min( values[1,2], values[2,1], values[1,1] ) = 2
+values[3,2] = |a[3] - b[2]| + min( values[2,2], values[3,1], values[2,1] ) = 3
+values[4,2] = |a[4] - b[2]| + min( values[3,2], values[4,1], values[3,1] ) = 4
+values[5,2] = |a[5] - b[2]| + min( values[4,2], values[5,1], values[4,1] ) = 5
+values[1,3] = |a[1] - b[3]| + min( values[0,3], values[1,2], values[0,2] ) = 2
+values[2,3] = |a[2] - b[3]| + min( values[1,3], values[2,2], values[1,2] ) = 0
+values[3,3] = |a[3] - b[3]| + min( values[2,3], values[3,2], values[2,2] ) = 1
+values[4,3] = |a[4] - b[3]| + min( values[3,3], values[4,2], values[3,2] ) = 2
+values[5,3] = |a[5] - b[3]| + min( values[4,3], values[5,2], values[4,2] ) = 3
+values[1,4] = |a[1] - b[4]| + min( values[0,4], values[1,3], values[0,3] ) = 3.5
+values[2,4] = |a[2] - b[4]| + min( values[1,4], values[2,3], values[1,3] ) = 0.5
+values[3,4] = |a[3] - b[4]| + min( values[2,4], values[3,3], values[2,3] ) = 0.5
+values[4,4] = |a[4] - b[4]| + min( values[3,4], values[4,3], values[3,3] ) = 1
+values[5,4] = |a[5] - b[4]| + min( values[4,4], values[5,3], values[4,3] ) = 1.5
+values[1,5] = |a[1] - b[5]| + min( values[0,5], values[1,4], values[0,4] ) = 4.5
+values[2,5] = |a[2] - b[5]| + min( values[1,5], values[2,4], values[1,4] ) = 1.5
+values[3,5] = |a[3] - b[5]| + min( values[2,5], values[3,4], values[2,4] ) = 0.5
+values[4,5] = |a[4] - b[5]| + min( values[3,5], values[4,4], values[3,4] ) = 0.5
+values[5,5] = |a[5] - b[5]| + min( values[4,5], values[5,4], values[4,4] ) = 0.5
+values[1,6] = |a[1] - b[6]| + min( values[0,6], values[1,5], values[0,5] ) = 5.5
+values[2,6] = |a[2] - b[6]| + min( values[1,6], values[2,5], values[1,5] ) = 2.5
+values[3,6] = |a[3] - b[6]| + min( values[2,6], values[3,5], values[2,5] ) = 0.5
+values[4,6] = |a[4] - b[6]| + min( values[3,6], values[4,5], values[3,5] ) = 0.5
+values[5,6] = |a[5] - b[6]| + min( values[4,6], values[5,5], values[4,5] ) = 0.5
+Optimal warping is
+(4,5): 1-&gt;1
+(3,4): 1-&gt;1.5
+(2,3): 2-&gt;2
+(1,2): 0-&gt;0
+(1,1): 0-&gt;0
+Warped distance is 0.5
+[alvarez@cslabgw1 DynProg]$ 
+	
+</pre>
+
+</font>
+
+</body>
+</html>

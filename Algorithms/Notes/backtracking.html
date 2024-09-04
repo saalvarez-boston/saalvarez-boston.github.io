@@ -1,0 +1,411 @@
+<html>
+<head>
+<title>
+CSCI 3383, Algorithms, Depth-first search / backtracking
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<!--
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CSCI 3383, Algorithms
+<br>Depth-first search with backtracking
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+I describe an example of applying depth-first search to the implicit graph
+associated with the nonattacking chess queens problem.
+
+<h3>Graphs</h3>
+
+        Recall that a graph is just a set of "nodes" or "vertices", 
+	together with "edges" (connections) between some pairs of nodes
+
+        If the connections have a direction, the graph is said to be "directed"
+
+
+<h3>Graph traversals</h3>
+
+   Many problems involve searching a graph, at least implicitly
+
+   Examples:
+
+      most optimization problems require searching for a solution
+         e.g. the knapsack problem (later)
+
+      "puzzles" such as the n-queens problem also require search
+
+                the problem is to place n queens on an nxn chess board
+                so that no two queens are in the same row, column, or diagonal
+
+                each node in the n-queens graph represents a board configuration
+                with some or all of the queens present
+
+                the search objective is to find a configuration in which all
+                queens have been placed and no two are attacking one another
+
+   Searching a graph is related to the task of exploring all of a graph's nodes
+
+        The latter task is called graph traversal
+
+
+<h3>Depth-first graph traversal algorithm</h3>
+
+   depth_first(v) {
+      S = empty stack
+      mark(v)
+      push v onto S
+      while (S not empty) {
+         while (some w adjacent to top(S) is unmarked) {
+            mark(w)
+            push w onto S
+         }
+         pop(S)
+      }
+   }
+
+
+<h3>Example</h3>
+
+   1 ---&gt; 2 &lt;--- 3 
+   |      |     /
+   |      |    /
+   v      v   /
+   5      4 &lt; 
+
+
+   Depth-first traversal visits 1, 2, 4, 5 upon calling depth_first(1)
+   To get node 3, a separate main procedure would be needed
+
+
+<h3>Searching implicit graphs</h3>
+
+   Need arises in game playing, puzzles
+
+   Nodes of graph represent partially constructed solutions
+
+   Example: n-queens problem
+
+   Given: nxn chess board, n chess queens
+
+   Objective: place the n queens on the board so that
+      no two are in the same row, column, or diagonal
+
+   Root node represents initial empty board configuration
+
+   Each node adjacent to the root might represent a tentative position for the first queen
+
+
+<h3>Backtracking</h3>
+
+   Technique for searching for solutions in an implicit graph
+
+   Variant of depth-first traversal in which nodes are only expanded if they 
+   are "promising" in the sense of being feasible precursors to a solution
+
+   Depends on notion of "k-promising vector"
+   v[1..k] is k-promising if a heuristic indicates that v can be
+      extended to a complete solution v[1..n]
+
+   Example: n-queens problem
+   v[1..k] represents tentative board positions for queens 1..k
+   v[1..k] is k-promising if no two queens among 1..k are attacking each other
+
+
+<h3>Abbreviated backtracking pseudocode</h3>
+
+   backtrack(v[1..k]) {
+      if v is a solution 
+	report v
+      else 
+         for each promising choice of x
+            backtrack(v[1..k];v[k+1]&lt;-x)
+   }
+
+
+<h3>Application to n-queens problem</h3>
+
+   Place i-th queen in i-th row; only need to decide which column to use
+
+   Start with queen 1 in row 1
+   Place in column 1
+   Record tentative move by pushing data onto history stack
+
+   Move to next queen
+   Try next column
+   While there's conflict with any previously placed queens, move right
+   If edge of board is reached, backtrack:
+      pop stack, attempt to reposition that queen...
+
+<h4>More detailed pseudocode for depth-first search with backtracking for the n-queens problem</h4>
+
+   s = empty stack of "moves" (each consisting of a queen and a board position)
+   move = (queen 1, position = (row 1, column 0))
+   current_queen = 1
+
+   do {
+   // search for a position for the current queen
+   // the k-th queen goes in the k-th row
+      	position.row = current_queen
+      	if (position.col &gt; n) // if previous position failed, move queen one column to the right
+         	position.col = move.pos.col + 1
+      	else			// start by placing current queen in column 1
+         	position.col = 1
+      	while ((there is a conflict between position and previous moves recorded in s) and (position.col &lt;= n)) 
+         	position.col++	// seek the first non-conflicting position
+      	if (position.col &gt; n) {	// no admissible position found
+         	current_queen-- 	// backtrack to previous queen
+         	if (s is not empty) {
+            		move = s.top()	// pop previous queen's tentative move
+            		s.pop()
+         	}
+         else // if stack is empty here, we're out of luck - there's no solution
+            	report that no solutions exist
+      	}
+      	else { // no conflict, so record move
+         	move.queen = current_queen
+         	move.pos = position
+         	s.push(move)
+         	current_queen++		// on to next queen
+      	}
+   } while (current_queen &lt;= n)
+   report solution
+
+
+<h3>Depth-first search results for n-queens problem</h3>
+
+I wrote a program based on the above pseudocode. Below is a sample run showing how 
+depth-first search with backtracking solves the 4-queens problem.
+
+Notice that once the first two queens have been tentatively placed at (row,col) 
+positions (1,1) and (2,3), there is no admissible position for a queen in row 3. 
+This leads to the first occurrence of backtracking, which results in the second 
+queen being repositioned from column 3 to column 4.
+However, this change eventually leads to a problem in row 4. Backtracking ensues, triggering a chain 
+of changes that finally results in the repositioning of the first queen from column 1 to column 2. 
+This finally allows a solution.
+
+[alvarez@cslabgw1 NQueens]$ nqueens d
+Enter the number of queens: 4
+
+tentatively placing queen 1 at (row,col) = (1,1)
+ 4
+ 3
+ 2
+
+  1    Q
+
+       1   2   3   4
+trying column 2
+trying column 3
+tentatively placing queen 2 at (row,col) = (2,3)
+ 4
+ 3
+
+  2            Q
+
+  1    Q
+
+       1   2   3   4
+trying column 2
+trying column 3
+trying column 4
+trying column 5
+backtracking...
+tentatively placing queen 2 at (row,col) = (2,4)
+ 4
+ 3
+
+  2                Q
+
+  1    Q
+
+       1   2   3   4
+trying column 2
+tentatively placing queen 3 at (row,col) = (3,2)
+ 4
+
+  3        Q
+
+  2                Q
+
+  1    Q
+
+       1   2   3   4
+trying column 2
+trying column 3
+trying column 4
+trying column 5
+backtracking...
+trying column 4
+trying column 5
+backtracking...
+backtracking...
+tentatively placing queen 1 at (row,col) = (1,2)
+ 4
+ 3
+ 2
+
+  1        Q
+
+       1   2   3   4
+trying column 2
+trying column 3
+trying column 4
+tentatively placing queen 2 at (row,col) = (2,4)
+ 4
+ 3
+
+  2                Q
+
+  1        Q
+
+       1   2   3   4
+tentatively placing queen 3 at (row,col) = (3,1)
+ 4
+
+  3    Q
+
+  2                Q
+
+  1        Q
+
+       1   2   3   4
+trying column 2
+trying column 3
+tentatively placing queen 4 at (row,col) = (4,3)
+
+  4            Q
+
+  3    Q
+
+  2                Q
+
+  1        Q
+
+       1   2   3   4
+Solution found after 12 steps:
+Total computation time: 0 seconds
+
+  4            Q
+
+  3    Q
+
+  2                Q
+
+  1        Q
+
+       1   2   3   4
+[alvarez@cslabgw1 NQueens]$
+
+<h3>Depth-first/backtracking vs. random permutations for n-queens</h3>
+
+For comparison purposes, I pitted depth-first with backtracking against a
+completely different strategy for solving the n-queens problem, namely
+random search. The latter strategy may be outlined as follows:
+
+while (true) {
+	randomly generate board locations for the n queens
+	if the randomly chosen locations solve the n-queens problem
+		report success
+}
+
+This isn't sufficiently detailed pseudocode, as it leaves out details that
+impact the running time significantly. In particular, how are the random
+board locations generated? Here are some options:
+
+	1) Locations of the different queens are generated independently;
+	for each queen, pick row and column values randomly among the values 1...n
+
+	2) Only one queen is placed in each row (as in the backtracking approach), 
+	but the column locations are chosen independently for different queens.
+	This option has the advantage of preventing row conflicts by design.
+
+	3) Only one queen is placed in each row, and pairwise distinct random
+	column locations are chosen for different queens. This option has the 
+	advantage of preventing both row and column conflicts.
+
+In practice, option 1) leads to a program with a ridiculously long running time.
+Options 2 and 3 are better. 
+
+For the 4-queens problem, for example, 20 runs lead to the following statistics 
+for the number of "basic steps" performed by each algorithm:
+
+			mean 	standard deviation
+
+random option 2		152		113
+random option 3		10		12
+backtracking		12		0
+
+Even though the notion of "basic step" used in this table differs across algorithms 
+in a way that favors the random search algorithms (a basic step for the random search algorithms 
+is a choice of locations for all of the queens, while a step for the depth-first algorithm
+with backtracking involves placing only one queen), these results do show that random option 3
+is much faster than random option 2 as expected, and they suggest that random option 3
+might even hold its own against depth-first search with backtracking (although it is
+also clear that both random search options exhibit a large variability in the run times).
+
+In order to shed light on the latter issue, I ran random search option 3 against
+depth-first search with backtracking for larger values of the number of queens, n. 
+Time was used as the metric rather than steps, given the differing notion of step
+for these two algorithms as mentioned above. The results, shown below, should be
+interpreted with caution as they reflect only a single run of each algorithm for
+each value of n. Better temporal resolution would require performing multiple runs
+of each algorithm for each n, and computing summary statistics. 
+
+For full disclosure: the times below were obtained on a really old machine 
+(year 2010 or so). The absolute times will be different on new hardware, but
+relative performance of the two algorithms, and overall qualitative conclusions,
+will be similar to what is shown here.
+
+	Running times in seconds for the n-queens problem
+	Programs were timed out after 5 minutes
+
+	n	depth-first search	random search option 3
+
+	10		0			0.02
+	11		0.01			0.1
+	12		0			0.01
+	13		0.01			0.78
+	14		0.09			0.23
+	15		0.06			1.8
+	16		0.55			18.3
+	17		0.32			0.5
+	18		2.5			56.06
+	19		0.18			157.33
+	20		15.56			out of time
+	21		0.71
+	22		159.01
+	23		2.46
+	24		out of time
+
+The above results suggest that depth-first search with backtracking is significantly faster
+than random search for the n-queens problem for "larger" values of n. Notice that
+the running time for backtracking is less than that of random search for all values of n &gt;= 12.
+Also, the available program run time of 5 minutes was exhausted by random search for n = 20,
+while backtracking also managed to finish under the time limit for n=20,21,22,23.
+Adding 4 to the maximum manageable problem size may not seem impressive. This highlights
+a fact about exponential running times that is difficult to swallow: multiplying the speed by a
+constant factor (even a large one) merely adds a constant to the maximum manageable problem size.
+
+</pre>
+
+</font>
+
+</body>
+</html>

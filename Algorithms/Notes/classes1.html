@@ -1,0 +1,466 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, C++ classes
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>C++ classes
+</h1>
+</center>
+
+<p><hr><p>
+
+
+<pre>
+	A class is a type that describes composite objects with a common "language" of allowable "behaviors".
+
+	Like the Nodes of a linked list, but such that each Node not only stores data but can also perform certain computations.
+
+	The instances of a class are called objects
+
+	Object-oriented programming involves defining classes and performing computations by creating and using objects of those classes
+
+	The member functions of a class allow one to access and manipulate the data stored inside individual objects
+
+
+<h3>Interface vs. implementation</h3>
+
+	Behavior of objects of a class is described in class' *public interface*
+
+	The public interface is like a contract between the class and the outside world - it states what can be expected of the class and what is expected of users of the class
+
+		like going to a bank - you can expect to be able to create a savings account, and to be able to deposit funds into, and withdraw funds from your account
+
+		you, as a customer, are expected to fill out the appropriate forms when requesting transactions, and you must adhere to rules such as not withdrawing more than the balance in your account
+
+	The contract does *not* state internal details regarding *how* the class will keep its end of the contract
+
+		those details are in the *implementation* of the class
+
+		only the programmers of the class need to deal with the implementation aspects of the class
+
+
+<h3>Example of a class: OneDWalker</h3>
+
+	OneDWalker instances represent point objects that move along a line
+
+	The public interface of the OneDWalker class is as follows:
+
+	Public data members:
+	// walkers start at this location
+		static const int DEFAULT_LOCATION = 50;	
+	// avg. number of columns per move
+		static const int AVERAGE_SPEED = 5;	
+
+	Constructor:
+	// creates a new OneDwalker instance
+		OneDWalker();		
+
+	Public member functions:
+
+	Selector (accessor) functions:
+	// returns current location of recipient (in columns)
+		double getLocation();
+	// prints current location of recipient (as a number of columns)
+		void printLocation();
+	// prints the argument string at the recipient's current location
+		void drawLocation(string label);
+
+	Modifier (mutator) functions:
+	// changes recipient's location by a random amount based on speed
+		void step();
+	// changes recipient's speed randomly
+                void changeSpeed();
+
+
+<h3>Sample program that uses the OneDWalker class</h3>
+
+	Even though we haven't written the OneDWalker class yet, we can already write a program that uses the class
+
+		don't forget to include the header file for the class
+
+	All we need to know is the public interface of the OneDWalker class, which is described above
+
+	Eg, a program that creates a OneDWalker instance and moves it 10 times:
+
+		#include "OneDWalker.h"
+
+		int main() {
+        		OneDWalker stroller = OneDWalker();
+        		for (int step=0; step&lt;10; step++) {
+                		stroller.step();
+                		stroller.drawLocation("*");
+			}
+        		return EXIT_SUCCESS;
+		}
+
+
+<h3>Another sample client program of the OneDWalker class</h3>
+
+	Move a walker until it reaches the middle of the screen
+
+	bool hitMiddle(OneDWalker w) {
+        	return w.getLocation() &lt; 10;
+	}
+	
+	int main() {
+        	cout &lt;&lt; endl &lt;&lt; "This program moves a random walker until it" &lt;&lt; endl;
+        	cout &lt;&lt; "reaches the left 10 columns of the screen." &lt;&lt; endl;
+        	OneDWalker middler = OneDWalker();
+        	int steps = 0;
+        	while (!hitMiddle(middler)) {
+                	middler.step();
+                	middler.drawLocation("*");
+                	steps++;
+        	}
+        	cout &lt;&lt; endl &lt;&lt; "Done! That took " &lt;&lt; steps &lt;&lt; " steps" &lt;&lt; endl;
+        	return EXIT_SUCCESS;
+	}
+
+<h4>Sample run</h4>
+
+[alvarez@cslabgw1 Classes]$ a.out
+
+This program moves a random walker until it
+reaches the left 10 columns of the screen.
+                                                 *
+                                                   *
+                                                     *
+                                                  *
+                                                      *
+                                                      *
+                                                    *
+                                                 *
+                                                *
+                                            *
+                                          *
+                                       *
+                                   *
+                                      *
+                                       *
+                                         *
+                                              *
+                                              *
+                                          *
+                                         *
+                                     *
+                                       *
+                                    *
+                                 *
+                            *
+                          *
+                         *
+                            *
+                           *
+                       *
+                      *
+                        *
+                           *
+                       *
+                           *
+                             *
+                              *
+                           *
+                               *
+                                    *
+                                  *
+                               *
+                            *
+                           *
+                      *
+                         *
+                     *
+                *
+              *
+           *
+           *
+         *
+
+Done! That took 52 steps
+[alvarez@cslabgw1 Classes]$
+
+
+<h3>Defining a class</h3>
+
+	Defining a class involves defining the private data members that 
+	provide data storage inside each instance, and defining the public 
+	member functions that allow the internal data to be accessed by 
+	other programs
+
+	Note that other (client) programs cannot access the private data 
+	members directly; instead, they *must* go through the public functions
+
+	class outline in C++ is as follows:
+
+	class ClassName {
+		public:
+			public functions and other public data members go here
+		private:
+			data members hidden inside individual objects go here
+	};
+
+
+<h3>Implementation of the OneDWalker class: private data members</h3>
+
+	We settle on the private data members first:
+
+	Each OneDWalker instance needs to know
+
+		its location
+
+		its speed (as an order of magnitude)
+
+	Here's the corresponding C++ code:
+
+	class OneDWalker {
+        	private:
+                	double x, dx;
+		public:
+	};
+
+
+<h3>Adding the public data members to the class definition</h3>
+
+	Each public member function must have at least a prototype
+	in the public portion of the class body
+
+	A minimal class body would be as follows:
+
+	class OneDWalker {
+        	public:
+                	static const int DEFAULT_LOCATION = 50;
+                	static const int AVERAGE_SPEED = 5;
+                	OneDWalker();
+                	double getLocation();
+                	void printLocation();
+                	void drawLocation(string label);
+                	void step();
+                	void changeSpeed();
+        	private:
+                	double x, dx;
+	};
+
+
+<h3>Header and implementation files of a class</h3>
+
+	Bodies for the public data members can be provided in either 
+	the class body itself, or in a separate implementation file
+
+	If a separate file is used:
+
+		header file will be named ClassName.h
+
+		header file will be named ClassName.cxx
+
+                the line
+
+                        #include "ClassName.h"
+
+                must appear in the implementation file
+
+
+<h3>Header file for the OneDWalker class</h3>
+
+// OneDWalker.h, by Sergio A. Alvarez
+// Header file for the C++ class OneDWalker whose instances 
+// represent point objects that move randomly along a line.
+// Note that this file contains only the class outline with 
+// function prototypes; implementations are in a separate file.
+
+#include <iostream>
+using namespace std;
+
+class OneDWalker {
+	public:
+	/**
+	* public data members
+	*/
+		// default parameters; static means that they 
+		// are shared by all OneDWalker instances
+		static const int DEFAULT_LOCATION = 50;
+		static const int AVERAGE_SPEED = 5;
+	/**
+	* constructors
+	*/
+		// creates a new OneDWalker with location DEFAULT_LOCATION
+		OneDWalker();
+
+	/**
+	* selector member functions
+	*/
+		// returns the recipient's current location
+		double getLocation() const;
+
+		// prints the recipient's current location
+		void printLocation() const;
+
+		// prints the argument string on the current line in the
+		// console window, starting at recipient's current location
+		void drawLocation(string label) const;
+
+	/**
+	* modifier member functions
+	*/
+		// changes recipient's location by an amount
+		// proportional to its speed
+		void step();
+
+		// changes the recipient's speed by a random amount
+		// proportional to the value AVERAGE_SPEED
+		void changeSpeed();
+
+	private:
+	/**
+	* private data members; each OneDWalker has its own copies of
+	* these variables (also called instance variables); they cannot 
+	* be accessed from a client program, except indirectly by calling
+	* the member functions of the class
+	*/
+		double x, dx;
+};
+
+<h3>Implementing the public members of a class: full headers</h3>
+
+	The implementation header of each public member of a class 
+	must have the prefix
+
+		ClassName::
+
+	For example, the getLocation() function, which has the prototype:
+
+                double getLocation();
+
+	will have the following implementation header:
+
+                double OneDWalker::getLocation()
+
+
+<h3>Implementing the public members of a class: function bodies</h3>
+
+	The public member functions of a class provide access to
+	the private data members
+
+	Consider the getLocation() function: it simply returns the 
+	private data member x, as follows:
+
+	double OneDWalker::getLocation() {
+		return x;
+	}
+
+	Notice that x is not declared anywhere in the getLocation() function;
+	instead, it is declared in the private portion of the class body
+
+
+<h3>Which object's x is it?</h3>
+
+	Suppose you have two OneDWalkers, steppy and jumpy, in a client program
+
+	What happens when one of them is sent the getLocation() message?
+
+	According the the getLocation() code, the value of x is returned
+
+		but which x is it, steppy's? jumpy's?
+
+		answer: it's the x of whoever received the message
+
+
+<h3>The "this" pointer</h3>
+
+	One may write the body of the getLocation() function in a way
+	that makes explicit the fact that x is a member of some object
+
+	One uses the word "this" to get a pointer (reference) to the
+	object that received the message
+
+	double OneDWalker::getLocation() {
+		return this -&gt; x;
+	}
+
+
+<h3>Selector (const) vs. modifier member functions</h3>
+
+        Some member functions provide read-only access to internal data
+
+                these are known as selector (or accessor, or const) functions
+
+        Other member functions provide read/write access to internal data
+
+                these are known as modifier (or mutator) functions
+
+        The read-only nature of selector functions can be enforced syntactically: use the const keyword in the function header
+
+                then the compiler will check that no attempt is made to change any of the recipient's data members in the function 
+
+        Example: getLocation() is read-only, so use the following prototype:
+
+                double getLocation() const;
+
+        The full implementation would be:
+
+                double OneDWalker::getLocation() const {
+                        return this -&gt; x;                 
+		}
+
+
+<h3>Implementation file of the OneDWalker class</h3>
+
+The remaining member functions should be implemented as was done for the getLocation() function above. The finished implementation file is shown below.
+
+// OneDWalker.cxx, by Sergio A. Alvarez
+// Implementation file for the OneDWalker class.
+
+#include &lt;iostream&gt;
+#include "OneDWalker.h"
+using namespace std;
+
+OneDWalker::OneDWalker() {
+	this-&gt;x = DEFAULT_LOCATION;
+	srand(time(0));
+	this-&gt;changeSpeed();
+}
+
+double OneDWalker::getLocation() const {
+	return this-&gt;x;
+}
+
+void OneDWalker::printLocation() const {
+	printf("%f", this-&gt;getLocation());
+}
+
+void OneDWalker::drawLocation(string label) const {
+	string s = "";
+	for (int pos=0; pos&lt;this-&gt;getLocation(); pos++)
+		s += " ";
+	cout &lt;&lt; s &lt;&lt; label &lt;&lt; endl;
+}
+
+void OneDWalker::step() {
+	this-&gt;x += this-&gt;dx;
+	this-&gt;changeSpeed();
+}
+
+void OneDWalker::changeSpeed() {
+	this-&gt;dx = 2*AVERAGE_SPEED*(rand()/(double)RAND_MAX-0.5);
+}
+
+</font>
+
+</body>
+</html>

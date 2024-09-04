@@ -1,0 +1,626 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, C++ container classes
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Container classes
+</h1>
+</center>
+
+<p><hr><p>
+
+
+<pre>
+	A container class stores items of a shared type
+
+	Container classes are needed for data storage in scientific computing
+
+	Different container classes have different access rules
+
+	For example, consider defining a List class
+
+		a List represents a linearly ordered sequence of elements
+
+		like an array, but a List can grow:
+
+			List mySeq = List();	// create an empty List
+			mySeq.append(3);	// mySeq is now {3}
+			mySeq.append(-10); 	// mySeq is now {3, -10}
+			cout &lt;&lt; mySeq.length();	// prints 2
+
+
+<h3>Recall: pointers allow dynamic memory allocation in C++</h3>
+
+	int* values;		// declare pointer (address) variable
+	values = new int[100];	// allocate 100 int locations from heap memory
+	for (int pos=0; pos&lt;100; pos++)
+		values[pos] = pos*pos;	// use array as desired
+	delete [ ] values;	// release array memory back to the heap
+
+
+<h3>Using dynamic memory in C++ classes</h3>
+
+	Resizeable arrays are convenient data members for container classes
+
+	One can implement a List of integers using a dynamic array as follows:
+
+	class List {
+		private:
+			int* data;
+			size_t capacity;
+	};
+		
+	We'll build on this idea and provide a complete List implementation
+
+<h3>
+Member functions associated with dynamic memory data members: constructors
+</h3>
+
+	The constructor function(s) must allocate new memory for members
+
+		List::List() {
+			data = new int[DEFAULT_CAPACITY]; // more needed (below)
+		}
+
+<h3>
+Member functions associated with dynamic memory data members: copy constructors
+</h3>
+
+	A copy constructor must allow copying an existing object of the class
+
+	Copy constructors have a similar header to ordinary constructors,
+	but copy constructors accept a member of the class as an argument
+
+	Note that copy constructor parameter must be const reference parameter
+
+		List::List(const List& model) {
+			data = model.data;	// will this work as is? more below
+		}
+
+<h3>
+Member functions associated with dynamic memory data members: destructors
+</h3>
+
+	A special destructor function must release memory that is not needed
+
+		usually called "automatically", to destroy local variables
+
+		e.g.,
+
+		void clientFunction() {
+			List myList = List();
+			myList.append(2);
+			cout &lt;&lt;"Created a list of length " &lt;&lt;myList.length();
+		}
+
+		when the function exits, the destructor is called
+		in order to destroy the local variable myList
+
+	The name of the destructor is ~ClassName()
+
+	Like the constructors, the destructor has no return type
+	
+		List::~List() {
+			delete [ ] data;	// more needed; see below
+		}
+
+<h3>
+Header file (public interface) for the List class
+</h3>
+
+// Program: List.h, by Sergio A. Alvarez
+// Header file for first version of an instantiable List class
+// Each List represents a linearly ordered sequence of int values.
+// Lists provide random (indexed) access to elements using int get(size_t),
+// as well as insertion at the end of the List using void append(int);
+// a size_t length() function returns the number of elements of a List.
+// Internal representation is based on a dynamically allocated array;
+// constructor and destructor functions deal with dynamic memory issues.
+
+#include &lt;iostream&gt;
+using namespace std;
+
+class List {
+
+	public:
+
+		static const size_t DEFAULT_CAPACITY = 10;
+
+	/** 
+	* constructors 
+	*/
+		// creates a List with the given initial capacity
+		List(int);
+
+		// creates a List with initial capacity DEFAULT_CAPACITY
+		List();
+
+		// copy constructor: creates a copy of the argument List
+		List(const List&);
+
+	/** 
+	* destructor 
+	*/
+		// releases the memory allocated for this List
+		~List();
+
+	/** 
+	* selectors
+	*/
+		// returns the number of elements of the recipient List
+		size_t length() const;
+
+		// displays the elements of the recipient List
+		void println() const;
+
+		// returns element of recipient List with the given location
+		int get(size_t) const;
+
+	/** 
+	* modifiers
+	*/
+		// adds the argument at the end of the recipient List
+		void append(int);
+
+	private:
+		// storage array for this List
+		int* data;
+		// first available position in the data array
+		size_t nextPos;
+		// size of the data array
+		size_t capacity;
+		// helper method to increase the size of the data array
+		void increaseCapacity();
+};
+
+<h3>
+Internal representation for the List class
+</h3>
+
+	The basic object is a dynamically allocated array:
+
+		int* data;
+
+	We'll also need to keep track of the array's size:
+
+		size_t capacity;
+
+	Notice that only part of the array may have been used;
+	therefore, we'll need to keep track of the size of the valid portion:
+
+		size_t nextPos;		// first unused position in data
+
+<h3>
+Constructor implementation
+</h3>
+
+	Remember that constructors must initialize all data members
+
+                // creates a List with the given initial capacity
+                List::List(int initCap) {
+                        capacity = initCap;
+                        data = new int[initCap];
+                        nextPos = 0;
+                }
+
+                // creates a List with initial capacity DEFAULT_CAPACITY
+                List::List() {
+                        List(DEFAULT_CAPACITY);
+                }
+
+<h3>
+Copy constructor implementation
+</h3>
+
+	Copy constructors must copy the argument object exactly
+
+	Obvious approach is as follows:
+
+                // copy constructor: creates a copy of the argument List
+                List::List(const List& given) {
+                        data = given.data;
+			capacity = given.capacity;
+                        nextPos = given.nextPos;
+                }
+
+	Oops!
+
+	By setting data = given.data, 
+	the two pointers point to the same area of memory
+
+	If either object is modified, both objects will be
+
+		e.g., 
+		List myList = List(given);
+		given.data[1] = 12;
+		cout &lt;&lt; myList.get(1);	// prints 12
+
+	A correct copy constructor must allocate *new* memory,
+	and then copy the old contents into the new memory
+
+                // copy constructor: creates a copy of the argument List
+                List::List(const List& given) {
+                        capacity = given.capacity;
+                        data = new int[capacity];
+                        nextPos = given.nextPos;
+                        for (int pos=0; pos&lt;nextPos; pos++)
+                                data[pos] = given.data[pos];
+                }
+
+<h3>
+Destructor implementation
+</h3>
+
+                // releases the memory allocated for this List
+                List::~List() {
+                        delete [ ] data;
+                        capacity = 0;
+                        nextPos = 0;
+                }
+
+<h3>
+Implementing the List selector member functions
+</h3>
+
+	There are no surprises in the selector member functions
+
+                // returns the number of elements of the recipient List
+                size_t List::length() const {
+                        return nextPos;
+                }
+
+                // displays the elements of the recipient List
+                void List::println() const {
+                        for (int pos=0; pos&lt;nextPos; pos++)
+                                cout &lt;&lt; " " &lt;&lt; data[pos];
+                        cout &lt;&lt; endl;
+                }
+
+                // returns element of recipient List with the given location
+                int List::get(size_t pos) const {
+                        return data[pos];
+                }
+
+<h3>
+Implementing the List modifier member functions (append)
+</h3>
+
+	Natural way to implement the append function
+
+		just add the argument in the first unused position:
+
+                // adds the argument at the end of the recipient List
+                void List::append(int elem) {
+                        data[nextPos] = elem;
+                }
+
+	Oops - forgot to update the nextPos variable!
+
+                // adds the argument at the end of the recipient List
+                void List::append(int elem) {
+                        data[nextPos] = elem;
+                        nextPos++;
+                }
+
+<h3>
+Need to increase capacity
+</h3>
+
+	The above still doesn't work!
+
+		it fails when the data array is already full
+
+	Care must be taken not to go beyond the currently allocated memory
+
+		the capacity of the array must be increased as needed
+
+                // adds the argument at the end of the recipient List
+                void List::append(int elem) {
+                        if (nextPos &gt;= capacity)
+                                increaseCapacity();
+                        data[nextPos] = elem;
+                        nextPos++;
+                }
+
+	The increaseCapacity() function does the heavy lifting:
+
+                void List::increaseCapacity() {
+                        int* newData = new int[2*capacity];
+                        for (int pos=0; pos&lt;nextPos; pos++)
+                                newData[pos] = data[pos];
+                        delete [ ] data;
+                        data = newData;
+                        capacity = 2*capacity;
+                }
+
+<h3>
+Summary so far
+</h3>
+
+	Dynamic arrays are natural internal data members for container classes
+
+		we've looked at a List class
+		other container classes may be built in this way too
+
+	Special care must be taken with dynamic memory when implementing:
+
+		constructors
+		copy constructors
+		modifiers
+		destructors
+		
+<p><hr><p>
+
+<h3>
+Another container class: Stack
+</h3>
+
+        A stack is a container with Last In First Out (LIFO) access
+
+        Like a stack of plates:
+
+                you can push an item onto the top of the stack
+
+                you can remove the item at the top of the stack
+
+                you cannot access other items unless you remove
+                all of the items above that item first
+
+        To push a new item
+
+                s.push(elem);
+
+        To get the top item (read-only (selector) function):
+
+                s.top();
+
+        To remove the top item:
+
+                s.pop();
+
+	We'll assume that the stack elements are chars for now
+
+<h3>
+First stack example: checking whether a string is symmetric
+</h3>
+
+        scan the string from left to right, pushing each char onto a stack
+
+        then scan again, comparing each char with the char at the
+        top of the stack, popping the top after each comparison
+
+<h3>
+Checking whether a string is symmetric: code
+</h3>
+
+#include &lt;iostream&gt;
+#include "Stack.h"
+using namespace std;
+
+string readLine(string prompt);
+
+int main() {
+        Stack s;
+        string text = readLine("Enter some text: ");
+        for (int pos=0; pos&lt;text.length(); pos++)
+                s.push(text[pos]);
+        for (int pos=0; pos&lt;text.length(); pos++) {
+                if (s.top() != text[pos]) {
+                        cout &lt;&lt;"Sorry, that's not a symmetric string" &lt;&lt;endl;
+                        return EXIT_SUCCESS;
+                }
+                s.pop();
+        }
+        cout &lt;&lt;"Yes - a symmetric string!" &lt;&lt;endl;
+        return EXIT_SUCCESS;
+}
+
+string readLine(string prompt) {
+        cout &lt;&lt;prompt;
+        string s;
+        getline(cin, s, '\n');
+        return s;
+}
+
+<h3>
+Implementing the Stack class
+</h3>
+
+	We can actually reuse a lot of the List class code
+
+	Internal representation is the same
+
+	Many methods are similar
+
+<h3>
+Notes on the Stack-specific methods
+</h3>
+
+	The top of the Stack is just the last valid array element
+
+                // returns the element at the top of the recipient Stack
+                char Stack::top() const {
+                        return data[nextPos-1];
+                }
+
+	Popping the top doesn't even require modifying the array;
+	just update the nextPos variable appropriately
+
+                // removes the element at the top of the recipient Stack
+                void Stack::pop() {
+                        nextPos--;
+                }
+
+	Pushing an element onto the top of the Stack is just like appending it
+
+                // adds the argument at the top of the recipient Stack
+                void Stack::push(char elem) {
+                        if (nextPos &gt;= capacity)
+                                increaseCapacity();
+                        data[nextPos] = elem;
+                        nextPos++;
+                }
+
+<p><hr><p>
+
+<h3>
+A third container class: Queue
+</h3>
+
+	Queues provide containers with First In First Out (FIFO) access
+
+	Like the check-out line at a store
+
+<h3>
+Public interface of the Queue class
+</h3>
+
+	I note only the differences relative to the List and Stack classes
+
+                // returns the element at the front of the recipient Queue
+                string front() const;
+
+                // returns the element at the rear of the recipient Queue
+                string rear() const;
+
+                // adds the argument at the rear of the recipient Queue
+                void insert(string);
+
+                // removes the element at the front of the recipient Queue
+                void remove();
+
+<h3>
+Implementing the Queue class
+</h3>
+
+	Queues are trickier than the other container classes
+
+	We'll still use a dynamic array as the main storage 
+
+	The fact that you insert at one end and remove at the other
+	requires that we think about what part of the array to use
+
+		if we add new elements at the high end of the array,
+		then we'll need to remove them at the low end
+		(and vice-versa)
+
+		we'll need to either shuffle things down to the
+		beginning (or end) of the array, or else we'll
+		need to keep track of *two* positions
+
+	Given the time needed to do the shuffling, we choose the latter
+
+<h3>
+Data representation
+</h3>
+
+	class Queue {
+        	private:
+                	// storage array for this Queue
+                	string* data;
+                	// position of the front element in the data array
+                	size_t frontPos;
+                	// first position after rear element in the data array
+                	size_t rearPos;
+                	// size of the data array
+                	size_t capacity;
+	};
+
+	Initially, both frontPos and rearPos will be 0
+
+	When an element is inserted at the rear of the Queue,
+	rearPos increases by 1
+
+	When an element is removed at the front of the Queue,
+	frontPos increases by 1
+
+	Note that rearPos and frontPos may eventually "wrap around" the end of the data array
+
+<h3>
+Sample member functions: front() and rear()
+</h3>
+
+	Assuming the Queue is not empty, the front element is the one located at position frontPos of the data array:
+
+                // returns the element at the front of the recipient Queue
+                string Queue::front() const {
+                        return data[frontPos];
+                }
+
+	Since rearPos is the first position *after* the rear element, the rear element is located in the position 
+	immediately preceding rearPos. You might think the following works:
+
+                // returns the element at the rear of the recipient Queue
+                string Queue::rear() const {
+                        return data[rearPos-1];	//oops
+                }
+
+	However, rearPos may well be 0 even if the Queue is not empty.
+	In that case, you must "wrap around" to the end of the data array:
+
+                // returns the element at the rear of the recipient Queue
+                string Queue::rear() const {
+			if (rearPos &gt; 0)
+                        	return data[rearPos-1];
+			else
+                        	return data[capacity-1];
+                }
+
+	Trick: you can combine the two cases by using the modular remainder operator % to wrap around automatically, as follows:
+
+                // returns the element at the rear of the recipient Queue
+                string Queue::rear() const {
+                        return data[(rearPos-1)%capacity];
+                }
+
+<h3>
+Sample member functions: size()
+</h3>
+
+	Again, there are two cases:
+
+		if rearFront &gt;= frontPos (e.g. front 2, rear 8, capacity 20), 
+
+			return rearFront-frontPos
+
+		else (e.g. front 10, rear 8, capacity 20),
+
+			return capacity+rearPos-frontPos
+
+	You can combine the two cases using modular remainder to
+	wrap around automatically:
+
+                // returns the number of elements of the recipient Queue
+                size_t Queue::size() const {
+                        return (capacity+rearPos-frontPos)%capacity;
+                }
+
+
+Try implementing the other Queue member functions!
+Note that care is required when resizing the data array in order not to 
+introduce invalid elements in the range between the frontPos and rearPos positions.
+
+</pre>
+
+</font>
+
+</body>
+</html>

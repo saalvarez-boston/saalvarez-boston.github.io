@@ -1,0 +1,315 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, C++ classes (2)
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>More on C++ classes: operator overloading
+</h1>
+</center>
+
+<p><hr><p>
+
+These notes provide additional comments about C++ classes.
+In particular, I describe how to overload the standard
+arithmetic operators so that they can be used as member
+functions of your own classes.
+
+<pre>
+
+<h3>Inline implementation of a class</h3>
+
+It is not necessary to provide a separate implementation file for a class if the class is to be used within the same program. As an example, here is an inline implementation of the OneDWalker class that we discussed recently.
+
+class OneDWalker {
+        private:
+                double x, dx;
+        public:
+
+                static const int DEFAULT_LOCATION = 50;
+                static const int AVERAGE_SPEED = 5;
+
+                OneDWalker::OneDWalker() {
+                        this-&gt;x = DEFAULT_LOCATION;
+                        srand(time(0));
+                        this-&gt;changeSpeed();
+                }
+
+                double OneDWalker::getLocation() const {
+                        return this-&gt;x;
+                }
+
+                void OneDWalker::printLocation() const {
+                        printf("%f", this-&gt;getLocation());
+                }
+
+                void OneDWalker::drawLocation(string label) const {
+                        string s = "";
+                        for (int pos=0; pos&lt;this-&gt;getLocation(); pos++)
+                                s += " ";
+                        cout &lt;&lt; s &lt;&lt; label &lt;&lt; endl;
+                }
+
+                void OneDWalker::step() {
+                        this-&gt;x += this-&gt;dx;
+                        this-&gt;changeSpeed();
+                }
+
+                void OneDWalker::changeSpeed() {
+                        this-&gt;dx = 2*AVERAGE_SPEED*(rand()/(double)RAND_MAX-0.5);
+                }
+
+};
+
+
+<h3>Another example: a Clock class</h3>
+
+	Each Clock instance represents a static clock that 
+	displays a fixed time in an hour:minutes format
+
+	External behaviors (functions or methods):
+
+		// constructor
+		Clock(int, int)
+
+		// selector functions
+		int getHour() const
+		int getMinutes() const
+
+		// modifier functions
+		void advanceMinutes(int)
+
+
+<h3>Sample client program of the Clock class</h3>
+
+	#include "Clock.h"
+
+	int main() {
+		Clock tocker = Clock(11, 45);
+		cout &lt;&lt; "Start time is ";
+		tocker.println();
+		for (int tick=0; tick&lt;30; tick++) {
+			tocker.advanceMinutes(1);
+			cout &lt;&lt; "Time is now ";
+			tocker.println();
+		}
+		return EXIT_SUCCESS;
+	}
+
+<h4>Sample run</h4>
+
+[alvarez@cslabgw1 Classes]$ a.out
+Start time is 11:45
+Time is now 11:46
+Time is now 11:47
+Time is now 11:48
+Time is now 11:49
+Time is now 11:50
+Time is now 11:51
+Time is now 11:52
+Time is now 11:53
+Time is now 11:54
+Time is now 11:55
+Time is now 11:56
+Time is now 11:57
+Time is now 11:58
+Time is now 11:59
+Time is now 12:00
+Time is now 12:01
+Time is now 12:02
+Time is now 12:03
+Time is now 12:04
+Time is now 12:05
+Time is now 12:06
+Time is now 12:07
+Time is now 12:08
+Time is now 12:09
+Time is now 12:10
+Time is now 12:11
+Time is now 12:12
+Time is now 12:13
+Time is now 12:14
+Time is now 12:15
+
+<h3>Implementation of the Clock class</h3>
+
+// Clock.cxx, by Sergio A. Alvarez
+// A simple C++ class that represents a (static) clock
+// that reports times in an hour:minutes text format.
+// You have to set and advance the time on the clock.
+// A sample main function is included that sets the time
+// to 11:45 and advances the time minute by minute for 30 minutes.
+// Provided merely as an example of objected-oriented syntax in C++.
+
+#include &lt;iostream&gt;
+using namespace std;
+
+class Clock {
+        private:
+                int minutesSinceMidnight;
+        public:
+                Clock::Clock(int hour, int minutes) {
+                        this-&gt;minutesSinceMidnight = (hour%12)*60 + minutes;
+                }
+
+                int Clock::getHour() {
+                        int hr = (this-&gt;minutesSinceMidnight/60)%12;
+                        if (hr==0)
+                                hr = 12;
+                        return hr;
+                }
+
+                int Clock::getMinutes() {
+                        return (this-&gt;minutesSinceMidnight)%60;
+                }
+
+                void Clock::advanceMinutes(int howMany) {
+                        this-&gt;minutesSinceMidnight += howMany;
+                }
+
+                void Clock::println() {
+                        if (this-&gt;getMinutes() &lt; 10)
+                                printf("%d:0%d\n", this-&gt;getHour(), this-&gt;getMinutes());
+                        else
+                                printf("%d:%d\n", this-&gt;getHour(), this-&gt;getMinutes());
+                }
+
+};
+
+int main() {
+	Clock tocker = Clock(11, 45);
+	cout &lt;&lt; "Start time is ";
+	tocker.println();
+	for (int tick=0; tick&lt;30; tick++) {
+		tocker.advanceMinutes(1);
+		cout &lt;&lt; "Time is now ";
+		tocker.println();
+	}
+	return EXIT_SUCCESS;
+}
+
+
+<h3>Operator overloading</h3>
+
+	Sometimes the objects of a class can perform arithmetic-like operations:
+
+		Accumulator a = Accumulator(0);
+		a.printTotal();	// prints 0
+		a.add(1);
+		a.add(-10);
+		a.add(5);
+		a.printTotal();	// prints -4
+
+	It would be convenient to use the ordinary infix notation instead:
+
+		Accumulator a = Accumulator(0);
+		a.printTotal();	// prints 0
+		a.add(1);
+		a.add(-10);
+		a.add(5);
+		a.printTotal();	// prints -4
+
+	You can do this in C++
+
+
+<h3>How to overload one of the standard operator symbols (+, -, *, /, %, ^, +=, ...)</h3>
+
+	add the keyword operator before the function name in the header
+
+	returnType operator symbol(arg)
+	(you must also include the prefix ClassName:: in the implementation)
+
+
+<h3>Operator overloading example: implementing an accumulator</h3>
+
+#include <iostream>
+using namespace std;
+
+class Accumulator {
+        public:
+                Accumulator::Accumulator(int amount) {
+                        total = amount;
+                }
+                int Accumulator::operator += (int delta) {
+                        total += delta;
+                        return total;
+                }
+                void printTotal() {
+                        cout &lt;&lt; total &lt;&lt; endl;
+                }
+        private:
+                int total;
+};
+
+int main() {
+        Accumulator a = Accumulator(0);
+        a.printTotal();
+        a += 2;
+        a += 17;
+        a.printTotal();
+        return EXIT_SUCCESS;
+}
+
+<h3>Another example: a complex number class</h3>
+
+// Program: complex.cxx, by Sergio A. Alvarez
+// Complex number class with overloaded + and * operators
+
+#include <iostream>
+using namespace std;
+
+class Complex {
+	private:
+		double re;
+		double im;
+	public:
+		Complex::Complex(double real, double imaginary) {
+			re = real;
+			im = imaginary;
+		}
+
+		Complex Complex::operator +(Complex other) {
+			return Complex(re + other.re, im + other.im);
+		}
+
+		Complex Complex::operator *(Complex b) {
+			return Complex(re*b.re - im*b.im, re*b.im + im*b.re);
+		}
+
+		void Complex::println() {
+			cout &lt;&lt; re &lt;&lt; " + i*" &lt;&lt; im &lt;&lt; endl;
+		}
+
+};
+
+		int main() {
+			Complex i = Complex(0, 1);
+			i.println();
+			(i*i).println();
+			(i+i).println();
+			return EXIT_SUCCESS;
+		}
+
+</pre>
+
+</font>
+
+</body>
+</html>

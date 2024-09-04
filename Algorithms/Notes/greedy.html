@@ -1,0 +1,455 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Greedy graph algorithms
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Greedy graph algorithms
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+<h3>A general computational optimization task</h3>
+
+   	given a set (or bag) C of candidate elements, 
+
+   	given a notion of solution for sets of candidates,
+
+   	given a notion of feasibility for sets of candidates,
+
+   	given an objective function that computes the value of a solution,
+
+   	construct solution set S that is optimal for this objective function
+
+
+<h3>Examples</h3>
+
+   	Given a positive integer n, express n as a linear combination 
+   	of powers of 10 so as to minimize the sum of the coefficients
+   
+   	Given a weighted graph G, find a tree embedded in G that includes 
+   	all of the vertices of G whose edge weight sum is as small as possible
+      
+
+<h3>Greedy algorithm design</h3>
+
+	Sometimes a simple idea will work well
+
+	The trick is knowing how to recognize this and exploit it
+
+	Greedy algorithms approach optimization problems in a shortsighted way
+
+   	Basic idea: get as close as possible to a solution in one step
+
+   	Intermediate decisions stick - no backtracking
+
+   	Sometimes easy to guess that greedy algorithms work
+
+   	Often very hard to prove that they actually do
+
+   	Often greedy algorithms *don't* provide optimal solutions
+
+   	but they tend to be fairly efficient
+
+
+<h3>Outline of a general greedy algorithm for the optimization task</h3>
+
+   Input: bag C of candidates
+
+   Output: bag S containing a solution
+
+   function greedy(bag C) {
+      S = empty set
+      while (C not empty) and (not solution(S)) {
+         x = selectBest(C)
+         C = C-{x}
+         if (feasible(S U {x})
+            S = S U {x}
+      } 
+      if (solution(S)) 
+	return S
+      else 
+	fail (no solutions found)
+   }
+
+
+<h3>Example: base-10 positional notation</h3>
+
+   Problem: Given a positive integer n, express n as a linear combination 
+      of powers of 10 so as to minimize the sum of the coefficients
+
+   Problem ingredients:
+      
+      C = {candidates} = {bag full of 1's, 10's, 100's, ... all powers of 10}
+
+      solution(S) = (sum of values of elements of S == n)
+
+      feasible(S) = (sum of values of elements of S &lt;= n)
+
+      objective function (S) = number of elements of S
+
+   Greedy approach (usual base-10 number system):
+
+      Follows above general outline with
+         selectBest(C) = largest element x of C such that feasible(S U {x})
+   
+
+<h3>Some problems don't take as well to greediness</h3>
+
+   It can be shown that the greedy decimal expansion algorithm
+   yields optimal solutions 
+
+	However, optimality depends on the choice of powers of 10
+   	as the set of candidates
+
+   If instead one has C = {1, 3, 4, 5, 10}, for example, then for n=7
+   the greedy algorithm gives S = {5, 1, 1}, which is not optimal
+   since S = {4, 3} also works and is a smaller bag.
+
+   An approach that *always* returns an optimal solution involves the 
+   technique of dynamic programming (to be discussed in a couple of weeks)
+
+
+<h3>Minimal spanning trees</h3>
+
+   A minimal spanning tree (MST) of a *weighted* graph G is a subtree of G
+   that spans the nodes of G and whose weight is smallest in the class of
+   all spanning trees for G
+
+   The following relation holds for all trees:
+
+      #vertices - #edges = 1
+
+   =&gt; All spanning trees of a graph with n vertices have exactly n-1 edges
+      and any subtree with exactly n-1 edges must be a spanning tree
+
+
+<h3>Greedy approach to constructing MST's</h3>
+ 
+   Set of candidate elements: C = {all edges of G}
+
+   A set of edges is a solution if it forms a spanning tree of G
+
+   A set of edges is feasible if it contains no cycles
+
+   Grow a tree T by iteratively adding edges to an initially empty set
+
+   At each step, select the "best edge" greedily
+   
+
+<h3>Two greedy MST algorithms, corresponding to different selection strategies</h3>
+
+   (Kruskal) Sort the edges of G in order of increasing weight.
+   At each step, choose the lightest edge that does not create a cycle
+      in the partially constructed tree T
+
+   In Kruskal's algorithm, T starts as a forest of n isolated nodes
+   Each "successful" iteration decreases the number of components by 1
+   After at most O(n^2) iterations (one for each edge), T is a MST
+
+
+   (Prim) Start at some specific node of G.
+   At each step, choose the lightest edge that connects 
+      the partially constructed tree T to a node not in T
+
+   In Prim's algorithm, T starts as a tree containing a single node
+   Each successful iteration adds one node to T, and T is still a tree
+   After O(n^2) iterations, T is a MST
+
+
+<h3>Why greediness works for the MST problem: the Cut Property</h3>
+
+        Cut Property: Suppose G is a connected undirected weighted graph.
+        If X is a "promising" set of edges of G, in the sense that X
+        can be extended to a MST of G, and if {S, V-S} is a "cut" -
+        partition of the vertices of G - such that no edges of X cross
+        between the two sides S and V-S, then X U {lightest edge that
+        crosses the cut} can also be extended to a MST of G.
+
+        Proof: Let X and S be as stated, and let T be a MST that extends X.
+        Let e be the lightest edge of G that crosses between S and V-S.
+        If e is in the MST T, we're all set.
+        Otherwise, T U {e} contains a cycle. Let e' be an edge of T
+        that crosses the cut between S and V-S and that forms part of
+        a cycle with e. Then replacing e' with e yields a connected
+        subgraph T' of G with exactly |V|-1 edges, which is therefore
+        a spanning tree of G. Since e weighs no more than e', T' is a MST.
+
+
+<h3>Disjoint sets data type for MST construction</h3>
+
+        Model collection of connected components as disjoint sets
+
+        Use directed trees as data structures
+
+                one tree per set, one vertex per element
+
+                each edge points toward parent vertex
+
+                each vertex supports two operations
+
+                        parent(x): vertex that x points to
+
+                        rank(x): return height of tree portion rooted at x
+
+                keep trees as shallow as possible for efficiency
+
+        Set operations (times assume union implementation keeps trees shallow):
+
+                makeset(x): create singleton set {x}
+
+                        time O(1)
+
+                find(x): return label of set to which x belongs
+
+                        time O(log n) for n elements
+
+                union(x,y): merge the sets that contain x and y
+
+                        time O(log n) for n elements
+
+
+<h3>Pseudocode for Kruskal's MST algorithm</h3>
+
+   Input: connected undirected weighted graph G
+   Output: MST of G
+
+   function Kruskal(weighted graph G) {
+      Sort the edges of G by increasing weight
+      T &lt;- empty set
+      for each vertex v of G
+         makeset(v)
+      sort the edges of G in increasing order of weight
+      do {
+         e &lt;- (u,v) = lightest remaining edge
+         if (find(u) != find(v)) {
+            union(u,v)
+            add edge e to T
+         }
+      } until T contains |V|-1 edges
+      return T
+   }
+
+
+<h3>Analysis of Kruskal's MST algorithm</h3>
+
+   Note that |V|-1 &lt;= |E| &lt;= |V|(|V|-1)/2 =&gt; |E| = O(|V|^2) and |E| = Omega(|V|)
+
+   Sorting takes time O(|E|*log(|E|)) = O(|E|*log(|V|))
+
+   Set initialization takes O(|V|) steps
+
+   Do loop requires O(|E|) passes
+
+   Set operations (find and merge) take time O(log |V|) per pass
+
+   Total time is O(|E|*log(|V|))
+
+
+<h3>Prim's algorithm</h3>
+
+   (Prim) Start at some specific node of G.
+   At each step, choose the lightest edge that connects 
+      the partially constructed tree T to a node not in T
+
+   In Prim's algorithm, T starts as a tree containing a single node
+   Each successful iteration adds one node to T, and T is still a tree
+   After O(n^2) iterations, T is a MST
+
+
+<h3>Another graph task: single-source shortest paths</h3>
+
+   Given: a *directed* weighted graph G, and a chosen source (start) node of G
+
+   Objective: for each target node in G, find the shortest path in G joining 
+      the source node to the target node
+
+
+<h3>Dijkstra's greedy algorithm for the shortest paths problem</h3>
+
+   	Label the nodes of the graph as 1..n
+
+   	Let 1 be the label of the source node
+
+   	Need to find the distances from node 1 to nodes 2..n
+
+   	Construct a solution iteratively, by growing a set S of marked nodes
+
+   	Initially, S = {start node}
+
+   	Keep an array distances[2..n] 
+
+   	At each step, update the array so that
+      		if w is in S 
+			distances[w] contains the length 
+			of the shortest path from 1 to w
+      		if w is not in S 
+			distances[w] contains the length of the shortest 
+			"S-path" from 1 to w (all nodes in S except w)
+
+   	Add nodes to S until S covers all of G
+
+   	At that point, distances contains lengths of all shortest paths from 1 
+
+
+<h3>Example</h3>
+
+   	Draw graph described by weights matrix below
+
+   	Show steps carried out by algorithm
+
+
+<h3>Graph representation: the weights matrix</h3>
+
+	We'll assume that the nodes of the graph are numbered 1...n,
+
+	and that the graph is represented by its weight matrix
+
+		weights[i,j] contains the weight from node i to node j
+
+   	E.g., for the above example, the weights matrix is as follows:
+
+		0	20	100	80	inf
+	
+		inf	0	30	inf	inf
+
+		inf	inf	0	10	inf
+
+		inf	inf	inf	0	25
+
+		inf	inf	inf	inf	0
+
+
+<h3>Dijkstra's algoritm: detailed pseudocode</h3>
+
+   	array[2..n] function Dijkstra(weights[1..n, 1..n]) {
+      		array distance[2..n]
+      		array predecessor[2..n]
+      		S = {1}
+      		C = {2..n}
+      		for i=2 to n {
+         		distance[i] = weights[1,i]
+         		predecessor[i] = 1
+      		}
+      		repeat n-2 times {
+         		v = argmin_C (distance[v])
+      			S = S U {v}
+         		C = C-{v}
+         		for each w in C {
+            			if (distances[v] + weights[v,w] &lt; distances[w]) {
+               				distances[w] = distances[v] + weights[v,w]
+               				predecessor[w] = v		 
+				}
+         		}
+      		}
+      		return distances (or predecessor, depending on what you need)
+   	}
+
+
+<h3>Running time analysis of Dijkstra's algorithm</h3>
+
+   	Theta(n) time for initialization of distances, predecessors
+
+   	Theta(n) passes to grow S
+
+      		on i-th pass, time is C*(n-i)
+
+   	total time for loop: Theta(n^2)
+
+
+<h3>A formal reasoning technique: induction</h3>
+
+	Often one needs to know that a property holds for all integers n &gt;= 0
+
+	The technique of mathematical induction provides a way to achieve this
+
+        Suppose that one wants to show that a sequence of statements S(n),
+        one for each natural number n, are all true
+
+        One can use the "domino chain reaction" technique:
+
+        Think of the statements S(n) as a chain of dominos
+
+        Showing that S(n) is true is like the n-th domino "falling"
+
+        We just need to show that the first domino falls, and that
+        if the first n dominos fall, then the (n+1)st domino falls
+
+                1) (base case) Prove that S(1) is true (the first domino falls)
+
+                2) (inductive step) Show that if all statements S(k) are true
+                for k &lt;= n (if the first n dominos fall), then S(n+1) must 
+		also be true (the (n+1)st domino must also fall)
+
+        Just like with dominos, (1) and (2) together imply that all
+        statements S(n) are true (all dominos fall)
+
+
+<h3>Fact: Dijkstra's algorithm always finds the shortest paths</h3>
+
+   Prove by induction in the number of passes through the repeat loop:
+
+   a) if w is in S, then distances[w] contains the length of the shortest 
+         path from 1 to w
+
+   b) if w is not in S, then distances[w] contains the length of the shortest 
+         S-path from 1 to w (all nodes in S except w)
+
+   (Base) For the 0-th pass, S={1}, and both a) and b) hold
+
+   (Induction step) Assume that a) and b) hold just before node v
+      is added to S in the repeat loop. Show that adding v to S
+      does not affect the truth of a) and b).
+
+      a) The only new w in S to consider is v. We claim that distances[v]
+      contains the length of the shortest path from 1 to v. If not,
+      there is a better path. By the induction hypothesis *for b)*,
+      distances[v] is guaranteed to contain the shortest S-pathlength
+      from 1 to w. A better path must therefore go through some other 
+      node x not in S; let x be the first such node. The length of the
+      better path is &gt;= distances[x].
+      But distances[x] &gt;= distances[v] (otherwise v would not have
+      been chosen to be added to S), so the better path isn't better.
+
+      b) Suppose w is a node of G not in S. We claim that distances[w]
+      still contains the length of the shortest S-path from 1 to w now
+      that v has been added to S. Because of the induction hypothesis,
+      this could only fail if the shortest S-path passes through v.
+      By IH, distances[v] contains the length of the shortest S-path
+      from 1 to v. The question now is what the shortest path from v
+      to w is. I claim the length of this segment is weights[v,w].
+      If not, then v is not the last S-node on the shortest S-path
+      from 1 to w. Let v' be the last S-node on the way to w. The
+      length of the shortest S-path to w is therefore precisely
+      distances[v'] + weights[v',w]. However, the quantity on the 
+      right-hand side of this equality was used to update the distances 
+      array when v' was added to S, so distances[w] was &lt;= above quantity
+      before the latest (v) update. 
+      Because of the way that v was chosen, we know that after the update,
+      distances[w] &lt;= distances[v] + weights[v,w] &lt;= old_distances[w],
+      so things are ok.
+</pre>
+
+</font>
+
+</body>
+</html>

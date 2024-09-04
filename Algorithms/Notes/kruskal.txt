@@ -1,0 +1,113 @@
+
+CS385, Algorithms
+Prof. Alvarez
+
+Disjoint Sets and Kruskal's MST algorithm
+
+In class we discussed Kruskal's greedy algorithm for constructing
+a Minimal Spanning Tree (MST) of a weighted connected graph.
+
+Kruskal grows a forest of trees one edge at a time. The forest at
+a given point in time may be modeled as a collection of disjoint
+(nonoverlapping) sets.
+
+Recall the basic disjoint sets operations:
+
+        makeset(v) creates the singleton set {v}
+
+        find(v) returns the label of the set that v belongs to
+
+        union(u,v) merges the sets containing u and v
+
+Using these operations, Kruskal's algorithm may be written as follows:
+
+        Input: weighted connected graph G = (V,E,weights)
+        Output: a minimal spanning tree T of G, that is, a
+        connected, acyclic subgraph (tree) of G that contains
+        all of the vertices in V (spans G) and that has least
+        weight among all such spanning trees
+
+        Procedure: Kruskal(G=(V,E,weights))
+
+                X = empty collection of disjoint sets
+                for each v in V
+                        makeset(v)      // add v node to X
+                sort E in increasing order by weight
+                for each edge (u,v) in E (in order of weight)
+                        if find(u) is not equal to find(v)
+                                union(u,v) // merge u and v sets in X
+                return X
+
+In particular, the problem of determining whether adding edge (u,v)
+to the partially constructed MST X creates a cycle, reduces to
+determining whether u and v are in the same set or not.
+
+Representation of Disjoint Sets as Directed Trees
+
+We consider one way of representing a collection of disjoint sets,
+as needed for Kruskal's algorithm for example.
+
+Assume that each set is represented as a directed tree, where
+each element (vertex) points to its parent in this tree.
+
+For example, the collection {A,B}, {C,D,E,F} consisting of the
+two disjoint sets {A,B} and {C,D,E,F} might be represented as:
+
+        B               D
+        ^               ^
+        |              / \
+        A             C   E
+                          ^
+                          |
+                          F
+
+Hopefully the formatting of the crude diagram above will display
+correctly. Just in case: A's parent is B, and both C and E have
+D as their parent, while F is E's only child.
+
+For this directed tree representation, the running times of the
+basic disjoint sets operations are as follows:
+
+makeset(v):
+        just creates the v node, which takes time O(1)
+
+find(v):
+        find(v) just starts at v and heads up from each node to
+        its parent, edge by edge, to the root of the corresponding
+        set; the root vertex is then returned as the label of v's set.
+        Because the starting point of the search required by find(v)
+        is known (it is just v), there is no need to search the whole
+        forest of trees. This fact makes the time for find O(log n),
+        where n is the total number of vertices.
+
+union(u,v):
+        attaches the root of the shorter of the two trees as a
+        new child of the root of the taller of the two trees;
+        time is O(log n) because of the need to travel up to
+        the root of each tree from u and v, respectively.
+
+Running Time Analysis of Kruskal's MST algorithm
+
+Consider the disjoint sets version of Kruskal's algorithm, using
+directed trees to represent the disjoint sets as described above.
+What is the resulting running time for Kruskal?
+
+Initialization: total of O(|V|) for |V| makeset operations
+
+Sorting E: |E| log |E| using an asymptotically optimal
+comparison-based sort such as mergesort
+
+Main loop: |E| iterations
+        within each pass, at most two find operations and one union
+        total time within each pass is O(log |V|)
+        total time across all iterations is O(|E| log |V|)
+
+Total time for Kruskal (sum of above times):
+        O(|V|) + O(|E| log |E|) + O(|E| log |V|)
+
+Exercise: find the ***tightest*** single big O expression (not a sum)
+        for the above asymptotic running time of Kruskal
+
+        Hint: it's one of the three terms in the above sum. Which one? Why?
+        (Note that there is at most one edge between each pair of vertices)
+

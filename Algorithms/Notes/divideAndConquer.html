@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Divide and Conquer
+</title>
+</head>
+
+<body bgcolor="FFFFFF"> 
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>Divide and Conquer Algorithms: multiplication and sorting
+</h1>
+</center>
+
+<p><hr><p>
+
+<pre>
+<h3>Divide, conquer, glue</h3>
+
+   This is a general algorithm design strategy
+
+   We used a Divide and Conquer strategy to solve Towers of Hanoi
+
+   Here is a general outline of a pure divide and conquer strategy:
+
+   Basic idea: given a problem instance, decompose it into several
+   smaller, similar subinstances; solve each of the subinstances
+   recursively, then assemble the solutions to get a solution of
+   the original problem
+
+   function PureDC(instance x) {
+      Decompose(x, x1, x2, ... xL)
+      for i = 1 to L
+         yi = PureDC(xi)
+      y = Combine(y1...yL)
+      return y
+   }
+
+   Actually, the overhead associated with decomposition and recombination
+      are not worth the trouble if the problem instance is very small
+
+   For example, insertion sort can actually be faster than a pure divide and conquer 
+   sorting algorithm (e.g., mergesort) for arrays of size 20 or less
+
+   Thus, in actual divide-and-conquer such small instances are solved by 
+      using such a simpler algorithm - let's call it AdHoc():
+
+   function DC(instance x) {
+      if x is small enough
+         return AdHoc(x)
+      else {
+         Decompose(x, x1, x2, ... xL)
+         for i = 1 to L
+            yi = PureDC(xi)
+         y = Combine(y1...yL)
+         return y
+      }
+   }
+
+
+<h3>Integer multiplication</h3>
+
+   Given: integers a and b
+   Objective: compute the product a*b
+
+   The "classical" algorithm for multiplication using base-10
+   positional notation for the factors takes how long?
+
+	time is Theta(n^2), where n is the number of digits
+
+   Is it possible to do better?
+
+
+<h3>Divide-and-conquer approach to integer multiplication</h3>
+
+   Express the operands a and b in base 10 notation
+
+   Split each of a and b into "halves":
+
+      a = 10^n/2*a1 + a2
+      b = 10^n/2*b1 + b2
+
+   The product is:
+
+      a*b  = 10^n*a1*b1 + 10^n/2*(a1*b2 + a2*b1) + a2*b2
+
+   Multiplying by a power of 10 is just a left shift of the argument
+
+   The above reduces a product of 2 n-digit numbers into 4 products 
+   of (n/2)-digit numbers together with 4 sums of n/2-digit numbers, 
+   leading to the following recurrence for he running time t(n):
+
+      t(n) = 4*t(n/2) + C*n
+
+
+<h3>Solution of the recurrence equation for the running time</h3>
+
+   I drew the recurrence tree in class, and we counted the time at each level
+
+	time Cn at top level
+
+	time 4*Cn/2 at next level
+
+	time 4*Cn below that
+
+	...
+
+   Total time is the sum over all levels:
+
+   Number of levels is O(log2(n))
+
+   	=&gt; t(n) = Cn*sum_i=0...log2(n) 2^i = O(Cn*2^log2(n)) = O(n^2)
+
+   This is no faster than the classical algorithm!
+
+
+<h3>The key to a faster divide and conquer multiplication algorithm</h3>
+
+   The problem is the factor 4 in front of t(n/2) in the recurrence relation
+
+   If we could only get it down to 3, then the time would go down too:
+
+      t(n) = 3*t(n/2) + C*n
+
+   Redo the recursion tree calculation to get
+
+   	t(n) = Cn*sum_i=0...log2(n) (3/2)^i = O(Cn*(3/2)^log2(n)) 
+	= O(n^log2(3))
+
+   The exponent of n here is just under 1.59
+
+   This would indeed be better than the classical algorithm
+
+
+<h3>Improved method that reduces the number of multiplications from 4 to 3</h3>
+
+   let p = a1*b1
+       q = a2*b2
+       r = (a1 + a2)*(b1 + b2)
+
+   then a*b can be expressed in terms of p, q, r, and some sums and shifts:
+
+      a*b  = 10^n*p + 10^n/2*(r-p-q) + q
+
+   The divide and conquer algorithm based on this idea (Karatsuba and Ofman, 1962) 
+   realizes the O(n^1.59) running time that we described above
+
+
+<h3>Divide and conquer sorting: mergesort</h3>
+
+   The divide, conquer, glue idea can be applied to sorting
+
+   To sort an array, split it in half (divide),
+   sort each half (conquer),
+   then merge the sorted halves (glue)
+
+   mergesort(T[1..n]) {
+      if (n &lt; n0) {
+         insertionsort(T)
+      }
+      else {
+         U[1..floor(n/2)] = T[1..floor(n/2)]
+         V[1..ceil(n/2)]  = T[1+floor(n/2)..n]
+         mergesort(U)
+         mergesort(V)
+         merge(U, V, T)
+      }
+   }
+
+
+<h3>The merging procedure</h3>
+
+   The only tricky part is the merging
+
+	use the "two fingers technique"
+
+	create a fresh array as big as both halves combined
+
+        have a pointer to the current cell in each half-array
+
+	copy the lesser of the two current values to the new array
+
+   merge(U[1..m+1], V[1..n+1], T[1..m+n]) {
+      i = 1;  j = 1
+      U[m+1] = infinity
+      V[n+1] = infinity
+      for k = 1 to m+n {
+         if (U[i] &lt; V[j]) {
+            T[k] = U[i];  i = i+1
+         }
+         else {
+            T[k] = V[j];  j = j+1
+         }
+      }
+   }
+
+
+<h3>Analysis of mergesort</h3>
+
+   Outline: t(n) = 2*t(n/2) + C*n
+   =&gt; worst-case t(n) = Theta(n*log(n))
+
+   Heuristic explanation: recursion is nested log2 n levels deep
+   Each layer adds C*n to t(n), so t(n) = Theta(n*log(n))
+
+   We drew the recursion tree in class and carried out this analysis
+</pre>
+
+</font>
+
+</body>
+</html>

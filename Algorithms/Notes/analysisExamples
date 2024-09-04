@@ -1,0 +1,134 @@
+CS383, Algorithms
+Prof. Alvarez, Spring 2008
+
+Examples of running time analysis 
+
+We will find the running time t(n) of each of the five functions shown here:
+
+		void MysteryAlgorithms::alg1(double n) {
+			for (double k=n; k>0; k--)
+				for (double j=n; j>0; j--);
+		}
+
+		void MysteryAlgorithms::alg2(double n) {
+			double m;
+			for (long k=10000; k>0; k--) {
+				m = n;
+				while (m > 1) m/=2;
+			}
+		}
+
+		void MysteryAlgorithms::alg3(double n) {
+			double m;
+			for (double k=n; k>0; k--)
+				for (long k=1; k>0; k--) {
+					m = n;
+					while (m > 1) m/=2;
+				}
+		}
+
+		void MysteryAlgorithms::alg4(double n) {
+			for (long k=10000; k>0; k--);
+			for (double k=n; k>0; k--);
+		}
+
+		void MysteryAlgorithms::alg5(double n) {
+			for (double k=n; k>0; k--)
+				for (double j=n; j>0; j--)
+					for (double i=n; i>0; i--);
+		}
+
+Solution:
+
+		void MysteryAlgorithms::alg1(double n) {
+			for (double k=n; k>0; k--)
+				for (double j=n; j>0; j--);
+		}
+
+	1 initialization step for the outer loop;
+	n+1 evaluations of the outer loop condition; 
+	n outer loop control updates (k--)
+	(total of 2n+2 steps for the outer loop, not counting the loop body)
+	n passes through the outer loop body; 
+	for each outer pass, 
+		n passes through the inner loop; 
+		(total of 2n+2 steps for each run of the inner loop, as before)
+	t(n) = 2n+2 + n*(2n+2) = (n+1)*(2n+2) steps
+	t(n) = Theta(n*n) steps
+	
+	
+		void MysteryAlgorithms::alg2(double n) {
+			double m;
+			for (long k=10000; k>0; k--) {
+				m = n;
+				while (m > 1) m/=2;
+			}
+		}
+
+	1 step for outer loop initialization (k=10000);
+	10001 evaluations of the outer loop condition; 
+	10000 outer loop control updates; 
+	10000 passes through the outer loop body; 
+	for each pass through the outer loop body:
+		1 step for assignment (m=n), 
+		log2(n)+1 inner loop condition evaluations; 
+		log2(n) passes through the inner loop body (1 step each); 
+	t(n) = 20001 + 10000*(2 + 2*log2(n)) steps in all
+	t(n) = Theta(log n) steps
+	
+		void MysteryAlgorithms::alg3(double n) {
+			double m;
+			for (double k=n; k>0; k--)
+				for (long k=1; k>0; k--) {
+					m = n;
+					while (m > 1) m/=2;
+				}
+		}
+
+	1 step for outer loop body initialization; 
+	n evaluations of the outer loop condition; 
+	n outer loop control updates; 
+	n passes through the outer loop body; 
+	for each pass through the outer loop:
+		1 step for inner loop initialization
+		2 evaluations of the inner loop condition
+		1 inner loop control update
+		1 pass through the inner loop:
+			1 step for assignment (m=n), 
+			1 + 2*log2(n) steps for the while loop; 
+	t(n) = 2n+1 + n*(6 + 2*log2(n)) steps in all
+	t(n) = Theta(n*log n) steps
+	
+		void MysteryAlgorithms::alg4(double n) {
+			for (long k=10000; k>0; k--);
+			for (double k=n; k>0; k--);
+		}
+
+	10001 evaluations of the outer loop condition; 
+	10000 outer loop control updates; 
+	10000 passes through the outer loop body; 
+	for each pass through the outer loop body:
+		2n+2 steps for the inner loop (as in previous functions)
+	t(n) = 20001 + 10000*(2n+2) steps in all
+	t(n) = Theta(n) steps
+	
+		void MysteryAlgorithms::alg5(double n) {
+			for (double k=n; k>0; k--)
+				for (double j=n; j>0; j--)
+					for (double i=n; i>0; i--);
+		}
+
+	1 initialization step for the outer loop;
+	n+1 evaluations of the outer loop condition; 
+	n outer loop control updates;
+	(total of 2n+2 steps for outer loop, not counting loop body)
+	n passes through the outer loop body; 
+	for each pass through the outer loop body:
+		2n+2 steps for middle loop, not counting loop body
+		n passes through the middle loop
+		for each pass through the middle loop:
+			2n+2 steps for inner loop
+	t(n) = 2n+2 + n*(2n+2 + n*(2n+2)) steps in all
+	t(n) = Theta(n^3) steps
+	
+

@@ -1,0 +1,49 @@
+<html>
+
+<head>
+<title>
+Solution to Problem #1
+</title>
+</head>
+
+<body bgcolor="ffffff">
+
+<h3>Solution to Problem #1</h3>
+
+Here's the rather obvious solution. 
+Sort the items in order of decreasing value, from the $1$st to the $2n$-th.
+Then pair off consecutive items, starting with the first two. Thus, you
+should pay the full price for items with odd indices and the discounted
+price for items with even indices.
+<p>
+Now we give a proof that this is indeed the optimal strategy.
+It is clear that the total discount depends only on which items
+are discounted. Thus, we focus our attention on the indices of the 
+discounted items. We call such indices the {\em discounted indices}, 
+and we list them in increasing order as $i_1 < i_2 < ... < i_n$.
+<p>
+Each pairing of the items produces a set of discounted indices.
+The pairing proposed above satisfies $i_k = 2k$ for all $k=1,..,n$.
+We claim that for <i>any</i> admissible pairing, one must have $i_k >= 2k$
+for all $k$. We will prove this below. Observe that this claim implies 
+that the proposed strategy is optimal, since the value of the $i$-th item 
+is a decreasing function of the index $i$, so that the savings associated 
+with any admissible pairing will be less than the savings associated with 
+the proposed pairing, which achieves the minimum allowable values of the 
+discounted indices.
+<p>
+Proving that $i_k >= 2k$ for any admissible pairing is quite easy.
+Admissibility reduces to the constraint that each discounted index
+be paired with a nondiscounted index corresponding to an item of
+equal or greater value, i.e. with a nondiscounted index which is 
+less than or equal to the given discounted index. Thus, since there
+are precisely $k$ discounted indices which are less than or equal to
+the $k$-th discounted index $i_k$, there must also be at least $k$ 
+associated nondiscounted indices less than or equal to $i_k$. 
+But the total number of nondiscounted indices in the range
+$1,...,i_k$ is precisely $i_k - k$. We must therefore have
+$i_k - k >= k$, or $i_k >= 2k$.
+
+</body>
+</html>
+

@@ -1,0 +1,508 @@
+<html>
+<head>
+<title>
+CS383 background: induction (Prof. Alvarez)
+</title>
+</head>
+
+<body bgcolor="ffffff">
+
+<h2>CS 383, Algorithms
+<br>Mathematical Background: Induction</h2>
+<p>
+This page is located at http://www.cs.bc.edu/~alvarez/Algorithms/Notes/induction.html
+<p>
+</center>
+
+<h3>Scope</h3>
+
+This page provides a very brief review of the technique of mathematical 
+induction, which is useful in CS383 and in courses on the theory of computation.
+For further details, see courses and other sources in discrete mathematics.
+I encourage you to do the exercises given below and hope that this material 
+will be helpful. Let me know if you have any questions. Have fun!
+
+<!--
+
+<h3>Sets, relations, and functions</h3>
+
+For our purposes, a <i>set</i> is merely a collection of objects in the 
+everyday sense. The objects of the collection are called the <i>members</i>
+or <i>elements</i> of the set. A set is completely determined by its members, 
+so that saying that two sets are equal is the same as saying that the two sets
+have the same members. This definition can be made more formal, and issues that 
+are interesting (or silly, depending on your perspective) arise almost 
+immediately. For example, consider the set S whose members are all sets that
+are not members of themselves; then is S a member of S, or not? 
+(see e.g. the book "Naive Set Theory" by Paul Halmos).
+<p>
+The usual braces will be used to define sets. 
+Thus, {Tom, Mary, Paul} refers to the set whose elements are Tom, Mary, and
+Paul, while {x | x is a unicorn} refers to the set of all unicorns.
+The vertical bar here is short for "such that".
+Notice that there is no need for a set to have any elements at all:
+there is a unique <i>empty set</i> that has no elements
+(suppose there are two empty sets A and B. 
+Then A and B must have the same elements, because there aren't
+any "witnesses" to the contrary).
+<p>
+The symbol <b>N</b> denotes the set of <i>natural numbers</i>,
+which are the "counting numbers" 0, 1, 2, 3, 4, ...
+There isn't a uniform agreement regarding whether 0 is a
+natural number or not. This shouldn't be surprising since,
+for example, the "first floor" of a building is sometimes the
+second one up from ground level, especially in Europe.
+
+<h4>Set-building operations</h4>
+
+Given sets A and B, one can construct new sets as follows:
+
+<ol>
+<li> The <i>union</i> of A and B is the set A U B containing all elements of A,
+all elements of B, and no other elements.
+<li> The <i>intersection</i> of A and B is the set A ^ B whose elements are the
+objects that are simultaneously elements of both A and B.
+<li> The <i>difference</i> of A and B is the set A-B whose elements are those
+elements of A that are not elements of B.
+<li> The <i>complement</i> of A is the set A' of all objects belonging to 
+some predetermined <i>universal set</i> that depends on the context, that 
+are not elements of A. So A' is really just U-A, where U is the universal set.
+<li> The <i>Cartesian product</i> of A and B is the set A x B whose elements
+are the pairs (a,b), where a ranges over all elements of A and b ranges over
+all elements of B.
+</ol>
+
+One has the following duality relations (sometimes called 
+<i>DeMorgan's laws</i>) for the union and intersection operations:
+<ul>
+<li> (A U B)' = A' ^ B'
+<li> (A ^ B)' = A' U B' 
+</ul>
+
+<p>
+<blockquote>
+<i>Exercise.</i>
+Give an argument to convince a skeptical but reasonable jury that
+DeMorgan's laws (above) are true. Since the jury is skeptical,
+it's not enough to say, for example, "they're true because I
+say so", or, "I tried them out with these particular sets A 
+and B that I'm bringing into evidence and it worked fine",
+because the jury will suspect that the result could be different 
+for other choices of A and B. So your argument has to be rational 
+and general. We're looking for "proof beyond a shadow of a doubt" 
+here. On the other hand, the jury is reasonable, so once there is 
+no way for your argument to fail, they will accept it.<br>
+<i>Hint: you wish to show in each case that two sets C and D are the same;
+thus, you must show that C and D have the same elements.
+To do this, first show that every element of C is also an element of D.
+Then show that every element of D is also an element of C.</i>
+</blockquote>
+
+<h4>Functions</h4>
+
+A <i>function</i> f: B -&gt; A from a set B to another set A is a "black box" 
+the inner workings of which may be unknown, but which somehow assigns a 
+well-defined element f(b) of A to each element b of B. 
+
+A function f: B -&gt; A maps B <i>onto</i> A if no matter what element 
+a of A you pick, there will be some element b of B such that f(b)=a, i.e. 
+such that b is mapped to a by the function f.
+
+A function f: B -&gt; A is said to be <i>one-to-one</i> if different elements
+of B are mapped to different elements of A, or, equivalently, if whenever
+b<sub>1</sub> and b<sub>2</sub> are elements of B such that 
+f(b<sub>1</sub>) = f(b<sub>2</sub>), then b<sub>1</sub> = b<sub>2</sub>.
+<p>
+Given functions g: C -&gt; B and f: B -&gt; A, one may form a new function
+f * g: C -&gt; A called the <i>composition</i> of g and f, defined by:
+(f*g)(c) = f( g(c) ) for all elements c of C.
+<p>
+The set of all functions f: B -&gt; A from B into A is denoted A<sup>B</sup>.
+<p>
+<blockquote>
+
+<h4>Exercises.</h4>
+<ol> 
+<li> Consider the function f: <b>N</b> -&gt; <b>N</b> defined by f(n) = n<sup>2</sup>.
+Is this function one-to-one? Is it onto? Explain your answers with arguments that
+would convince a skeptical but reasonable jury.
+<li> Assume given functions g: C -&gt; B and f: B -&gt; A.
+<ol>
+<li> Show that if g and f are both onto, 
+then the composite function f * g: C -&gt; A is also onto.
+Give an example to show that if f is onto but g is not, 
+then the conclusion may fail to be true.
+<li> Show that even if the composite function f * g is one-to-one,
+the function f need not be. What additional condition on g will
+force f to be one-to-one in this situation?
+</ol>
+</ol>
+</blockquote>
+
+<h4>Countable sets</h4>
+
+You can count the elements of lots of sets using natural numbers.
+This includes most of the sets encountered in CS385.
+Counting the elements of a set A means finding a function
+f: <b>N</b> -&gt; A that maps <i>onto</i> A. Since the counting
+function f must be onto, it is necessary that no matter what 
+element a of A you pick, there will be some element n of <b>N</b> 
+that is mapped to a by f, i.e. f(n)=a. 
+This is a complicated way of saying that f determines an ordering 
+of all the elements of A, so that every element a of A is the n-th 
+element in this ordering for an appropriate value of n (i.e. a = f(n)). 
+Any set for which there is a counting function is said to be a 
+<i>countable set</i>.
+A counting function f:<b>N</b> -&gt; A is also called an <i>enumeration</i>
+of the set A.
+<p>
+<blockquote>
+<i>Exercise.</i>
+Show that the following sets are countable by explicitly
+finding a counting function for each of them.
+<ol>
+<li> The set {Tom, Mary, Paul}.
+<li> The set E of all even natural numbers.
+<li> The set <b>N</b> x <b>N</b> of all pairs (m,n) of natural numbers.<br>
+<i>Hint: draw this set with m's as rows and n's as columns and then try to
+see a way to erase the drawing in a systematic way.</i>
+</ol>
+</blockquote>
+
+-->
+
+<h3>Mathematical recursion and induction</h3>
+
+<i>Recursion</i> is a method of defining countable sets, relations, 
+or functions in a step-by-step fashion. In the simplest context, 
+one wishes to define a function on the set of natural numbers. 
+Using recursion, one proceeds as follows:
+<ol>
+<li> Define the "first value" f(0) of the function.
+<li> Assuming that the values f(0) ... f(n) have been defined for some
+value of n, define the "next value" f(n+1), possibly in terms of one
+or more of the "previous values" f(0) ... f(n).
+</ol>
+A toppling dominoes metaphor is appropriate.
+A number n topples when the corresponding function value f(n) is defined.
+The basis step makes 0 topple, and the induction step topples n+1
+once 0..n have toppled.
+<p>
+More generally, a definition by recursion constructs a set A in three steps:
+<ol>
+<li> <i>Basis step</i>: 
+Define a starting set A<sub>0</sub>.
+<li> <i>Recursion step</i>:
+Assume that sets A<sub>0</sub>, ... A<sub>n</sub> have been defined.
+Then define the "next" set A<sub>n+1</sub> in terms of  
+A<sub>0</sub>, ... A<sub>n</sub>.
+<li> <i>Closure</i>:
+Define the final set A as the union of all the sets A<sub>n</sub>.
+</ol>
+A set A constructed by recursion according to the above procedure
+is called an <i>inductive set</i>.
+The prototypical inductive set is the set <b>N</b> of natural numbers.
+<p>
+<i>Induction</i> is a method of reasoning which may be used
+to show that every element of an inductive set has a certain property.
+For example,
+suppose that you want to find a formula for the sum S<sub>n</sub>
+of the first n natural numbers: S<sub>n</sub> = 1 + 2 + 3 + ... + n.
+You try some small values of n and find: S<sub>0</sub>=0, S<sub>1</sub>=1,
+S<sub>2</sub>=3, S<sub>3</sub>=6, S<sub>4</sub>=10.
+After fiddling with these values for a while you see that
+the formula S<sub>n</sub>=n(n+1)/2 works for these values of n.
+But what about larger values? Since there are infinitely
+many values of n to check, in order to reach some conclusion
+about the validity of the formula before you die you have to come up
+with some abbreviated logical argument that applies to all values of n
+without actually checking them one by one.
+<p>
+Here's how induction does the trick:
+<ol>
+<li> (<i>Basis step</i>) Check the first value of n: n=0. 
+Yes, S<sub>0</sub>=0=0(0+1)/2.
+<li> (<i>Induction step</i>) Assume that you've checked all the values up to 
+and including some n, and show that the next value, n+1, also checks:<br>
+S<sub>n+1</sub>
+= S<sub>n</sub> + (n+1)
+= n(n+1)/2 + (n+1)
+= (n+1)(n/2 + 1) = (n+1)(n+2)/2.
+Yes!
+</ol>
+So now you see that the natural numbers are lined up like dominoes
+and the above two steps make all of them fall. The basis step makes
+the first one fall, and the induction step shows that if all the dominoes
+up to a certain point have fallen then the next one in line falls too.
+This implies that all of them fall, i.e. in this case that the formula
+works for all values of n. 
+<p>
+More generally, if one wishes to prove that a statement A(n) is true 
+for every n, an induction proof would proceed as follows.
+<ol>
+<li> <i>Basis</i>: one proves that A(0) is true.
+<li> <i>Induction step</i>: one <i>assumes</i> (induction hypothesis)
+that A(n) is true, and proves that this hypothesis implies that
+A(n+1) is true.
+</ol>
+<p>
+
+<h3>Exercises</h3>
+<ol>
+<li> By trial and error, guess a simple formula in terms of n
+for the sum S<sub>n</sub> = 1 + 4 + 9 + ... + n<sup>2</sup>
+of the squares of the first n positive integers.
+Then prove your formula by induction.
+<li> Use induction to prove that 2<sup>n</sup> &gt; n
+for all natural numbers n.
+<!--
+(an unrelated proof appears in an exercise
+on 0/1 sequences in my notes on diagonalization).
+-->
+</ol>
+
+<!--
+
+<h3>Uncountable sets, diagonalization</h3>
+
+There are some sets that simply cannot be counted. They just
+have too many elements! This was first understood by Cantor in
+the 19th century. 
+I'll give an example of Cantor's famous <i>diagonalization</i> argument,
+which shows that certain sets are not countable. 
+See Halmos' book for more details.
+<p>
+Remember Paul Revere's ride? Here is an excerpt from the poem
+by Henry Wadsworth Longfellow:
+<blockquote>
+He said to his friend, "If the British march
+<br>By land or sea from the town to-night,
+<br>Hang a lantern aloft in the belfry arch
+<br>Of the North Church tower as a signal light,--
+<br>One if by land, and two if by sea;
+<br>And I on the opposite shore will be,
+<br>Ready to ride and spread the alarm
+<br>Through every Middlesex village and farm,
+<br>For the country folk to be up and to arm."
+</blockquote>
+
+<h4> The infinitely many lamps encoding </h4>
+
+The one lamp / two lamps encoding used by Revere and his friend was fine 
+for the two relevant alternatives of land and sea. 
+But what if you wanted to be able to represent infinitely many alternatives? 
+You can imagine infinitely 
+many towers, each with a lamp that can be either on or off. 
+Being on is like displaying two lamps in the Paul Revere story,
+and being off is like displaying just one lamp. With the
+infinitely many towers being visible at once, you can
+convey infinitely many messages, one for each combination
+of "on" and "off" (e.g. odd-numbered lamps may be on
+and even-numbered lamps may be off, or the only lamps
+that are on may be the powers of 2, or whatever other
+combination you like). What Cantor showed is that the
+set of all possible messages here is so large that
+it is not countable! In other words, there is no
+counting function that maps the set <b>N</b> of
+natural numbers onto the set of all messages,
+and in fact any would-be counting function will
+necessarily "miss" infinitely many messages.
+
+<h4> Impossibility and proof by contradiction </h4>
+
+Take a moment to think about what is being claimed here.
+In contrast to simply exhibiting a counting function that
+works, as in proving that a set is countable, in proving
+that a set is uncountable one is required to show that no 
+matter how clever a construction of a counting function may be, 
+it cannot work.
+In order to convince a jury of this, you must give an
+argument that does not depend on any details of the 
+would-be counting function, so that it will apply to 
+all possible functions that could ever be concocted. 
+Cantor gave a <i>proof by contradiction</i>.
+That is, he began by assuming that, contrary to the
+intended conclusion, there actually <i>is</i> a
+counting function for the set of messages, and
+then he proceeded to show that this assumption alone
+leads to a contradiction, regardless of any details
+of the particular counting function being considered. 
+A contradiction means that some statement must 
+simultaneously be true and false, or, equivalently, 
+that two mutually exclusive alternatives must occur 
+simultaneously.
+A contradiction, by definition, can't happen!
+Since it is the initial assumption that there
+is a counting function which leads to a contradiction,
+we conclude that this assumption must be false, and
+thus that there can be no counting function at all
+for the set of messages.
+
+<h4> Cantor's diagonalization argument </h4>
+
+With the above plan in mind, let M denote the set
+of all possible messages in the infinitely many lamps
+encoding, and assume that there is a function f: <b>N</b> -&gt; M
+that maps <i>onto</i> M. We want to show that this assumption 
+leads to a contradiction. Here goes. The would-be counting
+function f supposedly enumerates all of the elements of M.
+f(0) is the first message, then f(1), then f(2), and so on.
+Picture each message as a row containing the infinitely many
+towers, each with its lamp turned either on or off.
+f(0) is the top row, f(1) is the row below it, and in 
+general f(n+1) is the row just beneath f(n).
+So you should be picturing infinitely many rows,
+each containing infinitely many columns of towers.
+Each row is one of the possible messages.
+All rows supposedly exhaust the set of all possible messages.
+
+Cantor's argument shows that there is a message that we missed!
+He constructs this message by scanning down the "diagonal"
+of the picture, looking first at the first tower of the
+first row, then the second tower of the second row,
+and in general the n-th tower of the n-th row. 
+If the lamp in the n-th tower of the n-th row
+is on, turn it off. If the lamp is off, then
+turn it on. Record the results to get a new message.
+In other words, the lamp in the first tower of the 
+new message will be on if the lamp in the first tower of 
+the first row is off, and it will be off otherwise,
+and in general the lamp in the n-th tower of the
+new message will be on only if the lamp in the
+n-th tower of the n-th row is off, etc.
+The message thus constructed is not the same
+as any of the rows in the would-be enumeration.
+Why? Well, choose any row, say the n-th. Then
+the new message differs from this n-th row
+because their n-th towers differ: if the
+n-th tower of the n-th row is on, then the n-th 
+tower of the new message is off, and vice-versa.
+This shows that the new message wasn't listed
+as part of the enumeration, which contradicts
+the very notion of enumeration. Since contradictions
+are impossible, we conclude that our initial
+assumption that there is an enumeration must be
+false. This means that the set of all messages
+is not countable!
+<p>
+<blockquote>
+<i>Exercise.</i>
+Use the basic idea behind Cantor's diagonalization argument
+to show that there are more than n sequences of length n 
+consisting of 1's and 0's.<br>
+<i>Hint: with the aim of obtaining a contradiction, begin by
+assuming that there are n or fewer such sequences; list
+these sequences as rows and then use diagonalization to 
+generate a new sequence that differs from all of the
+original rows.</i>
+</blockquote>
+
+<h3>Rates of growth</h3>
+
+Let f and g be functions from the set <b>N</b> of natural numbers to itself.
+One writes f(n) = O(g(n)) if there exist numbers C and n<sub>0</sub> such that
+<dd> |f(n)| <= C |g(n)| &nbsp for all n >= n<sub>0</sub>.
+<p>
+<blockquote>
+<i>Examples.</i>
+<ol>
+<p><li> a n^2 + b^n + c = O(n^2)<br>
+I'll assume that a > 0. The other cases are left as an exercise.
+First factor the left-hand side as 
+a n^2 (1 + b/(an) + c/(an^2)).<br>
+Now choose n<sub>0</sub> so that 
+<dd>b/(an<sub>0</sub>) + c/(an^2<sub>0</sub>) <= 1<br>
+(this can be done because the expression on the left approaches 0
+as n approaches infinity).
+Then whenever n >= n<sub>0</sub> we have also:
+<dd>b/(an) + c/(an^2) <= 1,<br>
+and it follows that whenever n >= n<sub>0</sub> one has
+<dd> a n^2 + b^n + c <= 2a n^2<br>
+This proves the desired conclusion, for C=2a.
+<p><li> n^2 = O(b^n) for any b>0<br>
+This requires calculus. Consider the quotient
+<dd>q(n) = n^2 / b^n,<br>
+where now n represents a positive <i>real</i> variable
+rather than a positive integer value.
+Both the numerator and the denominator of q(n) approach infinity 
+as n approaches infinity.
+Applying L'Hopital's rule twice, one obtains:
+<dd> lim <sub>n -&gt; infinity</sub> q(n) 
+= lim <sub>n -&gt; infinity</sub> 2n / ((log b) b^n )
+<dd> = lim <sub>n -&gt; infinity</sub> 2 / ((log b)^2 b^n ) = 0<br>
+This means that, in particular, there exists a value n<sub>0</sub> such that
+<dd> n^2 / b^n <= 1 for all n >= n<sub>0</sub>
+<br>
+In other words, whenever n>=n<sub>0</sub>, one has:
+<dd> n^2 <= b^n <br>
+This implies that n^2 = O(b^n) as claimed.
+<p><li> Generalizing the preceding example:
+<dd> if lim <sub>n -&gt; infinity</sub> f(n) / g(n) = 0,
+then f(n) = O(g(n)).
+<p><li> If f(n) = O(g(n)) and h(n) = O(k(n)), then
+<ul>
+<li> f(n) + h(n) = O(|g(n)| + |k(n)|)
+<li> f(n) h(n) = O(g(n) k(n))
+</ul>
+</ol>
+</blockquote>
+
+-->
+
+<!--<h3>Logic</h3>
+
+First-order logic provides a well-defined basic language for making 
+declarative statements called <i>propositions</i> that are either true 
+or false, as well as more general <i>formulas</i> with variables whose
+true/false status ("truth value") depends on the instantiation of the
+variables.
+Everyday examples of phrases corresponding to propositions include 
+"Sergio A. Alvarez was 18 years old in 2001" (false) and
+"There are chairs in SCI E111". Examples of non-propositions
+are "Bob is fairly tall" (imprecise) and "Are you paying any attention?"
+(not a declarative statement). Related examples of formulas are
+"<Person> was 18 years old in 2001" and "There are <object-type>s in <room>". 
+<p>
+The <i>syntax</i> of logic gives rules to build formulas up starting from
+simpler formulas regardless of the meanings of the formulas. The rules provide:
+<ul>
+<li> A recursive vocabulary of "terms" that refer to objects,
+just as noun phrases do in natural language.
+<ol>
+<li> Constant symbols (names of specific things)
+<li> Variable symbols (names of unspecified things)
+<li> Function symbols
+</ol>
+Recursive definition of terms: Constants and variables are terms.
+Any function symbol applied to terms is a term.
+<li> A set of "atomic" formulas involving
+<ol>
+<li> Relation symbols
+</ol>
+Definition of atomic formula: if R is an n-ary relation symbol
+and if t<sub>1</sub>...t<sub>n</sub> are terms, then
+R(t<sub>1</sub>,...,t<sub>n</sub>) is an atomic formula.
+<li> Connectives
+<ol>
+<li> and
+<li> or
+<li> not 
+<li> implies
+</ol>
+<li> Quantifiers
+<ol>
+<li> for all (universal quantification)
+<li> for some (existential quantification)
+</ol>
+</ul>
+So, for example, starting from the formulas "x is a dog" and "y likes chicken"
+one can form the formula "(for all y ( y likes chicken )) implies (Bob is a dog)",
+i.e. "if everyone likes chicken then Bob is a dog".
+<p>
+
+<h3>Asymptotic growth rates</h3>
+
+-->
+
+</body>
+</html>

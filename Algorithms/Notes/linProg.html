@@ -1,0 +1,455 @@
+<html>
+<head>
+<title>
+CS 383, Algorithms, Linear Programming
+</title>
+</head>
+
+<body bgcolor="FFFFFF">
+<!--
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000">
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7">
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498">
+-->
+
+<font face=arial>
+
+<center>
+<img src="http://bc.edu/meta-elements/gif/logo-bc-1.gif">
+<!--
+<img src="http://www.bc.edu/bc_org/avp/csom/images/title.jpg">
+-->
+
+<h1>CS 383, Algorithms
+<br>
+Condensed Notes on Linear Programming and Network Flow
+</h1>
+<h3>
+(some details are missing - we did these in class)
+</h3>
+</center>
+
+<p><hr><p>
+
+<pre>
+
+<h3>Continuous Optimization</h3>
+
+	We've discussed optimization algorithms for discrete problems
+
+		Making change minimize number of coins)
+
+		Sequence similarity (minimize edit distance)
+
+		Knapsack problem (maximize total value)
+
+	In such problems, the objects involved, and the objective function,
+	are intrinsically discrete
+
+	However, many optimization problems are more naturally
+	viewed as continuous
+
+	We'll study one class of such continuous optimization problems
+
+		
+<h3>Linear Programming (LP)</h3>
+
+	In LP, the goal is to optimize a linear objective function
+	subject to linear constraints
+
+	Example (exercise 7.3 in the book)
+
+		cargo plane has maximum capacity
+
+			100 tons, 60 m^3
+
+		can load with 3 materials, with following conditions:
+
+			m1: density 2 tons/m^3, 40 m^3 available
+				revenue: $1000/m^3
+
+			m2: density 1 ton/m^3, 30 m^3 available
+				revenue: $1200/m^3
+
+			m3: density 3 tons/m^3, 20 m^3 available
+				revenue: $12000/m^3
+
+		how to load so as to maximize revenue?
+
+	LP formulation:
+
+		Let xi be the volume of material i to be loaded
+
+		Revenue:
+
+			R(x1,x2,x3) = 1000*x1 + 1200*x2 + 12000*x3
+
+		Revenue is to be maximized subject to constraints below
+
+		Cargo volume constraint:
+
+			x1 + x2 + x3 &lt;= 60
+
+		Cargo weight constraint:
+
+			2*x1 + 1*x2 + 3*x3 &lt;= 100
+
+		Material availability constraints:
+
+			0 &lt;= x1 &lt;= 40
+			0 &lt;= x2 &lt;= 30
+			0 &lt;= x3 &lt;= 20
+
+
+<h3>General form of LP problem</h3>
+
+	Given real variables x1...xn, and coefficients c1...cn,
+	b1...bm, and coefficients aij, i=1...m, j=1...n, 
+
+	optimize the linear objective function
+
+		sum_{j=1...n} cj*xj
+
+	subject to the m linear constraints
+
+		sum_{j=1...n} aij*xj &lt;= bi,  i=1...m
+
+
+<h3>Matrix notation</h3>
+
+	A more compact notation is helpful and is
+	suitable for Matlab solution of LP problems
+
+	Write the variables xj as a column vector:
+
+		x = (x1...xn)'
+
+	(the prime represents transposition, which changes
+	rows into columns and vice-versa)
+
+	Write the objective function coefficients cj and 
+	constraint RHS coefficients bi as column vectors:
+
+		c = (c1...cn)',  b = (b1...bm)'
+
+	and the constraint LHS coefficients aij as an mxn matrix
+	(m rows, n columns) with the coeffients corresponding to 
+	bi in the i-th row
+
+		A = (aij) (row i, col j)
+
+	Then the LP problem is written compactly as follows:
+	
+	optimize c'x subject to the constraint Ax &lt;= b
+
+
+<h3>Matrix notation example: for the cargo plane problem above:</h3>
+
+	c = (1000, 1200, 12000)'
+
+	b = (60, 100, 0, 40, 0, 30, 0, 20)'
+
+	A =
+
+		1	1	1
+		2	1	3
+		-1	0	0
+		1	0	0
+		0	-1	0	
+		0	1	0	
+		0	0	-1	
+		0	0	1	
+
+
+<h3>Solving LP problems</h3>
+
+	LP problems may be interpreted geometrically
+
+	The feasible region is a polytope, a convex region 
+	delimited by hyperplanes in n-space
+
+	The objective function may be understood in terms of
+	its level surfaces, which are also hyperplanes
+
+	The goal is to find the objective function hyperplane 
+	that has the largest possible level value
+
+	Geometrically, this corresponds to moving the hyperplane
+	in the direction of increasing objective value while it remains 
+	perpendicular to a fixed vector (the vector that defines the 
+	objective function), until the last point at which the objective 
+	hyperplane intersects the feasible region
+
+	This occurs at one of the vertices of the feasible polytope
+
+	The simplex algorithm solves LP problems based on the above
+	description, greedily searching on the vertices of the feasible 
+	region, evaluating the objective function at each vertex, 
+	and stopping when no increase is observed
+
+
+<h3>2-D LP Example</h3>
+
+	Consider the cargo problem with only the first two materials
+
+		max 1000*x1 + 1200*x2 subject to
+
+		x1 + x2 &lt;= 60
+		2x1 + x2 &lt;= 100
+		0 &lt;= x1 &lt;= 40
+		0 &lt;= x2 &lt;= 30
+
+	Draw the feasible region and its vertices
+
+	Solve LP problem by traversing vertices, seeking max f
+
+
+<h3>3-D LP Example: the cargo plane problem formulated above</h3>
+
+	Higher-D LP problems can be solved by hand, but harder to visualize
+
+	Do cargo example from my handwritten/sketched notes
+
+	Conclusion is that feasible region has vertices at
+
+		(20, 0, 20)
+		(40, 0, 20/3)
+		(40, 20, 0)
+		(30, 30, 0)
+		(20, 30, 10)
+		(5, 30, 20)
+	
+	plus the obvious "rear" vertices (see figure in notes) at
+
+		(0, 0, 0)
+		(0, 0, 20)
+		(0, 30, 20)
+		(0, 30, 0)
+		(40, 0, 0)
+
+
+<h3>LP solution in Matlab</h3>
+
+	Matlab provides the function linprog
+
+		linprog(f, A, b)
+
+	which returns the solution of the LP problem
+
+		min f'x subject to Ax &lt;= b
+
+	Notice that this problem is in "standard form":
+
+		min instead of max
+
+		only "less than" inequality constraints
+
+	It's easy to cast any LP problem in this standard form
+
+
+<h3>Example of LP solution in Matlab: the cargo problem</h3>
+
+	I illustrated how to cast as standard LP problem
+
+	Then solved in Matlab...
+
+
+<h3>Summary so far: Linear Programming (LP)</h3>
+
+	Goal is to optimize a linear objective function
+	subject to linear constraints
+
+	Write the variables xj as a column vector:
+
+		x = (x1...xn)'
+
+	and the objective function coefficients cj and 
+	constraint RHS coefficients bi as column vectors:
+
+		c = (c1...cn)',  b = (b1...bm)'
+
+	and the constraint LHS coefficients aij as an mxn matrix
+	(m rows, n columns) with i-th constraint in i-th row
+
+		A = (aij) (row i, col j)
+
+	Then the LP problem is written compactly as follows:
+	
+		optimize c'x subject to the constraint Ax &lt;= b
+
+	LP problems may be interpreted geometrically
+
+	The feasible region is a polytope, a convex region 
+	delimited by hyperplanes in n-space
+
+	The simplex algorithm solves LP problems by a greedy hillclimb
+	on the vertices of the feasible region
+
+
+<h3>LP solution in Matlab</h3>
+
+	Matlab provides the function linprog
+
+		linprog(f, A, b)
+
+	which returns the solution of the LP problem
+
+		min f'x subject to Ax &lt;= b
+
+	Notice that this problem is in "standard form":
+
+		min instead of max
+
+		only "less than" inequality constraints
+
+	It's easy to cast any LP problem in this standard form
+
+		change sign of objective function if need to maximize
+
+		split each equality constraint into two inequalities
+
+
+<h3>Network flow</h3>
+
+	Graph edge weights can model the capacities of various links
+	to transport a quantity that satisfies "conservation of mass"
+	(e.g., actual mass, or electrical current, or network traffic)
+
+	One may wish to maximize total flow from one node to another
+
+	This is the maximum flow problem:
+
+	Input: directed graph G with positive edge weights c(e) ("capacities"), 
+	source node s of G, sink node t of G
+
+	Output: assignment of a non-negative "flow" f(e) to each edge e of G
+	such that:
+
+	1) (conservation of mass) for each vertex v of G except s and t,
+
+		total flow into v = total flow out of v
+	
+	2) (capacity constraint) for each edge e of G,
+
+		f(e) &lt;= c(e)
+
+	3) (maximality) the total flow leaving s ("size" of the flow) is 
+	as large as possible among flows satisfying constraints 1) and 2).
+	
+
+<h3>Maximum flow is a familiar type of problem</h3>
+
+	Max flow therefore consists of solving the following problem,
+	where the variables are the quantities f(e) over all edges e in G:
+
+		max sum_{e leaving s} f(e)
+
+	subject to the constraints
+
+		sum_{e entering v} f(e) = sum_{e leaving v} f(e), 
+			(for every vertex v except s and t)
+
+		0 &lt;= f(e) &lt;= c(e)
+			(for every edge e)
+
+	Notice that the quantity to be maximized and the constraints
+	are linear in the variables f(e) - this is just LP!
+
+
+<h3>An algorithm for maximum flow</h3>
+
+	Simplex may be applied to maximum flow and has an interesting interpretation:
+
+	Starting from 0 flow, it iteratively finds a path from source to sink and 
+	increases the flow along all edges of that path by the minimum edge capacity
+
+	In order to allow tentative flow assignments to decrease during 
+	a run of the algorithm, the notion of residual network is used
+
+	A backward edge is added for each edge that has a nonzero flow
+	assigned to it; the capacity of the backward edge is exactly
+	the flow amount on the forward edge
+
+	The residual network of G for a given flow f is denoted G^f
+
+
+<h3>Ford-Fulkerson Algorithm</h3>
+
+    	Inputs: directed graph G with capacities c, source node s, sink node t
+    	Output: maximum flow f from s to t
+
+       	1. f(u,v) = 0 for all edges (u,v)
+       	2. While there is a path p: s -&gt; t in G^f with residual capacities &gt; 0
+             a. Find c^f(p) = min {c^f(u,v) | (u,v) in the path p}
+             b. For each edge (u,v) in p
+                   i. f(u,v) = f(u,v) + c^f(p) (saturate flow along the path)
+		   ii. c^f(v,u) = c^f(v,u) - c^f(p) (update residual capacity)
+
+	3. return f
+
+
+<h3>Ford-Fulkerson example</h3>
+
+	We did an example in class using a network with 5 edges
+
+
+<h3>Max flow - min cut theorem</h3>
+
+	Ford-Fulkerson terminates when every path in the residual network 
+	contains an edge of capacity 0
+
+	Define the set of nodes reachable from the source node as those
+	that are reachable via a path with positive residual capacities
+
+	Notice that the cut between the reachable nodes and the non-reachable 
+	nodes consists of edges of residual capacity 0; in other words, 
+	all such edges are at full capacity in the original network
+
+	This fact proves the following:
+
+	The maximum flow in a network is the same as the capacity of 
+	the minimum cut that separates the source and target nodes
+
+
+<h3>Maximum network flow via LP in Matlab</h3>
+
+	One can also directly apply simplex to max flow problems
+
+	We illustrated by casting a previous example directly as LP
+
+	Remember that Matlab expects LP problem to be in "standard form"
+
+		minimize objective function
+
+		only inequality constraints
+
+	Address these requirements as follows:
+
+		change sign of objective function to target max instead of min
+
+		split each equality constraint into two inequalities
+
+	Do in Matlab
+
+		Original network had 5 edges
+
+		Use one flow variable per edge: 5 variables
+
+		5 edges lead to 5 sign constraints, 5 capacity constraints
+
+		flow conservation yields 2 equality constraints per node
+		(but not for source and sink nodes)
+
+			split into 4 inequality constraints
+
+		total of 14 variables
+
+		constraint matrix is 14x5
+
+</pre>
+
+</font>
+
+</body>
+</html>
+

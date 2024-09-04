@@ -1,0 +1,110 @@
+// Program: Stack.cxx, by Sergio A. Alvarez
+// Implementation file for the Stack<Item> template class
+// This file should be included in the header file
+
+#include <iostream>
+//#include "Stack.h"
+using namespace std;
+
+	/** 
+	* constructors 
+	*/
+		// creates a Stack with the given initial capacity
+		template <class Item>
+		Stack<Item>::Stack(size_t size) {
+			data = new Item[size];
+			capacity = size;
+			nextPos = 0;
+		}
+
+		// creates a Stack with initial capacity DEFAULT_CAPACITY
+		template <class Item>
+		Stack<Item>::Stack() {
+			data = new Item[DEFAULT_CAPACITY];
+			capacity = DEFAULT_CAPACITY;
+			nextPos = 0;
+		}
+
+		// copy constructor: creates a copy of the argument Stack
+		template <class Item>
+		Stack<Item>::Stack(const Stack<Item>& existing) {
+			data = new Item[existing.capacity];
+			capacity = existing.capacity;
+			nextPos = existing.nextPos;
+			for (int pos=0; pos<nextPos; pos++)
+				data[pos] = existing.data[pos];
+		}
+
+	/** 
+	* destructor 
+	*/
+		// releases the memory allocated for this Stack
+		template <class Item>
+		Stack<Item>::~Stack() {
+			delete [ ] data;
+			capacity = 0;
+			nextPos = 0;
+		}
+
+	/** 
+	* selectors
+	*/
+		// returns the number of elements of the recipient Stack
+		template <class Item>
+		size_t Stack<Item>::size() const {
+			return nextPos;
+		}
+
+                // returns true if and only if recipient has no elements
+		template <class Item>
+                bool Stack<Item>::isEmpty() const {
+			return (size()==0);
+		}
+
+		// displays the elements of the recipient Stack
+		template <class Item>
+		void Stack<Item>::println() const {
+			cout << "(top)";
+			for (int pos=nextPos-1; pos>=0; pos--) 
+				cout << " " << data[pos];
+			cout << " (bottom)" << endl;
+		}
+
+		// returns the element at the top of the recipient Stack
+		template <class Item>
+		Item Stack<Item>::top() const {
+			return data[nextPos-1];
+		}
+
+	/** 
+	* modifiers
+	*/
+		// adds the argument at the top of the recipient Stack
+		template <class Item>
+		void Stack<Item>::push(Item elem) {
+			if (nextPos >= capacity)
+				increaseCapacity();
+			data[nextPos] = elem;
+			nextPos++;
+		}
+
+		// removes the element at the top of the recipient Stack
+		template <class Item>
+		void Stack<Item>::pop() {
+			nextPos--;
+		}
+
+	/** 
+	* helper functions
+	*/
+		// increases the capacity of the recipient Stack
+		template <class Item>
+		void Stack<Item>::increaseCapacity() {
+			Item* newData = new Item[2*capacity];
+			for (size_t pos=0; pos<nextPos; pos++) 
+				newData[pos] = data[pos];
+			delete [ ] data;
+			data = newData;
+			capacity = 2*capacity;
+		}
+

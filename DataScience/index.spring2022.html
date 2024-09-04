@@ -1,0 +1,880 @@
+<html>
+<head>
+<title>
+CSCI 2291, Data Science (Prof. Alvarez, Spring 2022)
+</title>
+</head>
+
+<body bgcolor="ffffff">
+<!--
+<body text="D0D8D0" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="F0DBA7" link="F8EDD0" vlink="F8EDD0" bgcolor="000000"> 
+<body text="000000" link="#444444" vlink="#444444" bgcolor="F0DBA7"> 
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="E0C498"> 
+-->
+
+<font face=helvetica>
+
+<center>
+<!--
+<img src="http://cs.bc.edu/images/resL1.jpg">
+-->
+<h1>CSCI 2291, Spring 2022
+<br>Data Science
+<br>Prof. Alvarez
+<p>
+<font color=709050>
+
+<i>This will be the syllabus page for CSCI 2291, Data Science
+<p>This page is under construction
+<p>All content below is subject to change
+
+</i>
+</font>
+</h1>
+
+<br>
+<font size=2>
+<a href="#people">Meeting</a> |
+<!--<a href="#times">Times</a> | -->
+<a href="#references">References</a> |
+<a href="#topics">Objective</a> |
+<a href="#prereq">Prerequisites</a> |
+<a href="#grading">Grading</a> |
+<a href="#timeline">Schedule</a> 
+<!--
+|
+<a href="#samples">Sample code</a>
+ |
+<a href="faq.html">FAQ</a> |
+<a href="#labs">Assignments</a>
+-->
+</font>
+<p>
+
+</center>
+
+<ul>
+
+<p>
+<!--
+<img src="http://www.cs.bc.edu/images/L1bar.gif">
+-->
+<hr>
+<p>
+
+<a name="people">
+<h3>Who, where, and when</h3>
+</a>
+
+<ul>
+<p><li>
+<h4>Instructor</h4> 
+<a href="http://cs.bc.edu/~alvarez/">Prof. Sergio A. Alvarez</a>
+<!--
+<br>St. Mary's Hall (South), S255
+-->
+<br>Office hours: online, see Canvas for link
+<!--
+<p>
+If you have any questions about CSCI 2291, please feel free to e-mail me
+(alvarez at bc dot edu). I'd be happy to talk with you.
+-->
+
+<a name="times">
+<p><li>
+<h4>Lectures</h4>
+Tu Th 9 am, Integrated Science Building 125
+
+<p><li>
+<h4>Teaching Assistants (see Canvas for office hours links)</h4>
+
+
+<ul>
+<li> Anna Bolger
+<p><li> Sarah Penrice
+</ul>
+<!--
+<ul>
+<li> Cam Rogers
+<p><li> David Kocen
+</ul>
+<ul>
+<li> Roger Wang (Mon noon-2, Wed 12-1)
+<p><li> Yuezhen Chen (Mon 3-4, Thurs 10-noon)
+</ul>
+-->
+
+<p><h4>Course web page</h4> 
+The web page for CSCI 2291 will be located at
+http://www.cs.bc.edu/~alvarez/DataScience/.
+You should check this page regularly for updates,
+including reading and homework assignments.
+
+</ul>
+
+<hr>
+<p>
+
+<a name="references">
+<h3>References</h3>
+
+The main references will be instructor notes, together with online materials
+to be provided during the semester.
+
+<h4>Supplementary software technical reference (optional)</h4>
+<ul>
+<p><li>
+J. VanderPlas.
+<br><i>Python Data Science Handbook</i>
+<br>O'Reilly Media, 2016
+<br>https://jakevdp.github.io/PythonDataScienceHandbook/
+</ul>
+
+<!--
+<h4>Additional references</h4>
+<ul>
+<p><li>
+T. M. Mitchell
+<br><i>Machine Learning</i>
+<br>McGraw-Hill, 1997
+<p>A concise overview of basic concepts and techniques in machine learning.
+<p><li> 
+K.P. Murphy
+<br><i>Machine Learning: a Probabilistic Perspective</i>
+<br>MIT Press, 2012
+<br>(available in O'Neill library Q325.5 .M87 2012)
+<p>
+Almost encyclopedic coverage. More than we could possibly cover in this course.
+<p><li> 
+S. Russell and P. Norvig
+<br><i>Artificial Intelligence: a Modern Approach</i>, 3rd edition
+<br>Prentice Hall, 2009
+<br>(first edition available in O'Neill Library: Q335 .R86 1994)
+<p>
+Standard reference on the broader field of AI, which ML is a key part of. 
+</ul>
+-->
+
+<h4>Software</h4>
+
+Programming in Python will be required. 
+Students will need access to the software platforms below from the
+beginning of the semester.
+I recommend competing the "Python basics" activity in the Schedule section, 
+below, as soon as possible. Students who did not previously program 
+in Python for their CS1 course may wish to start by working through the
+<a href="https://docs.python.org/3/tutorial/">Python tutorial</a>
+available at <font size=+1 face=tty>https://docs.python.org/3/tutorial/</font>.
+
+<ul>
+<p><li><a href="https://www.python.org">Python</a> 3.7 or higher
+<p><li><a href="https://www.numpy.org">NumPy</a>, 
+<a href="https://www.scipy.org">SciPy</a>, and 
+<a href="https://matplotlib.org">Matplotlib</a>
+<p><li><a href="https://pandas.pydata.org/">pandas</a>
+<p><li><a href="https://scikit-learn.org">scikit-learn</a>
+<!--
+<p><li><a href="https://pytorch.org/">PyTorch</a>
+-->
+</ul>
+
+<p>
+<hr>
+<p>
+
+<a name="topics">
+<h3>What this course is about</h3>
+</a>
+This course provides an introduction to concepts and techniques of computational data modeling and inference that can inform rational decision-making based on data. Topics include data preprocessing, exploratory data analysis and visualization, elements of probability and statistical inference, and predictive and descriptive modeling, with an introduction to machine learning concepts and approaches as time allows. Programming in Python will be required. Prospective students should also be comfortable with mathematical notation and reasoning at the college calculus level.
+
+
+<a name="prereq">
+<h3>Necessary Background</h3>
+</a>
+CSCI 2291 has as prerequisites the course CSCI 1101 (Computer Science I) or an equivalent introduction to Computer Science and programming, and one of MATH 1101, 1103, 1005, or an equivalent course in college-level calculus.
+In particular, it is assumed that students will be familiar 
+with the basics of the following topics before starting CSCI 2291: 
+<ul>
+<p><li> General mathematical notation and reasoning at the level of college 
+calculus, including summation notation, algebraic reasoning, functions, and 
+differential and integral calculus with functions of one variable. 
+<p><li> Computational problem-solving, program design in Python,
+including procedural abstraction / decomposition, functions, 
+conditional branching, iteration, list comprehension, and recursion.
+<!--
+Writing programs in Python and reading algorithmic pseudocode will be 
+required in this course. Refer to the <a href="https://www.python.org/downloads/release/python-2710/">Python downloads and documentation</a> at python.org. 
+Please use Python 2.7 to minimize incompatibility issues.
+<p><li> Object orientation, instantiable classes, data structures (e.g., mutability, lists, queues, stacks, big O).
+-->
+</ul>
+<p>
+Note: Python is a comparatively easy language to learn. A student who has taken an introduction to Computer Science using a language other than Python should be able to acquire the required Python skills with a modest amount of additional study.
+<p>
+<!--
+Additionally, some familiarity with <a href="Notes/cs243.recursionAndInduction.pdf">mathematical induction</a> would be helpful.
+<p>
+<img src="http://cs.bc.edu/images/L1bar.gif">
+-->
+<hr>
+<p>
+
+<a name="strategy">
+<h3>How to do well in this course</h3>
+</a>
+
+<h4>Take charge</h4>
+
+As a 2000-level course, CSCI 2291 requires greater autonomy from students 
+than do typical 1000-level courses. 
+Some of the material in the course is intellectually challenging.
+Lectures will cover most of the main ideas, but you will need to fill in 
+the gaps by studying the references and other materials linked from the course homepage, as well as the software documentation.
+
+Complete the reading assignments conscientiously.
+A first reading is advisable <i>before</i> class. 
+
+<h4>Tune out the noise</h4>
+
+Engage fully with the material, in class and out. I'll help with this by
+not allowing the use of laptops or phones during class, except that laptops
+will be needed for quizzes. Phones may be used in emergencies, of course. 
+I strongly encourage you to adopt a similar policy when you are studying and
+outlining program designs, except for the actual implementation phase.
+
+<h4>Start early</h4>
+
+Get started on each homework assignment as soon as possible. 
+Plan to go over your own notes and over the relevant course materials 
+several times in connection with a specific concept or problem. 
+This process may take several hours or even days, depending on the 
+complexity of the issue at hand.
+
+<h4>Explain your thinking</h4>
+
+Strive for maximum clarity and simplicity when preparing homework and quiz 
+solutions. I'm looking for lucid, step-by-step explanations and discussion, 
+not just the final answers. Aim for clarity over length.
+
+<p>
+<!--
+<img src="http://cs.bc.edu/images/L1bar.gif">
+-->
+<hr>
+<p>
+
+<a name="grading">
+<h3>Grading</h3>
+</a>
+
+The course grade will be based on homework, quizzes and active 
+course involvement, and a final exam. 
+
+<h4><b>Late homework submissions will receive no credit</b></h4> 
+(except, possibly, in very unusual circumstances, at the discretion of 
+the instructor).
+As students in my previous courses can confirm, I mean this, so
+please plan ahead.
+
+On the other hand, 
+<h4><b>"One free strike" policy</b></h4>
+I will drop each student's lowest homework score and lowest quiz score
+automatically, no questions asked. I highly recommend that you 
+not elect to miss a homework or quiz unless the circumstances merit it,
+as you may need the break unexpectedly later in the semester.
+
+<ul>
+
+<p><li> <h4>Homework (35%)</h4>
+Homework assignments will be posted on Canvas during the semester.
+Due dates will be posted in the schedule section of the CSCI 2291 homepage.
+Each student's lowest homework grade will be dropped.
+
+<!--
+<p><li> <h4>Midterm exam (25%)</h4>
+
+You may bring a single-sided 8"x11" / A4 sheet of notes with you
+to exams. Calculators, phones, and any networked devices are not allowed.
+<i>No make-up exams will
+be given, so plan ahead.</i> 
+
+-->
+
+<p><li> <h4>Quizzes and course involvement (35%)</h4>
+Several quizzes will be given during the term.
+The quizzes may cover material from class, from the posted reading materials,
+or from the homework assignments. 
+<!--
+<p> <i>Quizzes will require the use of a laptop, so bring yours to class
+if you will be in attendance on a given day, 
+minding the above policy restricting the in-class use of laptops at other times.</i>
+-->
+My "one free strike" policy applies to both homework and quizzes:
+makeup quizzes will not be offered, but I will drop each student's 
+lowest quiz score automatically, no questions asked. 
+
+<p>
+
+Active involvement in course-related activities is required.
+A substantial degree of independent work outside of class is expected,
+including completing the assigned reading before class
+(see the Schedule section on this page). Course involvement
+may play a role in determining final grades in cases in which
+the total score is on the border between letter categories.
+<!--
+Class discussions may involve material from the reading assignments
+(see the Schedule section on this page).
+I may sometimes ask individual students to explain a concept or technique
+from the assigned reading to the rest of the class.
+-->
+
+<p><li> <h4>Group term project (30%)</h4>
+
+Groups of students will collaborate on a substantial project that
+illustrates key data science concepts, developing some aspects further
+than in class. Projects can focus on a particular application, a
+set of techniques, or a data science issue ranging from technical
+processing steps to societal impact. The project will require focused 
+work over much of the semester. Deliverables will include a 
+presentation and a written report.
+
+<!--
+<p><li> <h4> Exam (30%)</h4>
+A cumulative exam will be held during the last class meeting,
+as indicated in the schedule below.
+You may bring a single-sided 8"x11" / A4 sheet of notes with you
+to exams. Calculators are not allowed.
+<i>No make-up exams will
+be given, so plan ahead.</i> 
+-->
+
+</ul>
+
+<p>
+<!--
+<img src="http://cs.bc.edu/images/L1bar.gif">
+-->
+<hr>
+<p>
+
+<a name="honesty">
+<h3>Academic Honesty</h3>
+</a>
+<i>You must individually design and write your own solutions for
+all assignments unless otherwise stated.</i> Furthermore, you should
+explicitly acknowledge any sources of ideas that are not your own.
+This includes other people, books, web pages, etc.
+Behavior that is not in the spirit of these guidelines is considered
+to be academically dishonest and may be reported to the appropriate
+class dean for review by the Academic Integrity Board.
+If you're unsure about what constitutes academic dishonesty
+in a particular situation, ask me before proceeding further.
+<p>
+You may also consult the
+<a href="https://www.bc.edu/bc-web/academics/sites/university-catalog/policies-procedures.html#academic_integrity_policies">
+university's academic integrity policies</a>.
+<p>
+<!--
+<img src="http://cs.bc.edu/images/L1bar.gif">
+-->
+<hr>
+<p>
+
+<a name="timeline">
+<h3><i>Rough</i> Schedule of Topics</h3>
+</a>
+<i>
+Notes:
+<p>This is an <i>approximate</i> schedule, and will be updated during the semester. 
+Precise topics and timing may deviate from the sketch below. 
+<p>
+Please check <font size=+1 face=tty>http://www.cs.bc.edu/~alvarez/DataScience</font>   frequently for updates, as well as the
+Canvas site for this course.
+</i>
+<p>
+<p>
+<table cellpadding=5 border=no>
+<tr>
+<td><b>Week</b>
+</td> 
+<td><b>Reading, assignments</b>
+</td> 
+<!--
+<td>
+<b>Additional materials</b>
+</td> 
+-->
+<td><b>Topics</b>
+</td> 
+</tr>
+
+<tr>
+<td>Jan. 17-21
+</td>
+<td>
+<b><i>Important: install the software</i></b>
+<ul>
+<p><li><a href="https://www.python.org">Python</a> 3.7 or higher
+<p><li><a href="https://www.numpy.org">NumPy</a>, 
+<a href="https://www.scipy.org">SciPy</a>, 
+<p><li><a href="https://matplotlib.org">Matplotlib</a>,
+<p><li><a href="https://pandas.pydata.org/">pandas</a>, and 
+<p><li><a href="https://scikit-learn.org">scikit-learn</a> 
+</ul>
+<p><hr><p>
+<p>
+Review 
+<a href="https://inst.eecs.berkeley.edu/~cs188/sp21/project0/">Python basics</a> (CS188, U. of California, Berkeley)
+<p>
+Python newbies (and, optionally, others) should read the 
+<a href="https://docs.python.org/3/tutorial/">Python tutorial</a>
+<p>
+Everyone should read the
+<a href="https://numpy.org/doc/stable/user/quickstart.html">numpy quickstart tutorial</a>
+<!--
+and <a href="https://www.python.org/downloads/release/python-2710/">Python</a>
+-->
+<p><hr><p>
+Submit the background survey on Canvas (due Feb. 1st)
+<p>
+Start HW1 (due Feb. 4th by 9 pm)
+<p>
+<a href="#grading"><i>Late submissions not accepted; lowest HW score dropped</i></a>
+<p>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+What is Data Science?
+<!--
+<p>Some general data science tasks:    
+<br>Data collection, preprocessing
+<br>Exploratory data analysis
+<br>Descriptive and predictive modeling
+<br>Regression, classification, clustering
+-->
+<p>
+Python basics refresher    
+<dd>Variables, control flow, functions
+<dd>List comprehension    
+<dd>External software packages 
+</dd>
+<p>
+Representing data    
+<dd>Attributes, labels (targets)    
+<dd>Attribute-value vectors
+<dd>Arrays and matrices in numpy
+<dl>
+	<dd>Boolean indexing
+	<dd>Elementwise operations
+	<dd>Matrix multiplication
+</dl>
+<dd>Attribute space visualization
+<dl>
+	<dd>Scatter plots
+	<dd>Grouped scatter plots
+</dl>
+</dd>
+</td>
+</tr>
+
+<tr>
+<td>Jan. 24-28
+<p>Online add / drop deadline Jan. 26
+</td>
+<td>
+HW1 due Thursday by 9 pm
+<p>
+<a href="https://docs.scipy.org/doc/numpy/reference/routines.statistics.html">Statistical functions in numpy</a>
+<p>
+<a href="https://matplotlib.org/tutorials/introductory/pyplot.html#sphx-glr-tutorials-introductory-pyplot-py">
+pyplot tutorial</a>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Populations and samples
+<p>
+First look at randomness
+<dd></dd>
+Statistical summary descriptors    
+<dd>Mean, var / stdev
+<dd>Mean-centering, standardization   
+<dd>Median, quartiles, IQR    
+</td>
+</tr>
+
+<tr>
+<td>Jan. 31 - Feb. 4
+</td>
+<td>
+HW2 due Thursday by 9 pm
+<p>
+<a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html">
+10 min to pandas</a>
+<p>
+<a href="https://pandas.pydata.org/pandas-docs/stable/getting_started/tutorials.html">pandas tutorials</a>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Visual exploratory data analysis    
+<dd>matplotlib    
+<dd>Scatter plots
+<dd>Box plots
+<dd>Histograms
+<dd>Radar (star) plots
+<dd>Multidimensional scaling
+</dd>
+<br>
+What counts as noteworthy?
+<dd>Outliers, missing values
+<dd>Statistical tests
+<dd>p-values vs. effect sizes
+<dd>Multiple comparisons
+</dd>
+</td>
+</tr>
+
+<tr>
+<td>Feb. 7-11
+</td>
+<td>
+HW3 due Thursday by 9 pm
+<p>
+<a href="https://scikit-learn.org/stable/auto_examples/linear_model/plot_ols.html">Linear regression example</a>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Statistical descriptors for n-D data
+<dd>Covariance
+<dd>Correlation
+</dd>
+<p>
+Predictive data modeling
+<p>
+Linear regression
+</td>
+</tr>
+
+<tr>
+<td>Feb. 14-18
+<p>Final course drop deadline Feb. 15
+</td>
+<td>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Linear regression
+<dd>Matrix formulation
+</dd>
+<dd>Pseudo-inverse solution
+</dd>
+<p>
+Linear classification
+<p>
+Nonlinear features
+<p>
+</p>
+Challenge of generalization    
+<dd>Sample-dependent variation    
+<dd>Overfitting
+<dd>The role of randomness
+</dd>
+<br>
+</td>
+</tr>
+
+<tr>
+<td>Feb. 21-25
+<p>
+</td>
+<td>
+HW4 due Tuesday by 9 pm
+<p>
+<a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html">Underfitting vs. Overfitting</a>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Gauging generalization
+<dd>Training/test splits
+</dd>
+<br>
+Introduction to probability
+<dd>Random experiments
+<dd>Probability distribution (PMF)
+<dd>Probability spaces
+</dd>
+<!--
+Populations and samples revisited
+-->
+<p>
+Random events
+<p>
+Law of Large Numbers
+<p>
+Estimating probabilities by simulation
+<p>
+</dd>
+</td>
+</tr>
+
+<tr>
+<td>Feb. 28 - Mar. 4
+<!--
+<p>
+<b>
+First exam
+<br>In class, Feb. 28
+</b>
+-->
+</td>
+<td>
+HW5 due Thursday by 9 pm
+<p>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Equally likely outcomes
+<br>Counting
+<p>
+Permutations
+<br>Sampling
+<!--
+<p>Measuring randomness: entropy
+-->
+</td>
+</tr>
+
+
+<tr>
+<td>Mar. 7-12
+<p>
+<b>
+Spring Vacation
+</b>
+</p>
+</td>
+<td>
+Relax
+</td>
+<td>
+</td>
+</tr>
+
+
+<tr>
+<td>Mar. 14-18
+<p>
+<!--
+<b>Spring break</b>
+-->
+</td>
+<td>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Independent events
+<p>
+</p>
+Random variables	
+<dd>Bernoulli, binomial, geometric</dd>
+<p>
+Expected value and variance
+</td>
+</tr>
+
+<tr>
+<td>Mar. 21-25
+</td>
+<td>
+HW6 due Thursday by 9 pm
+<p>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Sums of iid RVs
+<dd>Analysis of train/test splits
+</dd>
+<p>
+</p>
+Evaluating predictive models
+<dd>Cross-validation
+</td>
+</tr>
+
+<tr>
+<td>Mar. 28 - Apr. 1
+</td>
+<td>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Conditioning and causality
+<dd>Conditional probability
+<dd>Simpson's paradox
+</dd>
+<p>
+</p>
+Maximum a posteriori prediction
+<dd>Bayes' rule
+</dd>
+<p></p>
+Probabilistic models of data    
+<!--
+<br>Gaussian Mixture Models
+-->
+<dd>Naive Bayes models</dd>
+</td>
+</tr>
+
+<tr>
+<td>
+Apr. 4-8
+</td>
+<td>
+HW7 due Thursday by 9 pm
+<p>
+<!--
+<a href="https://scikit-learn.org/stable/tutorial/basic/tutorial.html#machine-learning-the-problem-setting">Machine learning: the problem setting</a>
+<p>
+-->
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Logistic regression
+<dd>Cross-entropy
+<dd>Odds ratio
+<dd>Overfitting
+<dd>Regularization
+</td>
+</tr>
+
+<tr>
+<td>Apr. 11-15
+<p>
+<b>
+No classes on Thurs / Fri 
+<br>
+(Easter weekend)
+</b>
+</td>
+<td>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+k-means clustering
+</td>
+</tr>
+
+<tr>
+<td>Apr. 18-22
+<p>
+<b>
+No Tu classes (Mon schedule)
+</b>
+<p>
+Course withdrawal deadline Apr. 19
+</td>
+<td>
+<!--
+HW8 due Thursday by 9 pm
+-->
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Nearest-neighbor prediction
+<p>
+</td>
+</tr>
+
+<tr>
+<td>Apr. 25-29
+</td>
+<td>
+<!--
+HW9 due Thursday by 9 pm
+<p>
+-->
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Final thoughts:
+big issues in data modeling
+<dd>Feature representation
+<dd>Sample performance vs. generalization
+<dd>Controlling model complexity
+<dd>Importance of sampling
+<dd>Probability as a modeling tool
+</dd>
+<!--
+Other ML data models (as time allows)
+<p>Predictive modeling examples
+-->
+</td>
+</tr>
+
+<tr>
+<td>May 2-6
+<p>
+<b>
+Project deliverables due Thurs May 5
+</b>
+</td>
+<td>
+</td>
+<!--
+<td>
+</td>
+-->
+<td>
+Term project presentations
+</td>
+</tr>
+
+</table>
+
+</font>
+
+</body>
+</html>
