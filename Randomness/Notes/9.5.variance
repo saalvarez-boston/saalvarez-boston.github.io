@@ -1,0 +1,365 @@
+
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	Questions? office hours today 1:30-3
+
+
+:02
+Recently
+
+	Random variables
+
+	Expected value
+
+	PMF/PDF and CDF
+
+	CDF applies to both discrete and continuous RV, X
+
+	CDF allows generation of pseudorandom values with same distribution as X
+
+		sample = F_X^-1(rand()) = min(x | F_X(x) >= rand())
+
+
+:05 (skip - leave for next PS)
+Another common discrete RV distribution: Poisson model of arrivals
+
+	X counts arrivals per unit time (service requests, customers, packets),
+        assuming arrival probability lambda*dt in each infinitesimal interval dt
+
+	Think of continuous time unit as split into n small discrete intervals
+
+	Assume that arrivals occur at rate lambda per unit time (on average)
+
+        Approximate as binomial RV with very large n, very small p = lambda/n
+
+                P(X=k) = nCk p^k (1-p)^(n-k)
+
+        Only smaller values of k will have considerable probability, so:
+
+                nCk = n^k / k! (approx.)
+
+        and
+
+                (1-p)^(n-k) = (1-p)^n = (1-lambda/n)^n = e^(-lambda) (approx.)
+
+        Therefore, probability of exactly k arrivals in [0,1] is approximately:
+
+                P(X=k) = e^-lambda lambda^k / k!   (all non-negative integers k)
+
+        Note that the sum of all of these P(k) is 1
+
+
+:05
+Measuring the variation of a random variable
+
+	Consider final location L1000 in a 1000-step random walk, as in PS5
+
+		initial location is 0
+
+		fair coin tosses to decide left or right at each step
+
+	(do MATLAB simulation of multiple samples of this RV)
+
+	for i=1:20
+		walks = cumsum(2*randi(2,1000,500)-3,1);
+		hist(walks(1000,:),-100:10:100); 
+		axis([-100 100 0 80]); 
+		pause(0.5);
+	end
+
+	Average final position is around 0, which is the expected value
+
+	However, there is considerable variation in the observed average
+
+	Observed distribution is about 60-80 units wide at half height
+
+	Another way of viewing this is as a plot instead of a histogram
+
+	We'd like to provide a measure of such variation
+
+
+:12
+Linear variance
+
+	Average of large number of observations of RV X, corresponding to many 
+	repetitions of underlying random experiment, is near expected value E(X)
+
+	Variation of X measured by deviation of individual values from average
+
+	Deviation of a particular value v from E(X) is just the difference:
+
+		deviation of v from E(X) = (v - E(X))
+
+	Try expected average of deviations E(X - E(X)) as measure of variation:
+
+		linvar(X) = E(x - E(X)) = sum p_i (v_i - E(X))
+
+	Exercise: compute the numerical value of this measure explicitly
+
+
+:20
+Variance
+
+	As an alternative, customary to consider squared deviations
+
+		squared deviation of v from E(X) = (v - E(X))^2
+
+	Variance of RV X is defined as expected average of squared deviations 
+
+		var(X) = expected average of (X - E(X))^2
+
+			= sum p_i (v_i - E(X))^2
+
+	Variance is expected value of new RV, (X - E(X))^2
+
+	The more variation X displays, the larger the variance of X
+
+
+:23
+Standard deviation
+
+	Note that variance is an average squared distance, not a distance
+
+	Variation of X on same scale as X measured by square root of variance 
+	(root mean square (RMS) variation, or standard deviation)
+
+	
+:25
+Variance in terms of the expected values of X and X^2
+
+	The following formula is often useful:
+
+		var(X) = E(X^2) - E(X)^2
+
+	Here's a derivation:
+
+		var(X) = sum of pi (vi - E(X))^2
+
+			= sum of pi (vi^2 + E(X)^2 - 2viE(X))
+
+			= sum of pi vi^2 + E(X)^2 sum of pi - 2E(X) sum of pi vi
+
+			= E(X^2) + E(X)^2 - 2E(X)^2
+
+			= E(X^2) - E(X)^2
+
+
+:32
+Example of variance calculation for single Bernoulli trial with P(success)=p
+
+	Define X=1 if success, X=0 if not success
+
+		E(X) = p*1 + (1-p)*0 = p
+
+	Also, X^2 is the same as X here, so E(X^2) = p as well
+
+	Therefore,
+
+		var(X) = E(X^2) - E(X)^2 = p - p^2 = p(1-p)
+
+	Plot as function of p - greatest variance / uncertainty at p=1/2
+
+	(skip) Poisson arrivals: let X = # of arrivals in unit time, 
+	for mean arrival rate lambda
+
+	Distribution of X is: 
+
+		P(X=k) = lambda^k/k! e^(-lambda)
+
+	Expected value:
+
+		E(X) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)!
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j!
+
+	The sum is 1, though, because it is the sum of all of the
+	values of a Poisson distribution, so:
+
+		E(X) = lambda, the mean arrival rate (of course!)
+
+	Now the variance:
+
+		var(X) = E(X^2) - E(X)^2
+
+	Compute the first term on the right:
+
+		E(X^2) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)! k
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j! (j+1)
+
+	Split into two sums, which have values lambda E(X) and lambda*1, so:
+
+		E(X^2) = lambda^2 + lambda
+
+	and
+
+		var(X) = E(X^2) - E(X)^2 = lambda^2 + lambda - lambda^2 = lambda
+
+
+:40
+Properties of expected value and variance
+
+	Expected value is linear: 
+
+		E(aX + bY) = aE(X) + bE(Y)
+
+	Variance is quadratic, and produces interaction terms: 
+
+		var(X + Y) = var(X) + var(Y) + 2(E(XY) - E(X)E(Y))
+
+
+:45
+Independent random variables
+
+	RV's X and Y are independent if all pairs of events
+
+		{X=v} and {Y=w}
+
+	are independent, where v is any value of X and w is any value of Y
+
+	Thus, if X and Y are independent, then for any values v, w:
+
+		P(X=v and Y=w) = P(X=v)*P(Y=w)
+
+	If X and Y are independent, then E(XY) factors:
+
+		E(XY) = sum_{i,j} pi qj vi wj = E(X)E(Y)
+
+	and the variance of X+Y is just the sum of their variances:
+
+		var(X + Y) = var(X) + var(Y)
+
+
+:50
+Examples of independence for RVs
+
+	X = # successes in n indep Bernoulli trials with success prob p
+
+	For each i between 1 and n, let Xi be the binary success variable for 
+	the i-th trial, with Xi=1 if i-th trial yields a success, 0 otherwise
+
+	Then
+
+		X = sum of all of the Xi
+
+	Furthermore, the Xi are mutually independent, and therefore:
+
+		var(X) = sum of var(Xi) = np(1-p)
+
+	This means that the variation, or uncertainty, in the total number
+	of successes, increases as the number of trials increases
+
+	In terms of the expected variation in normal (not quadratic) units,
+	we consider instead the standard deviation:
+
+		stdev(X) = sqrt(var(X)) = sqrt(p(1-p))sqrt(n)
+
+	This root mean square distance from the expected value varies
+	like the square root of the number of trials
+
+	The fraction of successes, 1/n X, has stdev like 1 / sqrt(n)
+
+
+:55
+Example of running average of independent RVs
+
+	Consider random walk from earlier today
+
+	Instead of absolute location, look at running average location
+
+		An = (L1 + ... Ln) / n
+
+	In MATLAB:
+
+		ravgs = walks./((1:1000)'*ones(1,500));
+		plot(ravgs);
+
+	Notice decrease in variation as number of steps increases
+
+	Can you compute the standard deviation exactly?
+
+
+:60
+Chebyshev inequality
+
+	Values of RV X unlikely more than a few standard deviations from E(X)
+
+	In fact: guarantee that P(|X - E(X)| > k sigma(X)) < 1/k^2
+
+	Usually gives very loose bound (very conservative)
+
+
+:63
+Examples of Chebyshev inequality
+
+	Assume X has geometric distribution P(X=k) = 2^-k for integers k >= 1
+
+		E(X) = 2,  std(X) = sqrt(2)	(good exercise)
+
+	By Chebyshev,
+
+		P(|X - 2| > sqrt(2)) is less than 1 (duh)
+
+		P(|X - 2| > 2*sqrt(2)) is less than 1/4
+
+		P(|X - 2| > 3*sqrt(2)) is less than 1/9
+
+	Simulate in MATLAB
+
+		>> values = mygeornd(10^5);
+		>> avg = mean(values)
+
+		avg =
+
+    			1.9952
+
+		>> mean(abs(values-avg) > std(values))
+
+		ans =
+
+    			0.1242
+
+		>> mean(abs(values-avg) > 2*std(values))
+
+		ans =
+
+    			0.0615
+
+		>> mean(abs(values-avg) > 3*std(values))
+
+		ans =
+
+    			0.0157
+
+
+:if time allows (at least state RV version of LLN)
+Law of Large Numbers, revisited
+
+	LLN for RV X states that average of large sample of X is close to E(X)
+
+	can state more precisely in light of Chebyshev inequality, as follows:
+
+	pick any small error bound (desired closeness) e; then:
+
+		P(|avg(X)-E(X)| > e) approaches 0 as n approaches infty
+
+		first decide how certain you want to be; let's say 99%
+
+		pick small error bound e; how to ensure avg(X) e-close to E(X)?
+
+		for some large enough k, 1/k^2 less than 0.01 (i.e., 1 - 0.99)
+
+		Chebyshev guarantees P(deviation > k sigma) less than 0.01
+
+		Just need to make sure that k sigma less than e
+
+		Done as long as sigma less than e/k
+
+		But sigma(average over n samples) = sigma(X) / sqrt(n)
+
+		so this works for large enough n
+

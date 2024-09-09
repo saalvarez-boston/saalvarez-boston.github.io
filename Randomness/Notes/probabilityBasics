@@ -1,0 +1,107 @@
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Equally likely outcomes
+
+	Suppose that a sample space, S, consists of a finite number, n, 
+	of equally likely outcomes
+
+		each outcome has probability 1/n (why?)
+
+	The probability of any event E then reduces to counting, because:
+
+		P(E) = sum over x in E of P(x) = sum over x of 1/n = |E|/n
+
+
+Examples of probability calculations in the case of equally likely outcomes
+
+	1) The probability of getting the Ace of Hearts in 
+	a random two-card hand dealt from a single deck
+
+		Here, the sample space S consists of all pairs of cards
+		from a single deck. There are 1326 such pairs (why: later).
+		Each pair therefore has probability 1/1326
+
+		The Ace of Hearts appears in exactly 51 such hands. Why?
+
+		=> P(Ace of Hearts in hand) = 51/1326 = 1/26
+
+	2) The probability that you'll see tails at least once
+	in two flips of a fair coin
+
+		S = {(s,s') | s,s' in {H,T}}
+		P(s,s') = 1/4
+		P(tails at least once) = 1 - one outcome/4 = 3/4
+	
+
+Continuous probability
+
+	A random experiment is continuous if it involves an uncountable 
+	infinity of outcomes, such as a continous range of real numbers
+
+		examples include measuring the temperature of a mixture
+
+			possible outcomes = all real numbers between 0 and 400
+
+		and throwing a dart at a target
+
+			possible outcomes = all points on the wall
+
+		continuous probability requires rethinking the nature of the
+		probability function, because the probability of an individual
+		outcome of a continuous random experiment is typically zero!
+
+
+:30
+Redefining the notion of probability function for continuous sample spaces
+
+	if the set of outcomes is an interval of real numbers,
+	then one can state the probability of every subinterval
+
+		for instance, if one is randomly throwing darts at the
+		interval [0,10], then the probability of a subinterval 
+		[a,b] should be proportional to the length b-a: 
+
+			P([a,b]) = C*(b-a), where C is some fixed value
+
+		In order for the set of all outcomes, [0,10], to have
+		probability 1, as it should:
+
+			1 = C*(10-0) = 10C => C = 1/10
+
+			=> P([a,b]) = (b-a)/10
+
+
+:30
+The general definition of probability space
+
+	We had started by stating that a random experiment is defined by
+	a sample space S of all possible experimental outcomes together with
+	a non-negative probability function P on the sample space S, with the
+	only additional restriction that
+
+		sum of P(x) over all x in S equals 1
+
+	However, we know that if the sample space is continuous then
+	each P(x) could actually be 0.
+
+	We dealt with this case by instead viewing the probability function 
+	as being defined on certain sets of outcomes, like intervals,
+	instead of on individual outcomes. In the special case of discrete
+	probability, this new definition is consistent with the old one.
+
+	This leads to the general definition of probability space as
+	consisting of a set S, called the sample space, whose elements
+	represent the possible experimental outcomes, together with a
+	probability function P defined on subsets of S, and satisfying
+	the following properties:
+
+		P(E) >= 0 for all subsets E of S
+		P(S) = 1 (this replaces the summing to 1 property)
+
+
+:35
+Simulation of random experiments
+(better to include simulation throughout, rather than as a separate section)
+

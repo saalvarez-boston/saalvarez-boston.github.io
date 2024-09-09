@@ -1,0 +1,70 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	Final Exam: Tuesday, 12:30 pm
+
+
+:02
+Final Exam coverage
+
+	Everything, with slightly more emphasis on last part of course
+
+	I'll be looking for conceptual understanding,
+	as demonstrated by the ability to solve specific problems
+
+
+:03
+Final Exam topics
+
+	Probability basics: random experiment, sample space
+
+	Counting: addition and multiplication principles,
+	combinations and permutations, hidden function trick
+
+	Independence and conditional probability: definition(s),
+	conditioning, Bayes' rule
+
+	Random variables: definition, distributions (PMF,PDF,CDF), 
+	E(X), var(X), independence
+
+	2D and nD random variables: joint and marginal distributions,
+	independence, covariance, correlation
+
+	Basic matrix algebra: matrix operations, inner and outer products,
+	multiplication of rectangular matrices, transposes
+
+	Eigenvectors and eigenvalues: definitions, transposition
+
+	Principal components analysis: geometric significance,
+	finding the principal axes, high-D PCA using instancewise covariance
+
+	Random processes: definition, i.i.d. processes, law of large numbers,
+	central limit theorem, Markov chains
+
+
+:12
+Study materials
+
+	The problem sets provide an excellent source of practice problems
+
+		do them again; you may get more out of them the second time
+
+	Solutions helpful also, but attempt the problems yourself first
+
+	I've posted notes on many important topics
+
+	Read the book, too
+
+
+:15
+Discuss PS10 solutions
+
+	See my solutions
+
+
+:45
+Answer questions
+

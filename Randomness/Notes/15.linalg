@@ -1,0 +1,227 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS8 due next Tuesday
+
+	No class meeting this Thursday - I'll post notes for you to study
+
+	and will be happy to answer questions during office hours on Thursday
+
+
+:02
+Exam 2 comments (return papers at end of class)
+
+	Go over all tasks
+
+
+:25
+Matrix operations
+
+	matrices can be used simply as organized data storage, but they are
+	more: matrices that store numbers have an arithmetic of their own,
+	and represent many useful transformations
+
+	matrices can represent images, networks, constraints
+
+	using matrices effectively requires a knowledge of matrix operations
+
+
+:27
+Matrices as linear transformations
+
+	An nxm matrix A defines a transformation 
+		between vectors of length m and vectors of length n
+
+	by either left multiplication on column vectors:
+
+		L_A: column -> A*column
+
+	or right multiplication on row vectors:
+
+		R_A: row -> row*A
+
+	These are linear transformations:
+
+		T_A(v + w) = T_A(v) + T_A(w)
+
+		T_A(c v) = c T_A(v)
+
+	In particular, T_A(0) = 0
+
+	
+:32
+Examples of 2D linear transformations by 2x2 matrices
+
+	axis scaling
+
+		[2 0; 0 5]
+
+	reflections
+
+		[-1 0; 0 1]
+
+	rotations
+
+		[c s; -s c]
+
+	shear transformations
+
+		[1 0;2 1]
+
+	translations are not linear - why?
+
+	illustrate these in MATLAB, using my shape() function
+
+
+:40
+Addition of matrices, scaling
+
+	addition is defined for pairs of matrices of the same size;
+	it is simply done element by element (position by position):
+
+		(A + B)(i,j) = A(i,j) + B(i,j)
+
+		[1 2; 3 4; 5 6] + [a b; c d; e f] = do in class
+
+	a matrix may be multiplied by a number:
+
+		(c*A)(i,j) = c*A(i,j)
+
+		do an example
+
+	multiplication of two matrices is allowed in certain cases (see below)
+
+
+:45
+Inner product of vectors
+
+	1) row vector * column vector of equal lengths = a single number
+
+		[a b][x 1]' = ab + x
+
+		sum k 2^k = [1 2 3 ... k ... n]*[2^0 2^1 2^2 ... 2^k ... 2^n]'
+
+		in general, if r is 1xn and c is nx1; then
+
+		r*n = sum of all products r(i)*c(i)
+
+		this number r*c is known as the dot product, or inner product, 
+		of the vectors r, c
+
+		it equals length(r)*length(c)*cos(angle between r, c)
+
+		if r,c are column vectors of the same length, then the
+		inner product of r, c is defined as r'*c
+
+
+:50
+Outer product of vectors
+
+	2) column vector * row vector of any lengths = a rectangular matrix
+		
+		[a b]'[x y z] = [ax ay az; bx by bz; cx cy cz]
+
+		in general, if c is nx1 and r is 1xm, then c*r is nxm, and
+
+		(c*r)(i,j) = c(i)*r(j)
+
+		this matrix c*r is known as the outer product of the vectors c,r
+
+		if r,c are column vectors, then the outer product of r, c 
+		is defined as r*c'
+
+		
+:60
+Multiplication of rectangular matrices
+
+	A*B is defined as long as A is nxm and B is mxp; the result is nxp
+
+	computation of A*B may be described in two alternative ways:
+
+	1) outer product method: A*B is the sum of the k outer products 
+	k-th col(A) * k-th row(B) for k=1...m
+
+	2) inner product method: (A*B)(i,j) is the inner product irow(A)*jcol(B)
+
+
+:65
+Example: covariance matrix in terms of matrix multiplication
+
+	if you have n experimental samples of X, Y, as rows of a nx2 matrix, 
+	with X values in the first column and Y values in the second column:
+
+		D = [x1 y1; x2 y2; x3 y3]
+
+	and you want to estimate the covariance matrix:
+
+		covM(X,Y) = 	[E((X-E(X)^2) 		E((X-E(X))(Y-E(Y)))
+
+		     		E((Y-E(Y))(X-E(X))) 	E((Y-E(Y))^2)]
+
+	you can rewrite in matrix  multiplication terms as:
+
+		covM(X,Y) = E of [X-E(X), Y-E(Y)]'*[X-E(X) Y-E(Y)]
+
+	Work out in class
+
+
+:70
+Special cases of matrix multiplication
+
+	matrix*column vector = weighted combination of matrix columns
+
+	row vector*matrix = weighted combination of matrix rows
+
+
+:if time allows
+Examples of matrix multiplication
+
+	1) recenter columns of matrix A so that each has mean 0
+
+	first try:
+
+		A - mean(A,1) doesn't work (dimension mismatch)
+
+	how to get appropriate mean to fill entire column?
+
+	use outer product:
+
+		A - ones(size(A,1),1)*mean(A,1)
+
+
+:next time
+Eigenvectors
+
+	For a given matrix A, certain vectors v are special in that the 
+	transformation T_A only scales them; it does not rotate them at all
+
+	Algebraically:
+
+		T_A(v) = cv for some constant c
+
+	Such vectors are called characteristic vectors, proper vectors,
+	or, traditionally, the German eigenvectors 
+
+
+:next time
+Example of eigenvectors
+
+	Consider the matrix A = [1 2;0 1] acting by right multiplication
+	on row vectors (examine in MATLAB)
+
+	Let's look at the details:
+
+		[x y][1 2; 0 1] = [x y+2x]
+
+	Clearly, if x=0, then R_A(v) = v, so any vector [0 y]
+	is an eigenvector of R_A
+
+	Does L_A have the same eigenvectors as R_A?
+
+		[1 2; 0 1][x; y] = [x+2y y]
+
+	so eigenvectors of L_A are of the form [x 0]
+

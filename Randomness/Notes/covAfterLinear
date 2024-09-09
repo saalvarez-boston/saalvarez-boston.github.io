@@ -1,0 +1,116 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Recall: covariance matrix of a 2D RV
+
+		cov(X,X)	cov(X,Y)
+	C = 
+		cov(Y,X)	cov(Y,Y)
+
+	Covariance doesn't change if the RVs X and Y are shifted by constants:
+
+		cov(X+a, Y+b) = cov(X,Y)
+
+	Why: use bilinearity as follows
+
+		cov(X+a, Y+b) = cov(X,Y) + cov(a,Y) + cov(X,b) + cov(a,b)
+
+				= cov(X,Y) because all other terms are 0
+
+	So, if we are just interested in obtaining the covariance matrix,
+	we can first shift the RVs involved so that their expected values are 0
+
+
+Covariance matrix in terms of matrix multiplication
+
+	Assume that (X,Y) has expected value 0, that is, [E(X) E(Y)] = [0 0]
+
+	The covariance matrix of X,Y is then
+
+			E(X^2)	E(XY)
+		C =
+			E(YX)	E(Y^2)
+
+			X^2	XY
+		= E (		     )
+			YX	Y^2
+
+
+		= E( [X Y]'*{X Y} )
+
+
+Sample covariance matrix
+
+	The above calculation refers to the exact distribution covariance
+
+	If the covariance matrix is instead estimated based on sample data,
+	then the expected values become averages over the sample points
+
+	In matrix notation, the calculation of the sample covariance is:
+
+					X'
+		sample C = average of 	   * [X Y]
+					Y'
+
+	where now X and Y denote columns of data samples, so that X' and Y'
+	are the corresponding rows of the same data samples
+
+	Note carefully that even though all sample points are weighted equally
+	in such an average, the underlying probability distributions are
+	correctly taken into account, because a given value will occur among
+	the samples in proportion to its probability
+
+
+Effect of a linear transformation on the covariance matrix
+
+	Suppose that [X Y] is a 2D RV with covariance matrix C
+
+	Suppose that A is a 2x2 matrix
+
+	Define a new 2D RV by matrix multiplication:
+
+		[U V] = [X Y]*A
+
+	How is the covariance matrix of [U V] determined in terms of C, A?
+
+	We assume that [X Y] has expected value 0:
+
+		[E(X) E(Y)] = [0 0]
+
+	First calculate the expected value of [U V]:
+
+		[E(U) E(V)] = E([U V]) = E( [X Y]*A ) = E([X Y])*A = [0 0]
+
+	Nice. Now compute the covariance matrix of the new variables:
+
+		Cnew = E([U V]*[U V]') = E( ([X Y]*A)'*[X Y]*A )
+
+			= E( A'*[X Y]'*[X Y]*A )
+
+			= A'*E([X Y]'*[X Y])*A 
+
+			= A'*C*A
+
+
+Example of the covariance matrix after a linear transformation
+
+	Try some examples in MATLAB, as we did in class
+
+	xy = randn(10^3,2);		independent Gaussians with mean 0, var 1
+
+	scatter(xy(:,1), xy(:,2));	nice and symmetrical
+
+	cov(xy)				what should this covariance matrix be?
+
+	A = some 2x2 matrix with a clear geometric meaning (e.g., shear)
+
+	w = xy*A;
+
+	scatter(w(:,1), w(:,2));	transformed according to A
+
+	cov(z)				this is computed directly from the data
+
+	A'*cov(xy)*A			given by formula; compare against cov(z)
+

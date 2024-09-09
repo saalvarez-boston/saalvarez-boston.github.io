@@ -1,0 +1,100 @@
+
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	PS7 due tonight
+
+	Questions? Office hours as usual
+
+
+:02
+2D summation example
+
+	sum_{m=1...10, n=1...25} i / 3^j
+
+	= (sum_{m=1...10} i) * sum_{n=1...25} 3^-j
+
+	= 55 * ((1 - 3^-26)/(1 - 3^-1) - 1)
+
+
+:10
+Poisson arrivals
+
+	Assume that events (packet arrivals, alarms) occur in continuous time
+
+	Model probability of an arrival as proportional to length of time:
+
+		P(arrival within duration dt) = r*dt
+
+	Let X = total number of arrivals in one unit of time
+
+	What is the distribution of X?
+
+	Approximate by discrete time: split time unit into N equal subintervals
+
+	Since 1/N very small, either have 0 or 1 arrival within each
+
+	X is then a binomial RV with success probability r/N, number of trials N
+
+	P(X = k) = C(N,k) * (r/N)^k (1 - r/N)^(N-k)
+
+	Since actual number of arrivals, k, will be much smaller than N,
+
+	P(X = k) approx N^k / k! * (r/N)^k * e^-r = r^k / k! e^-r
+
+	This is called a Poisson distribution with arrival rate r
+	
+
+:20
+2D covariance examples
+
+	Suppose that X and Y are independent RVs. Are X and X+Y independent?
+
+		cov(X, X+Y) = cov(X,X) + cov(X,Y) 
+
+	but 
+
+		cov(X,Y) = 0 because X, Y independent
+
+	so
+
+		cov(X, X+Y) = cov(X,X)
+
+	result is nonzero unless X is constant, so "No"
+
+
+:30
+Example of jointly distributed RVs
+
+	Discuss naive Bayes document classification
+
+	Determine topic of a text document based on content
+	(for some predetermined list of topics)
+
+	You need "training" material, so have some set of documents
+	that have already been categorized by topic
+
+	Training:
+
+		Start training by compiling dictionary of words
+
+		For each topic, estimate prob distribution P(word | topic)
+		by looking at all training documents for that topic
+
+	Testing: given a new, uncategorized, document:
+
+		determine what dictionary words appear in the document
+
+		assuming that words appear independently,
+
+		P(document | topic) = prod_word P(word | topic)
+
+		classify document into topic that maximizes the probability
+
+
+	Show in Weka for mini-newsgroups dataset
+
+

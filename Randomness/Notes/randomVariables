@@ -1,0 +1,360 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+Random Variables (week 6)
+
+Random variables
+
+	A random variable is, intuitively, a randomly varying quantity
+
+	Examples include the number of successes in repeated Bernoulli trials,
+	and the number of trials until the first success
+
+	Relative to a given probability space, a random variable is a
+	function defined on the sample space
+
+		X: S -> set of variable's values
+
+	A random variable assigns some value to each possible outcome of
+	a random experiment, deterministically
+
+	Randomness occurs because the generation process that selects an
+	outcome is random
+
+
+Examples of random variables
+
+	1) The number of draws, without replacement, to get the Ace of Diamonds
+	from a standard 52 card deck
+
+		sample space S = all permutations of the full deck of 52 cards,
+		that is, all ordered sequences of the 52 cards without repetitions
+		nDraws: S -> integers defined by
+
+			nDraws(s1...s52) = i, where s(i) = Ace of Diamonds
+
+	2) The sum of the faces on two playing dice
+
+		S = {(d1,d2) | each di is in {1,2,3,4,5,6}}
+
+		SumFaces:S -> {1,2,...12} defined by
+
+			SumFaces((d1,d2)) = d1+d2
+
+	3) The number of tosses of a coin until the first occurrence of heads
+
+		S = all countably infinite sequences of H,T
+
+		numTosses:S -> integers defined by
+
+			numTosses(s1...) = i, where i = min j such that s(j)=H
+
+	4) Distance at which a dart lands from the target center
+	(assume overall circular target of radius 1, with no misses)
+
+		S = {(x,y) | x^2 + y^2 <= 1}
+
+		distance:S -> real numbers defined by
+
+			distance(x,y) = sqrt(x^2 + y^2)
+
+		This is a continuous random variable
+
+
+Distribution of a random variable
+
+	The values of a random variable, X, are like outcomes of a random experiment
+
+	If X:S -> values, then the probability that a particular value of X
+	occurs can be calculated by using the probability function on S:
+
+		P(X=v) is the probability of the event that consists of all
+		outcomes s in S for which X(s) = v
+
+		Shorthand notation: P(X=v) is P(X^-1(v))
+
+	For example, if X is the sum of the faces on two rolls of a fair die,
+	modeled as a function on the sample space S consisting of all ordered
+	pairs (i,j), where each of i,j is 1,2,3,4,5, or 6, then:
+
+		P(X=6) = P(sum is 6) = P(set of ordered pairs that sum to 6)
+			= P({(1,5),(2,4),(3,3),(4,2),(5,1)})
+			= 5/36 since all outcomes of S are equally likely
+
+	The collection of the probability values P(v) over all possible values
+	of a RV X is called the distribution of X
+
+
+Examples of distributions of RV's
+
+	1) X = number of successes in n independent Bernoulli trials with P(success)=p
+
+	Set of possible values of X = all integers in the range 0-n
+
+		P(X=k) = nCk p^k(1-p)^(n-k) (binomial distribution)
+
+	2) X = number of trials until first success in repeated Bernoulli trials
+	
+		P(X=k) = (1-p)^(k-1) p (geometric / discrete exponential distribution)
+
+	3) X = number of draws without replacement from a single deck to get the Ace of Diamonds
+
+	Set of possible values of X = all integers between 1 and 52
+
+		P(X=1) = 1/52
+
+		P(X=2) = 51/52*1/51 = 1/52  (by chain rule of conditional probability)
+
+		P(X=k) = 51/52*50/51*49/50* ... *(52-k+1)/(52-k+2)*1/(52-k+1) = 1/52
+
+	A more transparent way to see this is simply that the Ace of Diamonds
+	is equally likely to be in any of the 52 positions of the shuffled deck
+
+	4) X = number of desirable objects in n draws without replacement 
+	from a finite bin of N objects of which M are desirable
+
+	Set of possible values of X = 0,1,2,...min(n,M)
+
+		P(X=k) = MCk * (N-M)C(n-k)	(hypergeometric distribution)
+
+	5) Poisson model of arrivals
+
+	X = number of arrivals (service requests, customers, data packets) per unit time,
+	assuming arrival probability lambda*dt in each infinitesimal interval dt
+
+	Approximate as binomial RV with very large n, very small p = lambda/n
+
+		P(X=k) = nCk p^k (1-p)^(n-k)
+
+	Only smaller values of k will have considerable probability, so:
+
+		nCk = n^k / k! (approx.) 
+
+	and 
+
+		(1-p)^(n-k) = (1-p)^n = (1-lambda/n)^n = e^(-lambda) (approx.)
+
+	Therefore, the probability of exactly k arrivals in [0,1] is approximately:
+
+		P(X=k) = e^-lambda lambda^k / k!   (all non-negative integers k)
+
+	Note that the sum of all of these P(k) is 1
+
+
+Expected value of a random variable
+
+	If the random experiment underlying a random variable is repeated,
+	various (random) values of the variable are observed
+
+	One might ask: can we predict anything about these values?
+
+	We know from our early random walk experiments that even if individual 
+	values are randomly generated, there may be an overall pattern "in the 
+	large", that is, in the collection of all values
+
+	In particular, we may be able to say something about the average of
+	a large number of observed values of the random variable
+
+	This large scale average is called the expected value of the RV
+
+	For example, consider the number of heads in 10 tosses of a loaded coin
+	with P(H) = 0.75
+
+		write simulation as function M-file in MATLAB
+
+		run several times
+
+		average is essentially predictable, and becomes more so
+		the larger the number of observations we make, that is,
+		the greater the number of times we repeat the experiment
+
+	How could one have predicted the average?
+
+
+Formula for the expected value of a RV
+
+	Since the probability of an event measures the expected fraction of 
+	experimental repetitions in which the event occurs, we can compute
+	the expected average (expected value) of a RV, X
+
+	We will assume that X is discrete, defined over either a finite or 
+	countably infinite sample space (not the dart distance, for example)
+
+	Say that X has possible values v1, v2, ..., with probabilities pi
+
+	The i-th value, vi, occurs in about pi (as a fraction) of experiments
+
+	Therefore, in a large number n of repetitions, one expects about npi
+	occurrences of the value vi
+
+	The average of any collection of values is just their sum divided by their number
+
+	The expected sum is np1 v1 + np2 v2 + ... + npi vi + ...
+
+	The number of values is n
+
+	The expected average is therefore the following:
+
+		E(X) = p1 v1 + p2 v2 + ... + pi vi + ...
+
+	
+Examples of expected value calculations
+
+	1) number of heads in 10 tosses of a coin with P(H)=0.75
+
+	Possible values are 0,1,2,3,4,5,6,7,8,9,10,
+	with probabilities P(numHeads=i) = 10Ci 0.75^i 0.25^(10-i)
+
+	Expected value is therefore
+
+		E(numHeads) = sum_{i=1}^{10} 10Ci 0.75^i 0.25^(10-i) * i
+
+	Solve with hidden function trick to get
+
+		E(numHeads) = 7.5
+
+	2) number of tosses until the first occurrence of heads
+
+	Assume P(heads) = p
+
+	First heads occurs on toss i if and only if
+
+		first i-1 tosses are tails
+		and
+		i-th toss is heads
+
+	Therefore,
+
+		P(X=i) = (1-p)^(i-1) p
+
+	Expected value is:
+
+		E(X) = sum from i=1 to infinity of (1-p)^(i-1) p i
+
+	Define hidden function:
+
+		f(x) = sum over all i of p x^i = p / (1-x)
+
+	Then the derivative of the hidden function is:
+
+		f'(x) = sum over all i of i p x^(i-1),
+
+	so you recognize the target sum as a particular instance of f'(x):
+
+		E(X) = f'(1-p)
+
+	Derivative is (from geometric sum formula, above):
+
+		f'(x) = p / (1-x)^2
+
+	Substitute x by 1-p to get answer:
+
+		E(X) = p / (1-(1-p))^2 = p / p^2 = 1/p
+
+
+Measuring the variation of a random variable
+
+	Consider the number of heads in 100 tosses of a fair coin
+
+	for i=1:100
+		hist( sum(randi(2,10^4,10^2)-1, 2) );
+		axis([20 80 0 3600]);
+		pause(0.1);
+	end
+
+	The average number of heads is around 50, which is the expected value
+
+	However, there is considerable variation in the observed average
+
+	In fact, the observed distribution is about 10 units wide at half height
+
+	Another way of viewing this is as a plot instead of a histogram
+
+	We'd like to provide a measure of such variation
+
+
+Variance
+
+	The average of a large number of observations of a random variable X, 
+	corresponding to many repetitions of the underlying random experiment, 
+	will be close to the expected value E(X)
+
+	The variation of X can be measured by examining the deviation of 
+	individual values from this average
+
+	It is customary to consider the squared deviation
+
+		squared deviation of v = (v - E(X))^2
+
+	The variance of a RV, X, is defined as the expected average of these 
+	squared deviations of X from the expected (average) value of X
+
+		var(X) = expected average of (X - E(X))^2
+
+	Thus, the variance is the expected value of a new RV, (X - E(X))^2
+
+	Before getting into calculation details, note that the variance is
+	an average squared distance, not a distance
+
+	To get a measure of the variation of X on the same scale as X,
+	just take the square root of the variance, which is what is
+	called a root mean square (RMS) measure
+
+	
+Formula for the variance
+
+	How to compute this expected average squared deviation?
+
+	Proceed as we did for the expected value last time
+
+	In a large sample of values of X, the various possible values vi will 
+	be represented in proportion to their probabilities, with approximately 
+	pi n instances of vi, where n is the total number of samples
+
+	Therefore, the expected contribution of vi to the sum of squared deviations is
+	
+		pi n (vi - E(X))^2
+
+	The expected average of all of the vi is the sum divided by n:
+
+		var(X) := sum of pi (vi - E(X))^2
+
+	The more variation X displays, the larger the variance of X
+
+
+Variance in terms of the expected values of X and X^2
+
+	The following formula is often useful:
+
+		var(X) = E(X^2) - E(X)^2
+
+	Here's a derivation:
+
+		var(X) = sum of pi (vi - E(X))^2
+
+			= sum of pi (vi^2 + E(X)^2 - 2viE(X))
+
+			= sum of pi vi^2 + E(X)^2 sum of pi - 2E(X) sum of pi vi
+
+			= E(X^2) + E(X)^2 - 2E(X)^2
+
+			= E(X^2) - E(X)^2
+
+
+Example of variance calculations
+
+	Single Bernoulli trial: suppose P(success)=p, and let X=1 if success,
+	X=0 if not success. Then:
+
+		E(X) = p*1 + (1-p)*0 = p
+
+	Also, X^2 is the same as X here, so E(X^2) = p as well
+
+	Therefore,
+
+		var(X) = E(X^2) - E(X)^2 = p - p^2 = p(1-p)
+
+	Plot as function of p - greatest variance / uncertainty at p=1/2
+
+

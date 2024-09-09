@@ -1,0 +1,300 @@
+
+CS244, Randomness and Computation
+
+:00
+Announcements
+
+	CS information session tonight at 5 in Campanella 559
+
+		Information about electives, the CS major, etc.
+
+		Pizza
+
+
+:02
+Comments on the third midterm exam 
+
+	I've made a full pass over all of the exams and assigned a rough grade
+
+		will return the exam papers next week
+
+	Quickly go over each problem in class
+
+		ask if there are any questions
+
+	Highlights:
+
+		2d) Are X and Y independent?
+
+			Easiest route is via the fact that cov(X,Y) is nonzero
+
+		3) and 4) should both be reviewed carefully
+
+
+:30
+Recall: covariance matrix of a 2D RV
+
+		cov(X,X)	cov(X,Y)
+	C = 
+		cov(Y,X)	cov(Y,Y)
+
+	Covariance doesn't change if the RVs X and Y are shifted by constants:
+
+		cov(X+a, Y+b) = cov(X,Y)
+
+	Proof: use bilinearity as follows
+
+		cov(X+a, Y+b) = cov(X,Y) + cov(a,Y) + cov(X,b) + cov(a,b)
+
+				= cov(X,Y) because all other terms are 0
+
+	So, if we are just interested in obtaining the covariance matrix,
+	we can first shift the RVs involved so that their expected values are 0
+
+
+:35
+Covariance matrix in terms of matrix multiplication
+
+	Assume that (X,Y) has expected value 0, that is, [E(X) E(Y)] = [0 0]
+
+	The covariance matrix of X,Y is then
+
+			E(X^2)	E(XY)
+		C =
+			E(YX)	E(Y^2)
+
+			X^2	XY
+		= E (		     )
+			YX	Y^2
+
+
+		= E( [X Y]'*{X Y} )
+
+
+:40
+Effect of a linear transformation on the covariance matrix
+
+	Suppose that [X Y] is a 2D RV with covariance matrix C
+
+	Suppose that A is a 2x2 matrix
+
+	Define a new 2D RV by matrix multiplication:
+
+		[U V] = [X Y]*A
+
+	How is the covariance matrix of [U V] determined in terms of C, A?
+
+	We assume that [X Y] has expected value 0:
+
+		[E(X) E(Y)] = [0 0]
+
+	First calculate the expected value of [U V]:
+
+		[E(U) E(V)] = E([U V]) = E( [X Y]*A ) = E([X Y])*A = [0 0]
+
+	Nice. Now compute the covariance matrix of the new variables:
+
+		Cnew = E([U V]*[U V]') = E( ([X Y]*A)'*[X Y]*A )
+
+			= E( A'*[X Y]'*[X Y]*A )
+
+			= A'*E([X Y]'*[X Y])*A 
+
+			= A'*C*A
+
+
+:45
+Example of the covariance matrix after a linear transformation
+
+	Do one or two examples in MATLAB
+
+	xy = randn(10^3,2);		independent Gaussians with mean 0, var 1
+
+	scatter(xy(:,1), xy(:,2));	nice and symmetrical
+
+	cov(xy);			what do you expect the covariance to be?
+
+	A = some 2x2 matrix with a clear geometric meaning (e.g., shear)
+
+	z = xy*A;
+
+	scatter(w(:,1), w(:,2));	transformed according to A
+
+	cov(z);				take a look
+
+	A'*cov(xy)*A;			any similarities?
+
+
+:50 or next time
+Recall: eigenvectors
+
+	Algebraically, v is an eigenvector of the linear transformation T_A if:
+
+		T_A(v) = cv for some constant c
+
+	The constant c is known as an eigenvalue of A, and goes with v
+
+		"v is an eigenvector of A with eigenvalue c"
+
+	We also saw:
+
+		the left eigenvectors of a matrix A are the transposes of 
+		the right eigenvectors of the transposed matrix A', and
+		the corresponding eigenvalues are the same in both cases
+
+
+:55
+Eigenvectors of covariance matrices
+
+	Continue the randn example above
+
+	Calculate the eigenvectors of the covariance matrix of the new variables
+
+	[vecs vals] = eig(cov(z));
+
+	Superimpose the lines defined by the eigenvectors on the scatterplot
+
+	Notice anything?
+
+	This is because the eigenvectors of the covariance matrix always
+	define new axes that are naturally tuned to the data
+	
+	What would the covariance be in the rotated coordinate system?
+
+		
+:next time
+n-dimensional random variables
+
+	We'll next start looking at nD RV, for n >= 3
+
+	Why would we care?
+
+		Lots of data are higher-D (e.g., images, signals)
+
+
+:next time
+Basic notions for nD RV
+
+	An nD RV is a function X:S -> V1 x V2 x ... x Vn
+
+		S is the sample space for some random experiment
+
+		Vi is the set of values of the i-th component Xi of X
+	
+			f(s) = (X1(s), X2(s), ..., Xn(s))
+
+	The (joint) distribution of an nD RV X is the function
+
+		P_X(v1...vn) = P(X1=v1 and X2=v2 and ... and Xn=vn)
+
+	The marginal distributions of X are:
+
+		P_Xi(vi*) = P(Xi=vi) = sum_{all j not i} P_X(v1,v2,...vi*,...vn)
+
+	The expected value of an nD RV X is the expected average value of X
+	over a very large number of random observations of X
+
+		E(X) = sum_{(v1,v2,...vn)} P_X(v1...vn)*(v1,v2,...vn)
+
+			= (E(X1), E(X2), ... E(Xn))
+
+	The covariance matrix of an nD RV X is the matrix whose (i,j) entry is
+
+		C(i,j) = E( (Xi-E(Xi)(Xj-E(Xj)) )
+
+	The covariance matrix doesn't change if the Xi are shifted by constants
+
+	If all Xi have expected value 0, then covariance in matrix form is:
+
+		C = E( X'*X ),
+
+	where X is assumed to be a row vector
+
+
+(Eigenvalues of ) covariance matrix in terms of transposes
+
+	# variables (rows) in X may be much larger than # instances (columns)
+
+	then cov(X) is a huge matrix
+
+
+n-dimensional random variables
+
+	We can consider n RVs together: X1, X2, ... Xn
+
+	This is natural as a model in several situations:
+
+		time-dependent sequences 
+
+		images
+
+	We can consider such a collection of RVs to be a single vector
+
+		X = [X1 X2 ... Xn]'
+
+	that is obtained as a function from a sample space to an nD space
+
+		X: S -> values^n
+
+
+:18
+MATLAB examples
+
+	Visualize multiple RVs 
+
+
+:25
+Distribution of an nD RV
+
+	Gives the probabilities P(X = v) for all vectors v = [v1 v2 ... vn]
+	that can occur as a value of X = [X1 X2 ... Xn]
+
+	Expected value E(X) = sum_v P(X=v) v is an nD vector that represents
+	an average over all possible vector values of X (it is "in the center 
+	of the distribution of X" if that distribution is unimodal)
+
+	Covariance matrix
+
+
+Independence for nD RV
+
+	If the Xi are independent, that is, if
+
+		P
+
+	Can X be independent of Y and independent of Z,
+	but not independent of (Y,Z)?
+
+	That would mean
+ 
+
+Eigenvectors of the covariance matrix
+
+
+:later
+(Eigenvalues of ) covariance matrix in terms of transposes
+
+	# variables (rows) in X may be much larger than # instances (columns)
+
+	then cov(X) is a huge matrix
+
+:if this fits naturally somewhere
+Covariance example: Fisher's Iris flower dataset
+
+	Show in MATLAB
+
+	load fisheriris;
+
+	x = meas(:,1); y = meas(:,2);
+
+	cov(x,y)
+
+		shows small covariance relative to individual variances
+
+	scatter(x,y);
+
+		shows that global covariance is not the whole story
+
+		this is where data mining begins...
+
+		

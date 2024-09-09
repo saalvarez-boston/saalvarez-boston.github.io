@@ -1,0 +1,77 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+Random Variables (week 6)
+
+	2) Poisson arrivals: let X = # of arrivals in unit time, 
+	for mean arrival rate lambda
+
+	Distribution of X is: 
+
+		P(X=k) = lambda^k/k! e^(-lambda)
+
+	Expected value:
+
+		E(X) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)!
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j!
+
+	The sum is 1, though, because it is the sum of all of the
+	values of a Poisson distribution, so:
+
+		E(X) = lambda, the mean arrival rate (of course!)
+
+	Now the variance:
+
+		var(X) = E(X^2) - E(X)^2
+
+	Compute the first term on the right:
+
+		E(X^2) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)! k
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j! (j+1)
+
+	Split into two sums, which have values lambda E(X) and lambda*1, so:
+
+		E(X^2) = lambda^2 + lambda
+
+	and
+
+		var(X) = E(X^2) - E(X)^2 = lambda^2 + lambda - lambda^2 = lambda
+
+
+Properties of expected value and variance
+
+	Expected value is linear: 
+
+		E(aX + bY) = aE(X) + bE(Y)
+
+	Variance is quadratic, and produces interaction terms: 
+
+		var(X + Y) = var(X) + var(Y) + 2(E(XY) - E(X)E(Y))
+
+
+Independent random variables
+
+	RV's X and Y are called independent if all pairs of events
+
+		{X=v} and {Y=w}
+
+	are independent.
+
+	Thus, if X and Y are independent, then for any values v, w:
+
+		P(X=v and Y=w) = P(X=v)*P(Y=w)
+
+	If X and Y are independent, then E(XY) splits:
+
+		E(XY) = sum_{i,j} pi qj vi wj = E(X)E(Y)
+
+	(here, pi = P(X=vi) and qj = P(Y=wj))
+
+	In this case, the variance of X+Y is just the sum of their variances:
+
+		var(X + Y) = var(X) + var(Y)
+
+

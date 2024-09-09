@@ -1,0 +1,412 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+:00
+Reminders
+
+	PS3 due tomorrow tonight
+
+	Questions? Office hours today, or e-mail
+
+	First midterm exam next Tuesday
+
+
+:02
+PS3 task 2 example
+
+	Generate uniformly distributed rands on [0,1] and take square roots:
+
+	>> x = rand(1,10^4);
+	>> y = sqrt(x);
+	>> hist(y);
+
+	What function would you guess describes the PDF of y?
+
+	Ok, how can one prove what the answer must be?
+
+	Let f(x) = sqrt(x)
+
+	Small interval dx gets mapped to small interval dy = dx / 2sqrt(x)
+
+	Following two events are equivalent, so have the same probability dP:
+
+		P(x lands in dx) = P(y lands in dy) = dP
+
+	The PDF of x is constant at 1:
+
+		dP = dx
+
+	Rewrite dx in terms of dy:
+
+		dP = dy 2sqrt(x)
+
+	Rewrite sqrt(x) in terms of y:
+
+		dP = dy 2y
+
+	Conclude:
+
+		dP/dy = 2y
+
+
+:18
+Summations
+
+	Probability calculations often involve adding expressions
+
+	We will discuss some useful tools to compute summations in special cases
+
+		Geometric sums and series
+
+		Binomial expansion
+
+		Hidden function trick
+
+
+:19
+Geometric sums and series
+
+	These are sums of consecutive powers of the same base, b:
+
+		1 + b + b^2 + ... + b^k + ... + b^n
+
+	Let S(n) denote the value of the sum for powers 0 through n (above)
+
+	To get a formula for S(n), multiply S(n) by the base, b:
+
+		S(n)*b = b + b^2 + b^3 + ... + b^{n+1}
+
+	This just shifts the sum for S(n), so subtractiong cancels a lot out:
+
+		S(n)*b - S(n) = b^{n+1} - 1
+
+	Then just solve for S(n):
+
+		S(n) = (b^{n+1} - 1) / (b - 1)
+
+	A geometric series is the name given to the limit as n -> infinity:
+
+		S(infinity) = limit of S(n) as n -> infinity
+
+	Limit well-defined only if base, b, satisfies |b| < 1, so b^{n+1}-->0
+
+		S(infinity) = -1/(b-1) = 1/(1-b)
+
+
+:26
+Hidden function trick
+
+	Can one find a simple expression for the following sum (series)?
+
+		S = sum of k*b^k over all positive integers k
+
+	Let's rewrite the sum in terms of something more familiar:
+
+		S = b * sum of k*b^{k-1}
+
+	Recognize the derivative?
+
+		S = b * d/db[ sum of b^k ]
+
+	We know that inner sum:
+
+		S = b * d/db[ 1/(1-b) ]
+
+	Just compute the derivative:
+
+		S = b / (1-b)^2
+
+	Done!
+
+
+:35
+Another hidden function example
+
+	Consider the following binomial-looking sum:
+
+		10 + 2 C(10,2) + 3 C(10,3) + ... + k C(10,k) + ... + 10
+
+	If we had
+
+		10 + C(10,2) + C(10,3) + ... + C(10,k) + ... + 10
+
+	then the sum would just be
+
+		(1 + 1)^10 = 2^10 = 1024
+
+	With the k factors, not so obvious how to obtain the sum
+
+	However, notice that k factors are like those in d/dx (x^k) 
+
+	Maybe the target sum is related to the derivative of some function?
+
+	Define the following function:
+
+		f(x) = x^0 + C(10,1) x^1 + ... + C(10,k) x^k + ... + x^10
+
+	Then the derivative of f(x) is reminiscent of the original sum:
+
+		f'(x) = C(10,1) x^0 + ... + k C(10,k) x^{k-1} + ... + 10 x^9
+
+	Except that there's a pesky x in the way
+
+	Get rid of x by setting x=1 in the derivative expression:
+
+		f'(x) at x=1 is precisely equal to the original sum!
+
+	Does that help?
+
+	Yes, because we can find a simple ("closed form") expression for f(x),
+	and therefore for f'(x), by using the binomial expansion:
+
+		f(x) = (1 + x)^10
+
+		f'(x) = 10 (1 + x)^9
+
+		f'(x) at x=1 equals 10 2^9, so that's the value of the sum!
+
+
+:45
+Probability example
+
+	Assume that the waiting time at a server is distributed as follows:
+
+		P(n-cycle wait) = C 2^{-n}, where n is a non-negative integer
+
+	What is the average wait?
+
+	The average will be a weighted sum:
+
+		avg wait = 0*P(0 wait) + 1*P(1 wait) + ... + n*P(n wait) + ...
+
+	Plug in the probability values:
+
+		avg wait = sum of C*n*2^{-n}
+
+	This is just like the preceding example, except with 1/2 instead of x
+
+		avg wait = C*1/2 / (1-1/2)^2 = 2C
+
+	What is the value of C? How can you find it?
+
+
+:55
+Canines and felines and the importance of context
+
+	Half of the pets in a town are dogs and the other half are cats
+
+	1) A family in town has two pets, of which one is known to be a cat
+
+		what is the probability that the other pet is also a cat?
+
+		Discuss
+
+		Simulate
+
+		>> a = randi(2,10^5,2)-1;
+		>> length(find(sum(a,2)==2)) / length(find(sum(a,2) > 0))
+	
+		ans =
+	
+    			0.3318
+
+	2) Another family also has two pets, of which one is a dog given to them
+	as a present by their friends. Their other pet is a stray that they
+	picked up and nursed back to health. 
+
+		what is the probability that the stray is also a dog?
+
+		Discuss
+
+		Simulate
+
+		>> a = randi(2,10^5,2)-1;
+		>> length(find(sum(a,2)==2)) / length(find(a(:,1)==1))
+		
+		ans =
+		
+    			0.4993
+
+
+:70
+Conditional probability
+
+	measures the likelihood of the occurrence of an event, E,
+	relativized to the restricted sample space in which some
+	other event, F, is assumed to occur with certainty
+
+	in general, compute conditional probability as following ratio:
+
+		P(E | F) = P(E and F) / P(F)
+
+
+:if time allows
+Another example: probability of busting (over 21) on third card in blackjack 
+
+	assuming that the first two cards are K and 5
+
+	also assume single player dealt cards randomly from single deck of
+	52 cards in four suits, with Ace,2,3,4,5,6,7,8,9,10,J,Q,K in each suit
+
+	current value of hand = 10 + 5 = 15 points
+
+	therefore, bust if third card is worth 7 or more points
+
+		cards remaining after dealing K,5: total of 50 cards,
+		of which 4x7 - 1 = 27 are worth 7 points or more
+		(subtract 1 because a K is already in hand)
+
+		probability of busting on the third card, given current hand,
+		can be computed as a simple ratio of counts in this particular
+		context because all outcomes (cards) are equally likely:
+
+		P(bust on 3rd | K,5) = P(>=7 pts on 3rd | K,5) = 27/50 = 0.54
+
+
+:if time allows
+Independence
+
+	two events are (probabilistically) independent if occurrence
+	of one of them does not affect the probability of the other
+
+	E independent of F if P(E | F) = P(E | not F)
+
+	E independent of F is equivalent also to either of the following:
+
+		P(E and F) = P(E)*P(F) (product rule for independent events)
+
+		P(E | F) = P(E)
+
+	by product rule, if E independent of F, then F also independent of E
+
+	product rule extends to more than two mutually independent events: 
+	if E1, E2, ... En are random events for which each Ei is independent 
+	of all of the others, then:
+
+		P(E1 and E2 and ... and En) = product of all of the P(Ei)
+
+
+:if time allows
+Independent tosses of a loaded coin
+
+	Assume P(H) = p on each toss (same p for all tosses)
+
+	Consider n successive tosses of the coin
+
+	Sample space S is {(s1,s2,...sn) | each si is H or T} of length-n seqs
+
+	If n tosses are independent, then probability of any specific outcome 
+	in the sample space can be computed using the product rule:
+
+		P(s1*,s2*,...sn*) = product from i=1 to n of P(si* on i-th toss)
+
+	each term in the product is either p if that slot in the selected
+	outcome is H, or 1-p if that slot is T.
+
+	therefore, the probability of observing the given outcome
+	depends only on the number of heads and tails that it contains:
+
+		P(s1*,s2*,...sn*) = p^k (1-p)^(n-k),
+
+	where k is the number of heads.
+
+	There are nCk different combinations of k of the n slots in which
+	exactly k heads can appear, and the elementary outcome associated
+	with each such combination is as given above. Therefore, the overall
+	probability of obtaining exactly k heads in n tosses is:
+
+		P(exactly k heas in n tosses) = nCk p^k (1-p)^(n-k)
+
+	This is a much easier derivation than our bins argument last week
+
+
+:if time allows
+Randomized algorithms
+
+	Randomness can be used as the basis for faster algorithms
+
+	For example, consider the computational task of primality testing:
+
+		input: a positive integer, n
+
+		desired output: true if n is prime, false otherwise
+
+	Standard deterministic algorithms for solving this task require
+	enormous amounts of time for large integers of the sort needed
+	in applications such as RSA public key cryptography
+
+	The randomized primality testing approach is based on repeatedly
+	applying various independent "weak tests" to a candidate number, n
+
+	Each weak test T(r) eliminates over half of non-primes:
+
+		P(n not prime | n passes test T(r)) < 1/2
+
+	and is guaranteed to be correct when it identifies a non-prime:
+
+		P(n prime | n fails test T(r)) = 0
+
+	The overall test of primality repeatedly applies the weak test with
+	a randomized parameter, r:
+
+		for i=1 to k
+			randomly generate parameter, r
+			apply resulting weak test T(r) to candidate n
+			if n fails T(r)
+				return false (no mistakes possible here)
+		end for
+		return true (only mistaken if non-prime n passes all k tests)
+
+	Assuming that each test is independent of the others:
+
+		P(n not prime | algorithm returns true) = 
+			product of all k probabilities
+			P(n not prime | n passes T(r))
+
+	Each of these probabilities is less than 1/2, so
+
+		P(n not prime | algorithm returns true)  < 1/2^k
+
+	This error probability can be made as small as desired by increasing
+	the number of tests, k
+
+		example: with k=100 tests, the error probability is < 10^(-10)
+
+
+:if time allows
+Chain rule of conditional probability
+
+	For any sequence of random events, E1, E2, ..., En,
+
+		P(E1 and E2 and ... and En) = the product over the
+		following chain of conditional probabilities:
+
+		P(E1)
+		P(E2 | E1)
+		P(E3 | E1 and E2)
+		P(E4 | E1 and E2 and E3)
+		...
+		P(En | E1 and E2 and ... and E(n-1))
+
+	Example: a very simple probabilistic model of text:
+
+		assume that words are selected randomly from a dictionary,
+		except that each word is conditioned by previous words.
+
+		for example, the probability of the sentence "the ball rolls"
+		would be computed as a product over the following chain:
+
+		P("the")
+		P("ball" | "the")
+		P("rolls" | "the" and "ball")
+
+		actually implementing a probabilistic text generator based on
+		these ideas requires an enormous amount of fodder for the 
+		estimation of the conditional probabilities; it is convenient 
+		to at least initially assume that all options are equally
+		likely; for example, if the dictionary contains 1000 words,
+		then one can guess that each word has probability 1/1000; 
+		any available text can then be used to update the probabilities
+

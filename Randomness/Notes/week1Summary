@@ -1,0 +1,121 @@
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Summary of key topics discussed in class during the first week
+
+
+Randomness
+
+	unpredictability within a given instance of a random phenomenon
+
+		like tossing a coin once
+
+	but collective behavior over many repetitions of the experiment
+	may allow nearly deterministic description
+
+		like the global pattern visible in a large collection of random walks
+
+Formal notion of random experiment / probability space
+
+	must define precisely what set (sample space) of individual outcomes 
+	are possible in any single instance of the experiment
+
+		like {Heads, Tails} for tossing a coin once
+
+		like {0,1,2,3,4,5,...} (all non-negative integers)
+		for a single observation of the line length at the DMV
+
+	but also, some measure of expected likelihood (probability) must be given
+
+		why: we want to answer questions such as "is observing 60 or so 
+		occurrences of the substring 'cat' plausible in a randomly generated 
+		string of length one million?" or "what is the probability that there 
+		will be at least three people in line at the DMV?"
+
+		how: we assign a number P(x) between 0 and 1 (probability) to each 
+		possible outcome x in the sample space, that measures the fraction 
+		of experimental instances in which that particular outcome x is 
+		expected to occur
+
+			like P(i)=1/6 for each face i of a fair die
+
+			like P(n) = e^(-rate) rate^n / n!, where n is the line length 
+			at the DMV (by the way, n! means the product 1*2*...*n here)
+
+		the sum of the probabilities of all outcomes in the sample space is 1
+
+Random events
+
+	are subsets of the sample space, and correspond to events that may occur 
+	or not depending on what experimental outcome occurs
+
+		like rolling an even number on a die
+
+			as a set: {2,4,6}
+
+		like observing at least three people in line at the DMV
+
+			as a set: {3,4,5,6,7,...} (all integers >= 3)
+
+	the probability of an event should measure its expected relative frequency
+
+		since outcomes in the sample space are mutually exclusive, it
+		follows that the probability of an event E is the sum of the
+		probabilities of its constituent outcomes
+
+Properties of the probability function
+
+	For any event, E, 
+
+		0 <= P(E) <= 1
+
+		P(E) = sum of all values P(x), over all x in E
+
+	The probability of the entire sample space is 1
+
+	If E and F are mutually exclusive events (cannot both occur in the
+	same experimental instance; represented by non-intersecting sets),
+
+		P(E or F occurs) = P(E) + P(F)
+
+	Therefore, if E is any event,
+
+		P(E does not occur) = 1 - P(E occurs)
+
+MATLAB (MATrix LABoratory) topics
+
+	Provides an interactive environment for computing and visualization
+
+	Uses vectors / matrices as the basic data objects, and is optimized to 
+	do vector operations efficiently; explicit iteration is possible but 
+	should not be the default technique
+
+	Random number generators
+
+		rand(n,m) returns a size n x m matrix (n rows, m columns)
+		containing random floating-point values between 0 and 1
+
+		randi(max, n, m) returns a random n x m matrix containing
+		random integers between 1 and max
+
+	Some other operators and functions that we used in class (see MATLAB help)
+
+		colon operator to define index ranges, and as a wildcard
+
+		sum, to add over a selected dimension of a matrix
+
+		hist, for histograms
+
+		findstr, for substring matching
+
+		elementwise arithmetic: use . in front of operator
+
+			like .^ for elementwise exponentiation
+
+	M-files
+
+		define scripts or functions
+
+		see examples on course web page
+

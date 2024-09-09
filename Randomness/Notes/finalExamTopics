@@ -1,0 +1,75 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Final Exam Topics
+(emphasis will be on establishing conceptual understanding, demonstrated by the 
+ability to cast specific problems in the language of the course, and to solve them
+using ideas and tools discussed in the course; knowing the terminology is important
+to the extent that it enables doing these things)
+
+	Probability basics: 
+
+		random experiment, sample space, probability function
+
+	Counting: 
+
+		addition and multiplication principles
+		hidden function trick
+		combinations and permutations
+		application to probability spaces with equiprobable outcomes
+
+	Independence and conditional probability: 
+
+		definition(s), conditioning
+		Bayes' rule (diagnostic reasoning)
+
+	Random variables: 
+	
+		definition, distributions (PMF,PDF,CDF)
+		E(X), var(X)
+		independence
+
+	2D and nD random variables: 
+
+		joint and marginal distributions
+		independence, covariance, correlation
+
+	Basic matrix algebra: 
+
+		matrix operations, transposes
+		inner and outer products
+		multiplication of rectangular matrices
+		behavior of covariance under linear transformations
+
+	Eigenvectors and eigenvalues: 
+	
+		definitions, geometric meaning
+		transposition
+
+	Principal components analysis: 
+
+		geometric significance and computation of principal axes
+		projections
+		high-D PCA using instancewise covariance
+
+	Random processes: 
+
+		definition
+		i.i.d. processes, law of large numbers, central limit theorem
+		Markov chain basics
+
+
+Study materials
+
+	The problem sets provide an excellent source of practice problems
+
+		do them again; you may get more out of them the second time
+
+	Solutions helpful also, but attempt the problems yourself first
+
+	I've posted notes on many important topics
+
+	Read the book, too
+

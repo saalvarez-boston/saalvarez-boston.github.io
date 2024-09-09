@@ -1,0 +1,512 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS6 due next Tuesday
+
+
+:02
+Recently
+
+	RVs represent measurements taken on a random experiment
+
+	Average behavior of RV X over many samples described in terms of 
+	expected value (average) and variance (variation from average)
+
+		E(X) = sum_i p_i v_i
+
+		var(X) = sum_i pi (vi - E(X))^2 = E(X^2) - E(X)^2
+
+		var(X) is squared distance; sigma(X) = sqrt(var(X)) is distance
+
+	Chebyshev inequality bounds probability of large deviations
+
+		P(|X - E(X)| >= k sigma(X))  <=  1 / k^2
+
+	Law of large numbers (LLN): observed averages are probably close to E(X)
+
+		P(|avg of X1...Xn - E(X)| < epsilon) -> 1 as n -> infinity
+
+
+:05
+Direct E(X) and var(X) calculations from PS5
+
+	X = fraction of successes in n Bernoulli trials with P(success)=0.12
+
+	Possible values of X are 0, 1/n, 2/n, ... 1.
+
+	Distribution of X is: 
+
+		P(X=k/n) = nCk 0.12^k 0.88^(n-k)
+
+	Expected value:
+
+		E(X) = sum_k k/n nCk 0.12^k 0.88^(n-k)
+
+			= 1/n 0.88^n sum_k k nCk (0.12/0.88)^k
+
+			= 1/n 0.88^n 0.12/0.88 sum_k k nCk (0.12/0.88)^(k-1)
+
+			= 1/n 0.88^(n-1) 0.12 d/dx[ (1 + x)^n ]|_(x=0.12/0.88)
+
+			= 1/n 0.88^(n-1) 0.12 n (1 + 0.12/0.88)^(n-1)
+
+			= 1/n 0.88^(n-1) 0.12 n / (0.88)^(n-1)
+
+			= 0.12
+
+	Variance:
+
+		var(X) = E(X^2) - E(X)^2
+
+		E(X^2) = sum_k k^2/n^2 nCk 0.12^k 0.88^(n-k)
+
+			= 1/n^2 0.88^n sum_k k^2 nCk (0.12/0.88)^k
+
+			= 1/n^2 0.88^n (0.12/0.88)^2 sum_k k^2 nCk (0.12/0.88)^(n-2)
+
+			Then express in terms of f''(x) for hidden function f(x)
+
+
+:15
+Exercise (skip in class)
+
+	Compute E(X) and var(X) for X = Poisson RV with mean arrival rate lambda
+
+	Distribution of X is: 
+
+		P(X=k) = lambda^k/k! e^(-lambda)
+
+	Expected value:
+
+		E(X) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)!
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j!
+
+	Sum is 1 because it is the sum over values of Poisson distribution, so:
+
+		E(X) = lambda, the mean arrival rate (of course!)
+
+	Now the variance:
+
+		var(X) = E(X^2) - E(X)^2
+
+	Compute the first term on the right:
+
+		E(X^2) = sum_(k>=1) e^(-lambda) lambda^k/(k-1)! k
+
+			= lambda sum_{j>=0} e^(-lambda) lambda^j / j! (j+1)
+
+	Split into two sums, which have values lambda E(X) and lambda*1, so:
+
+		E(X^2) = lambda^2 + lambda
+
+	and
+
+		var(X) = E(X^2) - E(X)^2 = lambda^2 + lambda - lambda^2 = lambda
+
+
+:17
+Properties of expected value and variance
+
+	We considered X = fraction of successes in n Bernoulli trials
+
+	We computed E(X) and var(X) directly from the definition
+
+	Notice that X = 1/n times Y, where Y = number of successes in n trials
+
+	If we happened to know that E(Y) = np and var(Y) = np(1-p), 
+	we would have a shortcut for X:
+
+	Expected value is linear: 
+
+		E(aX + bY) = aE(X) + bE(Y)
+
+	Variance is quadratic, and produces interaction terms: 
+
+		var(aX) = a^2 var(X)
+
+		var(X + Y) = var(X) + var(Y) + 2(E(XY) - E(X)E(Y))
+
+	So, for X = fraction of successes in n trials, we would have:
+
+		E(X) = E(1/n Y) = 1/n E(Y) = 1/n np = p
+
+		var(X) = 1/n^2 var(Y) = 1/n^2 np(1-p) = p(1-p)/n
+
+
+:25
+Independent random variables
+
+	RV's X and Y are called independent if all pairs of events
+
+		{X=v} and {Y=w}
+
+	are independent.
+
+	Thus, if X and Y are independent, then for any values v, w:
+
+		P(X=v and Y=w) = P(X=v)*P(Y=w)
+
+	If X and Y are independent, then E(XY) splits:
+
+		E(XY) = sum_{i,j} pi qj vi wj = E(X)E(Y)
+
+	and the variance of X+Y is just the sum of their variances:
+
+		var(X + Y) = var(X) + var(Y)
+
+
+:32
+Example
+
+	Let X be the number of successes in n independent Bernoulli trials
+	with success probability p
+
+	For each i between 1 and n, let Xi be the binary success variable for 
+	the i-th trial, with Xi=1 if i-th trial yields a success, 0 otherwise
+
+	Then
+
+		X = sum of all of the Xi
+
+	Furthermore, the Xi are mutually independent, and therefore:
+
+		var(X) = sum of var(Xi) = np(1-p)
+
+	This means that the variation, or uncertainty, in the total number
+	of successes, increases as the number of trials increases
+
+	In terms of the expected variation in normal (not quadratic) units,
+	we consider instead the standard deviation:
+
+		stdev(X) = sqrt(var(X)) = sqrt(p(1-p))*sqrt(n)
+
+	This root mean square distance from the expected value varies
+	like the square root of the number of trials
+
+
+:40
+MATLAB simulation of n independent coin tosses, for n=1:500
+
+	Perform 1000 repetitions of the experiment of 500 tosses of a fair coin
+	Each row is a toss, with repetitions (samples) across columns
+
+		tosses = randi(2,500,1000);
+
+	Keep track of the running total of heads
+	Row n will tabulate the number of heads in the first n tosses
+
+		headCounts = zeros(500,1000);
+
+	Row 1 is really easy:
+
+		headCounts(1,:) = tosses(1,:);
+
+	Then update heads count by including the latest coin toss:
+
+		for n=2:500
+			headCounts(n,:) = headCounts(n-1,:) + tosses(n,:);
+		end
+
+	Take a look:
+
+		plot(headCounts);
+
+	Expected value tendency dominates, occludes variation from mean
+	So, we subtract the expected value:
+
+		headCounts = headCounts - (1:500)'*ones(1,1000);
+
+		plot(headCounts);
+
+	Overall behavior is structured
+
+	Compare with standard deviation formula:
+
+		n = (0:500)';
+		stdevshape = sqrt(n*0.5*0.5);
+
+		plot(1:500, headCounts, n, stdevshape, n, -stdevshape);
+
+	Try a couple of standard deviations also
+
+	Fit is pretty good - we've successfully understood the shape!
+
+
+:skip
+Covariance: a measure of dependence between two RV
+
+	The covariance of X and Y is the expected average of the product
+	of their deviations from their respective means:
+
+		cov(X,Y) = E( (X-E(X))(Y-E(Y)) )
+
+	In particular,
+
+		cov(X,X) = var(X)
+
+	The covariance may be written as
+
+		E( (X-E(X))(Y-E(Y)) ) = E(XY) - E(X)E(Y) 
+
+	Notice that the covariance of two independent RV X,Y is therefore 0
+
+	The last term in the var(X+Y) formula is just the covariance:
+
+		var(X + Y) = var(X) + var(Y) + 2cov(X,Y)
+	
+
+:50
+Comments on Thursday's midterm exam
+
+	Topics: everything so far, but emphasis on 
+
+		equiprobability: counting, sums
+
+		independence, conditional probability, chain rule
+
+		diagnostic reasoning, Bayes' rule
+
+		random variables, expected value, variance
+
+	Study materials: plentiful!
+
+		PS3, PS4, PS5 (do and redo), Pset solutions
+
+		notes posted on syllabus
+
+		reading assignments on syllabus
+
+	Let me know if you have any questions!
+
+Behavior of iid averages for large sample sizes
+
+	We have become accustomed to viewing the expected value of a RV X as 
+	the expected average value of a large number of observations of X
+
+	This idea can be formalized in terms of an iid sequence of RVs
+
+	Indeed, the observations of X are an iid sequence Xi as described above
+
+	We consider the relationship between the sample average
+
+		Xn~ = (X1 + X2 + ... + Xn) / n
+
+	and the expected value E(X)
+
+	We expect that the sample average will be close to the expected value,
+	especially if the number of samples, n, is very large
+
+
+Law of Large Numbers
+
+	(LLN, weak form) If Xi is an iid sequence of RVs with finite variance,
+	then the probability that Xn~ and E(X) are more than a distance d apart 
+	decreases toward 0 as n becomes very large:
+
+		lim_{n -> infinity} P(|Xn~ - E(X)| > d) = 0
+
+	(LLN, strong form) If Xi is an iid sequence of RVs with finite variance,
+	then the probability that Xn~ converges to E(X) as n -> infinity is 1
+
+		P( lim_{n -> infinity} Xn~ = E(X) ) = 1
+
+
+Why the LLN (weak form) is true
+
+	We will first establish a fact about any RV X with finite variance:
+
+		P( |X - E(X)| > d )  is no larger than var(X) / d^2
+
+	This is called Chebychev's inequality
+
+	To see that this is true, write out the formula for the variance:
+
+		var(X) = sum over i of P(X=vi)*| vi - E(X)|^2
+
+	Split the sum into two parts, the first over indices i for which
+	|X - E(X)| <= d, and the second over i's for which |X - E(X)| > d
+
+	The first sum is >=0 and the second is >= d^2 P( |X-E(X)| > d )
+	because each of its terms is >= P(X=vi)*d^2 (for the i's in that sum)
+
+	Therefore,
+
+		var(X) >= d^2 P(|X-E(X)| > d)
+
+	and so we get Chebychev's inequality:
+
+		P(|X-E(X)| > d) <= var(X) / d^2
+
+	The LLN follows from Chebychev's inequality applied to the average Xn~,
+	as we show below
+
+	By independence of the various Xi, 
+
+		var(X1 + X2 + ... + Xn) = n var(X)
+
+	and so the variance of the average is:
+
+		var(Xn~) = n var(X) / n^2 = var(X) / n
+
+	which implies that 
+
+		P( |Xn~ - E(X)| > d ) <= (var(x) / n) / d^2
+
+	Therefore, for any fixed d, the probability on the left converges to 0
+	as n approaches infinity, which is the LLN
+
+
+Central Limit Theorem
+
+	Consider a simulation of repeated coin tosses (MATLAB exercise)
+
+	Examine histogram of average for large time (constant time section)
+
+	It will have a bell shape, reminiscent of a Gaussian distribution
+
+	The Central Limit Theorem describes the distribution of the limiting 
+	averages for iid RVs
+
+	It states that the PMF in the limit is in fact Gaussian, 
+	with mean E(X) and variance var(X)
+
+
+Non-IID random processes
+
+	It is more interesting to consider what happens when the various RV Xt
+	that comprise a random process are dependent in some way
+
+	We will study a particular form of dependence, namely that in which
+	each RV Xt depends on the value of the RV X(t-1) immediately before Xt
+
+		e.g., Xt = number of people in line at a store
+
+			more likely that Xt=10 if X(t-1)=9 than if X(t-1)=0
+
+
+Markov chains
+
+	We assume that there is a shared set of possible values of the Xt
+
+	and that the probability that X(t)=vj is observed at time t is 
+	determined by what value X(t-1) is observed at time t-1, according 
+	to the same table of conditional probabilities for all t:
+
+		p(i,j) = P(X(t)=j | X(t-1)=i)
+
+	The p(i,j) are known as transition probabilities, and are frequently
+	represented as arc weights on a graph that has the possible values vj
+	as its nodes
+
+	The nodes are usually referred to as the states of the Markov chain
+
+	
+Some applications of Markov chain models
+
+	Queueing theory (e.g., number of people in line at the DMV)
+
+		Possible states are the non-negative integers 0,1,2,...
+
+		Transition probabilities determined by arrival and service rates
+
+	Simple model of text
+
+		Possible states can be letters or words
+
+		Transition probabilities describe relative frequency of
+		various letter sequences or word sequences
+
+	Web surfing
+
+		Possible states are all pages on the web
+
+		Transition probabilities describe likelihood that an outgoing 
+		link will be followed, or that a jump to an unlinked page
+		will occur
+
+
+Generating the state sequence of a Markov chain
+
+	For notational convenience, we will assume that the states are
+	the positive integers in some range 1...n
+
+	If the state X(0)=i at time 0 is known, then the state X(1) at time 1
+	will not be determined, but we know its probability distribution:
+
+		P(X(1)=j) = P(X(1)=j | X(0)=i) = p(i, j) = row i of A,
+
+	where A is the transition probability matrix
+
+	Notice that this can be written as a matrix multiplication:
+
+		P(X(1)=j | X(0)=i) = [0s ... 1 in column i ... 0]*A,
+
+	We will represent distributions as row vectors
+
+		P_X(k) is a row vector with j-th column value equal to P(X(k)=j)
+
+	If the initial state X(0)=i0 is known, then the initial PMF is:
+
+		P_X(0) = [0s ... 1 in column i ... 0]
+
+
+Markov chain simulation example
+
+	Consider the Markov chain with the following transition matrix:
+
+		A = [0.75 0.25; 0.4 0.6]
+
+	Assume that the chain starts in state X(0)=1
+
+	Then the PMF of the state X(1) at the next time step is:
+
+		P(X(1)=j) = [1 0]*A = [0.75 0.25]
+
+	So, we don't actually know X(1), but we know that X(1) is three times
+	as likely to be 1 than it is to be 2
+
+	What about X(2)?
+
+	Well, we know its PMF too, by the chain rule of conditional probability:
+
+		P(X(2)=j) = P(X(1)=1)*P(X(2)=j|X(1)=1) + P(X(1)=2)*P(X(2)=j|X(1)=2)
+
+			= 0.75*0.25 + 0.25*0.6
+
+	Notice that this is also a matrix multiplication:
+
+		P(X(2)=j) = [0.75 0.25]*A = P_X(1)*A
+
+	In fact, we can continue generating the Markov chain PMFs in this way:
+
+		P_X(k+1) = P_X(k)*A
+
+	The matrix multiplications build up, so that we end up with:
+
+		P_X(k) = P_X(0)*A^k
+
+	Try this for a few dozen iterations
+
+
+Simulating a specific state sequence
+
+	Once we have the PMFs, simulating a state sequence is just a matter of
+	pseudorandom number generation according to those PMFs
+
+
+Temporal evolution of a Markov chain
+
+	In summary, we will know the PMF for X(k) from that for X(k-1),
+	so we can find P_X(k+1) as long as we know the PMF for X(0):
+
+		P_X(k) = P_X(0)*A^k
+
+	where P_X(t) is a row vector that gives the distribution of X(t)
+
+	If P_X(0) specifies a starting state i0, then P_X(k) will simply be
+	the i0-th row of the matrix A^k
+

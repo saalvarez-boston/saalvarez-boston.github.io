@@ -1,0 +1,311 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS6 due tonight
+
+	Questions? Office hours as usual
+
+
+:02
+Last time: jointly distributed pairs of RVs
+
+	X, Y RVs described by joint distribution
+
+		discrete case: PMF 
+
+			PXY(X=v,Y=w) for all possible values
+
+		continuous case: PDF 
+
+			fXY(x,y)dxdy = P(X in dx, Y in dy)
+
+	marginalization recovers individual RV distributions
+
+		PX(X=v) = sum of PXY(X=v,Y=*) or integral fXY(v,*)d*
+
+		
+:10
+Large-scale average behavior of jointly distributed RVs: expected average
+
+	If (X,Y) jointly distributed RVs, how do X,Y behave "on average"?
+
+	We know that each of X, Y will average close to its expected value
+
+		E(X) = sum_v v*P(X=v) = sum_v v*sum_w P(X=v,Y=w)
+
+		E(Y) = sum_w w*P(Y=w) = sum_w w*sum_v P(X=v,Y=w)
+
+	Both sums have same range and weights P(X=v,Y=w); can write as vector:
+
+		[E(X) E(Y)] = sum_v sum_w [v w]*P(X=v,Y=w)
+
+	The scatterplot of a large sample of (X,Y) values will have a
+	"center of mass" near this 2D point [E((X) E(Y)]
+
+
+:15
+Large-scale average behavior of jointly distributed RVs: expected variation
+
+	We also know that each of X, Y will deviate from its expected value
+	by about its standard deviation on average
+
+	reasonable guess based on planar Euclidean geometry: 
+
+		[X Y] deviates from [E(X) E(Y)] by sqrt(var(X)+var(Y))
+
+	this is in fact true!
+
+	Let D = E( (X-E(X))^2 + (Y-E(Y))^2 )	(call this the net variation)
+
+	Compute using joint distribution (abbreviated devs shown here):
+
+		D = sum_v,w P(v,w) ( v^2 + w^2 )
+
+		= sum_v v^2 sum_w P(v,w) + sum_w w^2 sum_v P(v,w)
+
+		= sum_v v^2 P(v) + sum_w w^2 P(w)
+
+		= var(X) + var(Y)
+
+
+:23
+Example
+
+	>> xy = (rand(500,2)-0.5)*[1 2;3 4];
+	>> x = xy(:,1); y = xy(:,2);
+	>> figure; scatter(x,y);
+	>> axis equal;
+	>> mean(x.^2)
+
+	ans =
+
+    	0.7957
+
+	>> mean(y.^2)
+
+	ans =
+
+    	1.5743
+
+	>> mean(x.^2 + y.^2)
+
+	ans =
+
+    	2.3700
+
+	>> mean(x.^2 + y.^2) - mean(x.^2) - mean(y.^2)
+
+	ans =
+
+   	1.3323e-15
+
+
+:28
+Incompleteness of net variation as descriptor
+
+	scramble the points from the preceding example:
+
+	>> newy = sort(y);
+	>> figure; scatter(x,y);
+	>> figure; scatter(x,newy);
+
+	expected value has not changed, net variation has not changed
+
+	but plot is completely different
+
+	how can we capture this kind of behavior?
+
+
+:32
+Covariance: a measure of dependence between two RV
+
+	The covariance of two RV X and Y is the expected average of 
+	the ***product*** of their deviations from their respective means:
+
+		cov(X,Y) = E( (X-E(X))(Y-E(Y)) )
+
+	In particular,
+
+		cov(X,X) = var(X)
+
+	Recall that
+
+		cov(X,Y) = E(XY) - E(X)E(Y)
+
+	The covariance matrix for two RV is the following 2x2 matrix:
+
+		cov(X,X)	cov(X,Y)
+
+		cov(Y,X)	cov(Y,Y)
+
+	This matrix is computed by the MATLAB function cov.
+
+
+:35
+What covariance tells you
+
+	cov(X,Y) measures the "linear co-variation" of the two RV's X, Y
+
+	cov(X,Y) > 0 if an increase in X is associated with an increase in Y
+
+	cov(X,Y) < 0 if an increase in X is associated with a decrease in Y
+
+	cov(X,Y) = 0 if an increase in X is not associated with a change in Y
+
+
+:38
+Preceding example, revisited
+
+	before scrambling (diagonally leaning scatterplot):
+
+	>> cov(x,y)
+
+	ans =
+
+    	0.7964    1.1087
+    	1.1087    1.5763
+
+	after scrambling (isotropic random jumble of points):
+
+	>> cov(x,newy)
+
+	ans =
+	
+    	0.7964   -0.0522
+   	-0.0522    1.5763
+
+	contrast the off-diagonal terms in the two cases
+
+
+:43
+Sample covariance vs distribution covariance
+
+	cov(X,Y) = E((X-E(X))(Y-E(Y))) is based on the joint distribution of X,Y
+
+	as with any expected value, the RHS just means a weighted sum of all
+	possible values of (X-E(X))(Y-E(Y)) weighted by their probabilities
+
+	E((X-E(X)(Y-E(Y)) means sum of P(X=vi ^ Y=wj)*(vi-E(X))(wj-E(Y))
+
+	if we have n sample points (xk,yk), we assume that the various values
+	occur among the samples in proportion to their actual probabilities
+
+	E((X-E(X)(Y-E(Y)) is close to 1/n times sum of (xk-E(X))(yk-E(Y))
+
+	that's called the sample covariance; it's what MATLAB cov computes
+
+
+:50
+Covariance and independence
+
+	If X, Y are independent, then E(XY) = E(X)E(Y)
+
+		Therefore, cov(X,Y) = E(XY) - E(X)E(Y) = 0
+
+	Conversely, if cov(X,Y)=0, then E(XY) = E(X)E(Y)
+
+	Does this imply that X and Y are independent?
+
+	No. Consider X,Y occupying the circumference of a circle in (x,y)-space
+
+		the inside of the circle has positive projections on x,y
+
+		but its probability is 0, so no independence...
+
+
+:if time allows
+Abstract geometric interpretation of covariance
+
+	Recall that
+
+		var(X + Y) = var(X) + var(Y) + cov(X,Y)
+
+	The formula for the covariance of a sum may remind you of 
+	something from high school geometry: the cosine rule 
+	for the lengths of the sides of a triangle
+
+		c^2 = a^2 + b^2 - 2 ab cos(a,b)	(draw triangle, label sides)
+
+	Notice the discrepancy in the sign;
+	this is just a matter of convention regarding how to measure angles:
+
+		triangle version measures from common vertex of a,b
+
+		variance version measures relative to fixed boundary direction
+
+	The interpretation is that RV's are vectors; their individual variances 	correspond to their lengths, and their covariance has something to do 
+	with the cosine of the angle between them
+
+		cov(X,Y) = a b cos(a,b) = sqrt(var(X))sqrt(var(Y)) cos(X,Y)
+
+	If this is correct, then the cosine of the angle between X, Y is:
+
+		cosine(X,Y) = cov(X,Y) / sqrt(var(X)var(Y))
+
+	In fact, the quantity on the RHS varies between -1 and +1 and is
+	indeed the cosine of an angle in an abstract space
+
+		it is usually called the correlation of X and Y
+	
+
+:45 (skip)
+Covariance example: Fisher's Iris flower dataset
+
+	Show in MATLAB
+
+	load fisheriris;
+
+	x = meas(:,1); y = meas(:,2);
+
+	cov(x,y)
+
+		shows small covariance relative to individual variances
+
+	scatter(x,y);
+
+		shows that global covariance is not the whole story
+
+		this is where data mining begins...
+
+		
+
+:55
+Standardized covariance: correlation
+
+	cov(X,Y) scales linearly with each of X, Y
+
+		the magnitude of cov(X,Y) depends on the system of units
+		(e.g., change length unit ft to m -> cov changes)
+
+	The following "standardized" covariance does not depend on units:
+
+		corr(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This measure is called the (Pearson) correlation of X and Y
+
+		its values range between -1 and +1
+
+	If the LS regression line for Y in terms of X is rewritten
+	in terms of standardized versions of X, Y (mean 0, variance 1):
+
+		Y^ = slope' * X'
+
+	then the new slope is:
+
+		slope' = cov(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This quantity is known as the correlation of X and Y
+
+	It is the expected value of the cosine of the angle between two random
+	sample sequences of RV's X and Y (shifted to mean 0), viewed as vectors
+
+	That is, sample X n times: x1, x2, x3, ... xn (and subtract avg(xi))
+
+	and sample y n times: y1, y2, y3, ...yn (and subtract avg(yi))
+
+	Then the expected (average) value of cos((x1...xn),(y1...yn)) is
+	the correlation of the RV X and Y
+

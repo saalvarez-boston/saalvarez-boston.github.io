@@ -1,0 +1,418 @@
+
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	PS7 due on Tuesday 
+
+	Questions? Office hours as usual
+
+
+:02
+Last time: covariance
+
+	cov(X,Y) measures the "linear co-variation" of the two RV's X, Y
+
+	cov(X,Y) > 0 if an increase in X is associated with an increase in Y
+
+	cov(X,Y) < 0 if an increase in X is associated with a decrease in Y
+
+	cov(X,Y) = 0 if an increase in X is not associated with a change in Y
+
+	var(X + Y) = var(X) + var(Y) + 2cov(X,Y)
+
+		= sum of covariances if X, Y independent
+
+
+:03
+Sample covariance vs distribution covariance
+
+	cov(X,Y) = E((X-E(X))(Y-E(Y))) is based on the joint distribution of X,Y
+
+	as with any expected value, the RHS just means a weighted sum of all
+	possible values of (X-E(X))(Y-E(Y)) weighted by their probabilities
+
+	E((X-E(X)(Y-E(Y)) means sum of P(X=vi ^ Y=wj)*(vi-E(X))(wj-E(Y))
+
+	if we have n sample points (xk,yk), we assume that the various values
+	occur among the samples in proportion to their actual probabilities
+
+	E((X-E(X)(Y-E(Y)) is close to 1/n times sum of (xk-E(X))(yk-E(Y))
+
+	that's called sample covariance; it's what MATLAB cov computes
+	(actually, MATLAB uses n-1 instead of n in the denominator)
+
+
+:08
+Algebraic properties of covariance
+
+	cov is symmetric:
+
+		cov(X,Y) = cov(Y,X)
+
+		since cov(X,Y) = E(XY) - E(X)E(Y) = E(YX) - E(Y)E(X) = cov(Y,X)
+
+	cov is bilinear:
+
+		cov(aX+bY, Z) = a cov(X,Z) + b cov(Y, Z)
+
+		since cov(aX+bY, Z) = E((aX+bY)Z) - E(aX+bY)E(Z)
+
+				= E(aXZ + bYZ) - (aE(X)+bE(Y))E(Z)
+
+				= a (E(XZ) - E(X)E(Z)) + b (E(YZ) - E(Y)E(Z))
+
+				= a cov(X,Z) + b cov(Y,Z)
+	
+
+:15 
+Geometric interpretation of covariance; correlation
+
+	The formula for the variance of a sum may remind you of 
+	the cosine rule for the lengths of the sides of a triangle
+
+		var(X+Y) = var(X) + var(Y) + 2 cov(X,Y)
+
+		c^2 = a^2 + b^2 - 2 ab cos(a,b)	(draw triangle, label sides)
+
+	Notice the difference in sign; due to convention about angles:
+
+		triangle version measures from common vertex of a,b
+
+		variance version measures relative to fixed boundary direction
+
+	Interpretation: RV's are vectors; individual variances are lengths, 
+	covariance is cosine of angle between the vectors
+
+		cov(X,Y) = a b cos(a,b) = sqrt(var(X))sqrt(var(Y)) cos(X,Y)
+
+	If this is correct, then the cosine of the angle between X, Y is:
+
+		cosine(X,Y) = cov(X,Y) / sqrt(var(X)var(Y))
+
+	In fact, the quantity on the RHS varies between -1 and +1 and is
+	indeed the cosine of an angle in an abstract space
+
+		it is usually called the correlation of X and Y
+	
+
+:20
+Predictive value of the covariance
+
+	Suppose that one wishes to predict values of Y from values of X
+
+		if Y is a RV, this can't be done exactly, of course
+
+		but if cov(X,Y) is nonzero, some dependence exists between X,Y
+
+		maybe we can exploit that
+
+	One can build a simple predictive linear model for Y as a function of X:
+
+		Y = aX + b
+
+	The issue is how to find good values for the values a and b
+
+	A reasonable approach is to minimize the expected predictive error:
+
+		error(a,b) = E( (Y - (aX + b))^2 )
+
+	which can be done through calculus (by differentiating wrt a, b)
+
+	The optimal value of the slope term, a, is related to the covariance:
+
+		a = cov(X,Y) / cov(X,X)
+
+	and the b term just makes sure the expected values are equal:
+
+		Y = aX + E(Y-aX)
+
+	or, equivalently,
+
+		Y - E(Y) = a(X - E(X))
+
+
+:28
+Example of linear prediction using covariance
+
+	Let's generate some data based on linear model + noise
+
+		x = randn(100,1); y = 3.75*x + 5*randn(100,1);
+
+	This is a lot of noise - 5 times the size of the "signal". Plot:
+
+		scatter(x,y);
+
+	To get the best linear prediction, compute the covariance matrix:
+
+		C = cov(x,y)
+
+	and define
+
+		a = C(1,2)/C(1,1); b = mean(y - a*x);
+
+	Compare the value of a to the generative slope, and compare b to 0
+
+	and plot:
+
+		hold on;
+		plot(x, a*x + b);
+
+	Not bad, considering the poor signal/noise ratio
+
+
+:35 (skip unless no later than :30 at this point)
+Standardized covariance: correlation
+
+	cov(X,Y) scales linearly with each of X, Y
+
+		so the magnitude of cov(X,Y) depends on the system of units
+		(e.g., change length unit ft to m -> cov changes)
+
+	The following "standardized" covariance does not depend on units:
+
+		corr(X,Y) = cov(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This measure is called the (Pearson) correlation of X and Y
+
+		its values range between -1 and +1
+
+	If the LS regression line for Y in terms of X is rewritten
+	in terms of standardized versions of X, Y (mean 0, variance 1):
+
+		Y^ = slope' * X'
+
+	then the new slope is just the correlation of X, Y
+
+	It is the expected value of the cosine of the angle between two random
+	sample sequences of RV's X and Y (shifted to mean 0), viewed as vectors
+
+	That is, sample X n times: x1, x2, x3, ... xn (and subtract avg(xi))
+
+	and sample y n times: y1, y2, y3, ...yn (and subtract avg(yi))
+
+	Then the expected (average) value of cos((x1...xn),(y1...yn)) is
+	the correlation of the RV X and Y
+
+
+:40
+Normal random variables
+
+	We mentioned the Gaussian distribution earlier
+
+		give general 1D formula
+
+	Normal RVs come up often, so it's good to learn about them
+
+	MATLAB provides useful functions to work with normal distributions
+
+		randn and normrnd
+
+		normpdf(x) returns normal probability density
+
+		normcdf(x) returns P(X <= mean + x standard deviations)
+
+		norminv(y) returns x such that normcdf(x) = y
+
+
+:45
+Some facts about normal random variables
+
+	distribution is symmetric wrt mean
+
+	probability of landing within k standard deviations of mean:
+
+		k=1:	0.68
+		k=2:	0.95
+		k=3:	0.997
+
+	more general cases: use normcdf
+
+		if X normal RV, then (X - E(X)) / sigma(X) standard normal RV
+		(mean 0, standard deviation 1)
+
+		normcdf(x) returns P(Z <= x), where Z is standard normal RV
+
+		example: if X is normal RV with mean 1, sigma 2, 
+
+			what is P(X < 2.5)?
+
+		answer: P(X < 2.5) = P(Z < (2.5-1)/2) = normcdf(0.75)
+
+
+:50
+The Central Limit Theorem
+
+	There's a fundamental reason for the ubiquity of the normal distribution
+
+	It naturally describes accumulation of many independent random effects
+
+		if X1, X2, ... Xn are independent random variables with the same
+		distribution (any distribution for which E(X) and var(X) are
+		finite values for X = any of th Xi), then the average
+
+			(X1 + X2 + ... + Xn) / n  
+
+		has a distribution that is very close to normal if n is large
+
+		Limiting distribution has same expected value as X
+		and variance equal to var(X) / sqrt(n)
+
+
+:55
+CLT example
+
+	In random walk, position after n steps is sum of individual steps
+
+	If distribution of steps is constant
+
+		step = rand() - 1/2, for example
+
+	then final location will have an approximately normal distribution
+
+	>> walks = cumsum(rand(500,1000)-0.5);
+	>> plot(walks);
+	>> figure; hist(walks(500,:));
+
+
+:next time
+Matrix operations
+
+	matrices can be used simply as organized data storage, but they are
+	more: matrices that store numbers have an arithmetic of their own,
+	and represent many useful transformations
+
+	matrices can represent images, networks, constraints
+
+	using matrices effectively requires a knowledge of matrix operations
+
+
+:42
+Addition of matrices, scaling
+
+	addition is defined for pairs of matrices of the same size;
+	it is simply done element by element (position by position):
+
+		(A + B)(i,j) = A(i,j) + B(i,j)
+
+		[1 2; 3 4; 5 6] + [a b; c d; e f] = do in class
+
+	a matrix may be multiplied by a number:
+
+		(c*A)(i,j) = c*A(i,j)
+
+		do an example
+
+	multiplication of two matrices is allowed in certain cases (see below)
+
+
+:45
+Inner product of vectors
+
+	1) row vector * column vector of equal lengths = a single number
+
+		[a b][x 1]' = ab + x
+
+		sum k 2^k = [1 2 3 ... k ... n]*[2^0 2^1 2^2 ... 2^k ... 2^n]'
+
+		in general, if r is 1xn and c is nx1; then
+
+		r*n = sum of all products r(i)*c(i)
+
+		this number r*c is known as the dot product, or inner product, 
+		of the vectors r, c
+
+		it equals length(r)*length(c)*cos(angle between r, c)
+
+		if r,c are column vectors of the same length, then the
+		inner product of r, c is defined as r'*c
+
+
+:50
+Outer product of vectors
+
+	2) column vector * row vector of any lengths = a rectangular matrix
+		
+		[a b]'[x y z] = [ax ay az; bx by bz; cx cy cz]
+
+		in general, if c is nx1 and r is 1xm, then c*r is nxm, and
+
+		(c*r)(i,j) = c(i)*r(j)
+
+		this matrix c*r is known as the outer product of the vectors c,r
+
+		if r,c are column vectors, then the outer product of r, c 
+		is defined as r*c'
+
+		
+:55
+Multiplication of rectangular matrices
+
+	A*B is defined as long as A is nxm and B is mxp; the result is nxp
+
+	computation of A*B may be described in two alternative ways:
+
+	1) outer product method: A*B is the sum of the k outer products 
+	k-th col(A) * k-th row(B) for k=1...m
+
+	2) inner product method: (A*B)(i,j) is the inner product irow(A)*jcol(B)
+
+
+:60
+Example: covariance matrix in terms of matrix multiplication
+
+	if you have n experimental samples of X, Y, as rows of a nx2 matrix, 
+	with X values in the first column and Y values in the second column:
+
+		D = [x1 y1; x2 y2; x3 y3]
+
+	and you want to estimate the covariance matrix:
+
+		covM(X,Y) = 	[E((X-E(X)^2) 		E((X-E(X))(Y-E(Y)))
+
+		     		E((Y-E(Y))(X-E(X))) 	E((Y-E(Y))^2)]
+
+	you can rewrite in matrix  multiplication terms as:
+
+		covM(X,Y) = E of [X-E(X), Y-E(Y)]'*[X-E(X) Y-E(Y)]
+
+	Work out in class
+
+
+:if time allows
+Special cases of matrix multiplication
+
+	matrix*column vector = weighted combination of matrix columns
+
+	row vector*matrix = weighted combination of matrix rows
+
+
+:later
+(Eigenvalues of ) covariance matrix in terms of transposes
+
+	# variables (rows) in X may be much larger than # instances (columns)
+
+	then cov(X) is a huge matrix
+
+:if this fits naturally somewhere
+Covariance example: Fisher's Iris flower dataset
+
+	Show in MATLAB
+
+	load fisheriris;
+
+	x = meas(:,1); y = meas(:,2);
+
+	cov(x,y)
+
+		shows small covariance relative to individual variances
+
+	scatter(x,y);
+
+		shows that global covariance is not the whole story
+
+		this is where data mining begins...
+
+		

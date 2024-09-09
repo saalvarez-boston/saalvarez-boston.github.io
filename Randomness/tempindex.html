@@ -1,0 +1,934 @@
+<html>
+<head>
+<title>
+CSCI 2244, Randomness and Computation (Alvarez, Spring 2025)
+</title>
+</head>
+
+<body bgcolor="ffffff">
+<!--
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="ffffff">
+-->
+<!--background="http://www.bc.edu/HSP/s_bback2.gif">-->
+
+<font face="arial">
+
+<center>
+
+<h1>CSCI 2244, Spring 2025
+<br>Randomness and Computation
+<br>Course Homepage and Syllabus
+
+<!--
+<p>
+<font size=+3>
+IMPORTANT (AUG. 2020): THIS PAGE IS BEING UPDATED<br>
+ALL INFORMATION ON THIS PAGE IS SUBJECT TO CHANGE
+</font>
+-->
+
+</h1>
+
+<blockquote>
+<font face=arial size=4>
+Welcome to the CSCI 2244 syllabus page!
+</font>
+</blockquote>
+Also see the Canvas site for this course.
+<p>
+<i>Note: This syllabus will be modified slightly during the term.
+<br>Updates will appear at
+http://www.cs.bc.edu/~alvarez/Randomness/.
+</i>
+
+<p>
+<font size=2>
+<a href="#people">Contact</a> | 
+<!--<a href="#times">Times</a> | -->
+<a href="#textbook">References</a> | 
+<a href="#topics">Objective</a> | 
+<a href="#grading">Grading</a> | 
+<!--<a href="#prereq">Background</a> | -->
+<!--<a href="downloads.html">Downloads</a> | -->
+<a href="#timeline">Schedule</a> 
+</font>
+<p>
+
+<p>
+
+</center>
+
+<ul>
+
+<p><hr><p>
+
+<a name="people">
+<h3>Who, where, and when</h3>
+</a>
+
+<h4>Instructor</h4>
+<dd><a href="http://www.cs.bc.edu/~alvarez/">Prof. Sergio A. Alvarez</a>
+<dd>alvarez at bc dot edu
+
+<dd><i>Office hours:</i>
+See Canvas for information
+
+<h4>Teaching Assistants (see Canvas for office hours info)</h4>
+
+<ul>
+<li> TBD
+<p><li> TBD
+</ul>
+
+<!--
+<ul>
+<li> Kate Clancy
+<p><li> Kenny Wang
+</ul>
+
+<li>Hannah Brooks (brooksha at bc) 
+<p><li>Amalia Riegelhuth (riegelhu at bc)
+
+	<dd>Serge Aleshin-Guendel
+	<dd>serge.aleshin-guendel at bc
+	<dd>office hours in Fulton 160: Mon 10-noon, Wed 10-11
+<p>
+	<dd>Aldo Eysaman
+	<dd>eysaman at bc
+	<dd>office hours in Fulton 160: Sat noon-3, Mon 3-4
+<p>
+	<dd>Dominika Blach
+	<dd>dominika.blach at bc
+	<dd>office hours in Fulton 160, Mon 2-4, Tu 3-5
+<dd>Matt Keemon
+<dd>matthew.keemon@bc.edu
+<dd>office hours M 9:30 pm - midnight, F noon-3 pm (Fulton 160)
+<p>
+<dd>Kevin Lamb
+<dd>lambkf@bc.edu
+<dd>office hours Tu 5-8 pm, W 3-5:30 pm (Fulton 160)
+
+<dd>Jinho Kim
+<dd>jowkim91@gmail.com, kimahc@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Wed 2-4, Fr 3-6
+<p>
+<dd>Tim West
+<dd>timothy.west@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Sun 6-9pm, Th 6-8pm
+<dd>Hilary Fairchild-Carbonell
+<dd>hilary.fairchild-carbonell@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Sun 5:30 pm - 8 pm, Th 7 pm - 9 pm
+-->
+
+<a name="times">
+<h4>Lectures</h4>
+The class meets Tu Th 9 am in 245 Beacon 229.
+
+<h4>Course web resources</h4> 
+
+This web page for CSCI 2244 is located at
+http://www.cs.bc.edu/~alvarez/Randomness/.
+<p>
+Problem set statements and notes will be posted on Canvas at 
+<a href="https://bc.edu/lms">https://bc.edu/lms</a>.
+<!--
+Check Canvas regularly for updates.
+-->
+Attending class, reading the notes, and conscientiously completing the problem 
+sets will be crucial to understanding the core concepts.
+
+<h4>AI resources</h4>
+
+BC students have access to Microsoft Copilot (based on ChatGPT 4).
+See <a href="https://www.bc.edu/bc-web/offices/its/about/its-news/copilot.html">this link</a>. 
+<p>
+While AI tools can be helpful in exploring the course concepts, 
+you will need to develop a good understanding of both the mathematical 
+and computational specifics in order to attain the required level of
+understanding.
+Your grade will be based on quizzes and exams that aim to assess the
+latter; you will not be able to use AI or any computational aids 
+during assessments.
+Therefore, you will need to go beyond consulting AI for "answers",
+instead laboring to internalize the conceptual foundations and 
+master the relevant procedural techniques.
+<p><hr><p>
+
+<a name="textbook">
+<h3>References</h3>
+</a>
+
+<h4>Textbook</h4>
+<!--
+(required; available at the 
+<a href="http://bcbookstore.collegestoreonline.com/">BC bookstore:</a>
+http://bcbookstore.collegestoreonline.com/)</h4> 
+-->
+You won't need to purchase a textbook. Instead, I'm providing 
+(on <a href="https://bc.edu/lms">Canvas</a>)
+a PDF draft of my book for CSCI 2244, <i>Randomness and Computation</i>. 
+<!--
+Prof. Howard Straubing is writing a corresponding 
+volume for CSCI 2243, Logic and Computation. A grant from the <a href="http://libguides.bc.edu/affordable/2015">Affordable Course Materials Initiative</a> 
+supported a portion of this effort over the summer of 2015. 
+-->
+
+<p><hr><p>
+
+<a name="topics">
+<h3>What this course is about</h3>
+</a>
+CSCI 2244 provides an introduction to fundamental concepts and tools that 
+enable advanced work in modeling and computation involving randomness. The 
+focus is on discrete probability. Topics include probability spaces, random 
+variables, conditional probability, limit theorems, and Markov chains. 
+Selected topics in linear algebra are discussed in connection with the 
+analysis of covariance. Randomness in the sense of algorithmic succinctness 
+(e.g., Kolmogorov complexity) is mentioned in passing, but is not discussed 
+at length. Computational illustrations in Python are given throughout the course.
+
+<p>
+
+<a name="prereq">
+<h3>Prerequisites / Required Background</h3>
+</a>
+<b>The official prerequisites for CSCI 2244 are Computer Science I (CSCI 1101),
+calculus (MATH 1102/1103 or equivalent), and either CSCI 2243 Logic & 
+Computation or MATH 2216 Introduction to Abstract Mathematics.</b>
+In particular, students entering CSCI 2244 should be comfortable with 
+fundamental programming techniques, differential and integral calculus with
+functions of one real variable, boolean algebra of sets, recursion and 
+induction, and basic mathematical reasoning. 
+Writing short programs in Python will be required in some of the problem sets.
+Please <a href="https://www.python.org/downloads/">install Python 3.9 or higher</a>, if you don't already have it.
+
+<p>
+By the way, if your CS1 course did not use Python as the programming language, 
+don't panic. Python is easy to learn, and you won't need all of its features
+right away. 
+See <a href="https://docs.python.org/tutorial/">https://docs.python.org/tutorial/</a> to get started. 
+<p>
+<a name="strategy">
+<h3>How to do well in this course</h3>
+</a>
+<i>This is a challenging course.</i> You should plan to work hard,
+to keep up with the reading assignments, and to start problem sets 
+early. Engage with the course material, in class and out.
+<p>
+<b>
+While you can use AI tools to help in exploring the course concepts, 
+you will need to develop a good understanding of both the mathematical 
+and computational specifics in order to attain the required level of
+understanding.
+Your grade will be based on quizzes and exams that aim to assess the
+latter; you will not be able to use AI or any computational aids 
+during assessments.
+Therefore, you will need to go beyond consulting AI for "answers", 
+instead laboring to internalize the conceptual foundations and master 
+the relevant procedural techniques. 
+</b>
+<p>
+Assigned reading will usually follow the in-lecture discussion
+fairly closely, but there may be a few exceptions to this rule.
+Therefore, it is important to make sure that you've understood 
+all of the the material covered in the lectures and in the 
+reading assignments. 
+<p>
+<i>I cannot overstate the
+importance of conscientiously doing all of the problem sets
+in order to master the course material</i>.
+When preparing problem set solutions, you should strive for
+maximum clarity. Your write-ups should reveal the key ingredients 
+and the structure of your reasoning. Include detailed explanations.
+These comments apply equally to exam solutions.
+<p>
+I'll be happy to discuss any questions during my regular office hours,
+and encourage you to attend our TAs' office hours, as well. 
+If you can't make it to my office hours, please contact me by e-mail so 
+that we can schedule an appointment at a mutually convenient time.
+
+<!--
+<p>
+<h4>No networked devices policy</h4>
+<i>The use of portable computers (laptops, tablets) or phones is not permitted
+in class.</i> Prior experience suggests that such devices can be distracting
+and detrimental to learning, both for the user and for others around him / her.
+Computational experimentation with the course material outside of class is 
+highly encouraged.
+-->
+
+<p><hr><p>
+
+<a name="grading">
+<h3>Grading</h3>
+</a>
+
+The course grade will be based on problem sets, exams, and participation.
+
+<ul>
+
+<p><li> Problem sets will be due on Canvas most Fridays 
+(check each problem set on Canvas for possible exceptions). 
+<i>You must submit at least six problem sets that demonstrate a serious 
+attempt at completion in order to be eligible for a passing grade in the 
+course.</i> 
+Each problem set will be posted approximately one week before the due date. 
+<p>
+<i>Late submissions will receive no credit except in very unusual 
+circumstances</i> (at the discretion of the instructor). 
+On the other hand, <i>I will drop your lowest homework grade</i>, 
+such as a zero from a missed assignment, no questions asked.  
+<!--
+and reduce your resilience to unexpected events later on (leading to low problem set
+scores that would count toward your final grade).
+-->
+The average score on the problem sets will contribute 10% of your course grade. 
+More importantly, however, your work on the problem sets will be crucial
+in developing a mastery of the material.
+Think twice before deciding to skip a problem set or not do it fully,
+as this would negatively impact your performance on exams.
+
+<p><li>Three exams will be given before the end of classes
+(see the schedule for dates). 
+The exams will cover material from class, from the problem sets, 
+and from the book. You may use your own cheat sheet
+(single-sided sheet of letter-sized paper of your own notes) during exams. 
+<i>No sharing of materials or information is allowed.</i>
+The average of each student's exam scores will contribute 
+80% of their course grade.
+<p>
+Brief quizzes may also be given during some class periods,
+possibly without prior notice.  
+The overall quiz score will count as 10% of the course grade.
+<p>
+There will be no make-up exams or quizzes. 
+In order to allow for unexpected events, I will drop each student's 
+lowest quiz score.
+<p>
+<b>
+Do not be fooled by the low weight given to homework scores in the overall
+grade, relative to exams and quizzes. The not-so-secret recipe for doing well on the latter is to work diligently on the problem sets and to stay up to date on the course material.
+</b>
+
+<p><li>My holistic assessment of a student's level of participation 
+may enter into their final grade in cases in which their
+overall score is on the boundary between two letter grades.
+
+<!--
+<p><li>
+My assessment of your class participation may be 
+-->
+<!--
+<p><li>A written final exam (see schedule below for
+date and time) will count as 30% of your course grade.
+-->
+
+<!--
+<p><li>In-class activities and participation will count as 
+10% of your course grade. Occasional pop quizzes or unannounced 
+discussions of the current reading assignment may be held and
+would contribute to this part of your grade.
+-->
+
+</ul>
+
+<p>
+
+<a name="honesty">
+<h3>Academic Honesty</h3>
+</a>
+You are encouraged to discuss assigned homework problems (but not exams) 
+with other people but you must individually design and write your own 
+solutions for all assignments. Furthermore, you should explicitly 
+acknowledge any sources of ideas used that are not your own; this includes 
+other people, chatbots, books, web sites, etc. 
+You should not discuss exam problems with anyone except the instructor. 
+Please also read the
+<!--
+<a href="
+http://www.bc.edu/offices/stserv/academic/resources/policy.html#integrity">
+-->
+<a href="https://www.bc.edu/bc-web/academics/sites/university-catalog/policies-procedures.html#academic_integrity_policies">
+Boston College academic integrity policy</a>.
+Behavior that is not in the spirit of 
+the above guidelines may be reported to the appropriate class dean for 
+review by the Academic Integrity Board.
+<!--will be considered to be a violation of the honor code.-->
+If you're in doubt about what constitutes academic dishonesty in a
+particular situation, talk to me.
+<p>
+
+<p><hr><p>
+
+<a name="timeline">
+<h3>Downloads and Approximate Schedule of Topics</h3>
+</a>
+<i>Notes: 
+<p>Deviations from the preliminary schedule below may occur.
+<br>Updates will appear at 
+http://www.cs.bc.edu/~alvarez/Randomness/.
+
+<P>The reading assignments and materials provided below complement 
+the lectures, but are not intended to replace them. Students are 
+responsible for topics discussed in the lectures as well as those
+covered in the reading assignments.
+<p>
+<a href="#end">Jump</a> to the end of the schedule
+<p>
+<!--
+Go to the <a href="downloads.html">downloads page</a>
+<p>
+-->
+</i>
+<p>
+
+<table cellpadding=5 border=yes>
+<tr>
+<td><b>Week</b>
+</td> 
+<td><b>&nbsp Reading/Homework</b>
+</td> 
+<td><b>Topics</b>
+</td> 
+</tr>
+
+<tr>
+<td>Jan. 13-17</td>
+<td>
+Install the software:
+<p>
+<a href="https://www.python.org/downloads/">Python</a> for homework assignments.
+Use Python 3.9 or higher.
+<p>
+You'll also need <a href="http://matplotlib.org">matplotlib</a>, starting in PS1 (as well as <a href="https://numpy.org">numpy</a> and <a href="https://scipy.org">scipy</a>, which you should install before matplotlib, in that order).
+<p>
+Review 
+<a href="https://inst.eecs.berkeley.edu/~cs188/fa22/projects/proj0/">
+Python basics</a>
+<br>(U. of California, Berkeley)
+<p>
+Python newbies (and, optionally, others) should read the 
+<a href="https://docs.python.org/3/tutorial/">Python tutorial</a>
+<hr>
+Do PS0 (Canvas) and review the course prerequisites
+<hr>
+<p>
+Read chapters 1-2 of the course notes on Canvas.
+<p>
+Optional reading:
+<dd>S. Aaronson. <a href="https://www.americanscientist.org/article/the-quest-for-randomness">
+<!--
+http://www.americanscientist.org/issues/pub/2014/3/the-quest-for-randomness">
+-->
+The Quest for Randomness</a>, <i>American Scientist</i>, May-June 2014.
+<!--
+<a href="PS1/cs244.ps1.spring2012.pdf">PS1</a> due Jan. 20
+<br>(submit as a zipped folder on Canvas)
+<p>
+<a href="PS1/ps1.sol.html">
+PS1 solutions</a>
+<p>
+<a href="Code/compareRands.m">sample script M-file</a>
+<p>
+<a href="Code/randText.m">sample function M-file</a>
+<p>
+<a href="Code/iterateOrNot.m">iteration vs. vectorization</a>
+<p>
+<a href="Code/randWalks.m">randomness or structure?</a>
+-->
+</td>
+<td>Randomness
+<br>Probability
+<br>Monte Carlo simulation
+<p>
+Probability axioms (discrete case)
+<br>PMF
+<br>Random events
+</td>
+</tr>
+
+<tr>
+<td>Jan. 20-24
+<p>
+</td>
+<td>
+<p>
+PS1 due Jan. 24
+<p>
+<b>
+Important reminder: I don't accept late homework
+</b>
+<p>
+chapter 2
+<p>
+<!--
+<a href="Notes/counting">notes on counting</a>
+<a href="PS2/cs244.ps2.spring2012.pdf">PS2</a> due Jan. 27
+<p>
+<a href="PS2/ps2.sol.html">
+PS2 solutions</a>
+-->
+</td>
+<td>
+Independent events
+<p>
+Equally likely outcomes
+<br>Counting principles
+</td>
+</tr>
+
+<tr>
+<td>Jan. 27-31
+</td>
+<td>
+<p>
+PS2 due Jan. 31
+<p>
+chapters 2, 3
+<!--
+<p>
+<a href="PS3/cs244.ps3.spring2012.pdf">PS3</a> due Feb. 3
+<p>
+<a href="PS3/ps3.sol.html">
+PS3 solutions</a>
+-->
+<!--
+<a href="topics1">Topics for Test 1</a> (not exhaustive)
+<br>
+plus <a href="Exam1/exam1.practice.solution">solutions</a>
+<p>
+<a href="Exam1/exam1.solution">Solutions to Exam 1</a>
+<p>
+<a href="Notes/sumsAndHiddenFunctions">notes on sums and hidden functions</a>
+-->
+</td>
+<td>
+Permutations
+<br>Combinations
+<br>Stirling's formula
+<p>
+Discrete random variables
+<br>Common distributions
+</td>
+</tr>
+
+<tr>
+<td>Feb. 3-7
+<!--
+<p>
+<b>Monday classes meet 
+<br>on Tuesday this week</b>
+-->
+</td>
+<td>
+<p>
+PS3 due Feb. 7
+<p>
+chapter 3
+<!--
+<p>
+<a href="Notes/exam1Review">Review notes for the first midterm exam</a>
+<p>
+<a href="PS3/cs244.ps3.5.spring2011.pdf">PS3.5</a> not due Feb. 15 (but do it)
+<p>
+<a href="Notes/conditionalProbability">notes on conditional probability</a>
+-->
+</td>
+<td>
+CDF and simulation
+<p>
+Expected value
+<!--<br>"Hidden function trick"-->
+</td>
+</tr>
+
+<tr>
+<td>Feb. 10-14
+<p>
+<b>
+Exam 1
+on Friday, Feb. 14
+</b>
+</td>
+<td>
+chapter 3
+<!--
+<a href="PS4/cs244.ps4.spring2012.pdf">PS4</a> due Feb. 12
+<p>
+<a href="PS4/ps4.sol.html">
+PS4 solutions</a>
+<p>
+<a href="Notes/diagnosis">notes on Bayes' rule</a>
+<p>
+<a href="Notes/exam1Review">Review notes for first exam</a>
+-->
+</td>
+<td>
+Variance
+<br>
+Markov and Chebyshev inequalities
+</td>
+</tr>
+
+<tr>
+<td>Feb. 17-21
+<!--
+<p>
+<b>First midterm exam
+<br>
+In class, Mon Oct. 5
+</b>
+-->
+</td>
+<td>
+PS4 due Feb. 21
+<p>
+chapter 4
+<!--
+<a href="PS5/cs244.ps5.spring2012.pdf">PS5</a> due Feb. 28
+<p>
+<a href="PS5/ps5.sol.html">
+PS5 solutions</a>
+<p>
+<a href="Notes/randomVariables">notes on random variables</a>
+-->
+</td>
+<td>
+General probability axioms
+<br>Continuous RV
+<br>PDF
+<br>Transformation of RV
+<!--
+<br>Simulation of discrete RV's
+-->
+</td>
+</tr>
+
+<tr>
+<td>Feb. 24-28
+<!--
+<p>
+<b>
+Second midterm exam
+<br>In class, Th. Mar. 1
+</b>
+-->
+</td>
+<td>
+PS5 due Feb. 28
+<p>
+chapters 5, 6
+<!--
+<p>
+<a href="Code/mygeornd.m">generation of geometrically distributed values using CDF</a>
+-->
+</td>
+<td>
+Law of Large Numbers
+<p>
+Central Limit Theorem
+<p>
+Conditional probability
+<!--
+<br>Estimating mean and variance
+-->
+</td>
+</tr>
+
+<tr>
+<td>Mar. 3-7
+<p>
+<b>Spring Vacation</b>
+</td>
+<td>
+Book or paper of your choice. 
+<p>
+If you like this "randomness" stuff, let me recommend
+<i>The Drunkard's Walk: How Randomness Rules Our Lives</i>,
+by Leonard Mlodinow (Pantheon, 2008). You can read it lightly, and it's fun
+that way. Try to pause now and then to see whether you can do the actual
+calculations using the tools that you're picking up in this course.
+</td>
+<td>
+Relax
+</td>
+</tr>
+
+
+<tr>
+<td>Mar. 10-14</td>
+<td>
+<p>
+chapters 6, 7
+<!--
+<a href="Notes/2DRV">notes on 2D random variables</a>
+<p>
+<a href="PS6/cs244.ps6.spring2012.pdf">PS6</a> due March 16
+<p><a href="PS6/ps6points.txt">ps6points.txt</a>
+<p>
+<a href="PS6/ps6.sol.html">PS6 solutions</a>
+-->
+</td>
+<td>
+Bayes' rule
+<p>
+n-dimensional RV
+<br>Joint distribution
+<br>Marginals
+</td>
+</tr>
+
+<tr>
+<td>Mar. 17-21
+<p>
+</td>
+<td>
+PS6 due Mar. 21
+<p>
+chapter 7
+<!--
+<a href="Notes/covariance">notes on covariance</a>
+<p>
+<a href="Notes/cs244.BiasSampleVariance.pdf">bias in sample variance</a>
+<a href="PS7/cs244.ps7.spring2012.pdf">PS7</a> due March 23
+<a href="PS7/cs244.ps7.spring2012.pdf">PS7</a> due March 23
+<p>
+<a href="PS7/ps7.sol.html">PS7 solutions</a>
+-->
+<!--
+Extra Credit Problem
+(due May 1 by 9 am)
+<dd><a href="http://www.cs.bc.edu/~alvarez/Theory/ExtraCredit/ec/">
+HTML</a> 
+<dd><a href="http://www.cs.bc.edu/~alvarez/Theory/ExtraCredit/ec.pdf">
+PDF</a> 
+<p>
+<a href="Exam2/exam2.practice">Practice problems for Exam 2</a>
+<br>(updated Apr. 29)
+<br>
+plus <a href="Exam2/exam2.practice.solution">solutions</a>
+<p>
+<a href="Exam2/exam2.solution.html">Solutions to Exam 2</a>
+-->
+</td>
+<td>
+Expected values
+<p>
+Covariance
+<br>Correlation
+</td>
+</tr>
+
+<tr>
+<td>Mar. 17-21
+<p>
+<b>
+Exam 2 on Friday,
+March 21
+</b>
+</td>
+<td>
+7.11, chapter 8
+<p>
+<!--
+<p>
+<a href="PS8/cs244.ps8.spring2012.pdf">PS8</a> due April 2
+PS8 due March 30
+<p>
+<a href="PS8/ps8.sol.html">PS8 solutions</a>
+-->
+</td>
+<td>
+Covariance matrix
+<br>
+Matrix arithmetic
+<!--
+<p>
+Linear transformations
+-->
+</td>
+</tr>
+
+<tr>
+<td>Mar. 24-28
+<!--
+<p>
+<b>
+Second midterm exam
+<br>
+In class, Mon Nov. 9</b>
+-->
+</td>
+<td>
+chapter 8
+<!--
+<p>
+<a href="Notes/exam2Review">Review notes for second exam</a>
+-->
+</td>
+<td>
+Sample covariance
+<p>
+Covariance after linear transformations
+</td>
+</tr>
+
+<tr>
+<td>Mar. 31 - Apr. 4
+<!--
+<p>
+<b>
+No class on Thursday<br>
+(Holy Thursday)
+</b>
+-->
+</td>
+<td>
+PS7 due Apr. 4
+<p>
+chapter 8
+<!--
+<p>
+<a href="Notes/matrixOperations">notes on matrix operations</a>
+<p>
+<a href="Notes/outerProductExamples">additional outer product examples</a>
+<a href="PS9/cs244.ps9.spring2012.pdf">PS9</a> due April 17
+<a href="PS9/cs244.ps9.spring2011.pdf">PS9</a> due April 17
+<p>
+<p>
+<a href="PS9/ps9.sol.html">PS9 solutions</a>
+-->
+</td>
+<td>
+Decorrelating data
+<p>
+Eigenvectors
+</p>
+<!--
+<br>Diagonalization
+<br>Orthogonality
+<br>Least squares
+-->
+</td>
+</tr>
+
+<tr>
+<td>Apr. 7-11
+<p>
+Class meets Tu, W, F 
+</b>
+</td>
+<td>
+PS8 due Apr. 11
+<p>
+chapter 8
+<!--
+<a href="Notes/covAfterLinear">notes on covariance after linear transformation</a>
+<p>
+<a href="Notes/2DPCA">notes on principal axes in 2D</a>
+<p>
+<a href="PS10/cs244.ps10.spring2012.pdf">PS10</a> due Apr. 27
+PS10 due Apr. 20
+<br>(see Canvas for data file)
+<p>
+<p>
+<a href="PS10/ps10.sol.html">PS10 solutions</a>
+-->
+</td>
+<td>
+Principal axes
+<br>Projections
+<p>
+PCA
+</p>
+</td>
+</tr>
+
+<tr>
+<td>Apr. 14-18
+<p>
+<b>
+No class on Friday
+(Holy Friday)
+</b>
+</td>
+<td>
+<p>
+PS9 due Apr. 18
+<p>
+chapter 9
+<!--
+<a href="Notes/highDPCA">notes on n-D RVs and high-D PCA</a>
+<p>
+<p>
+<br>see Canvas for chars.mat file
+<a href="PS11/cs244.ps11.spring2012.pdf">PS11</a> (extra credit and practice) 
+due May 4
+<a href="PS10/cs244.ps10.spring2011.pdf">PS10</a> due May 1
+<br>(see Canvas for data file)
+<p>
+<p>
+<a href="PS10/ps10.sol.html">PS10 solutions</a>
+-->
+</td>
+<td>
+Markov chains
+<br>Equilibrium distribution
+<br>Absorbing states
+<!--
+<br>Laws of large numbers
+<br>Stationarity
+-->
+</td>
+</tr>
+
+<tr>
+<td>Apr. 21-25
+<p>
+<b>
+No class on Mon
+<br>(Patriots' Day)
+<p>
+No class on Monday
+(Easter Monday)
+</b>
+<p>
+<b>
+<a name="end">
+Last week of classes
+</a>
+<!--
+<p>
+CSCI 2244 Final Exam: 
+<br>Friday May 12th @ 9 am
+<br>In usual classroom
+-->
+</b>
+</td>
+<td>
+<!--
+<a href="Notes/randomProcesses">notes on random processes</a>
+<p>
+<a href="Notes/markovChains">notes on Markov chains</a>
+<p>
+<a href="Notes/finalExamTopics">Topics for the final exam</a>
+-->
+</td>
+<td>
+Catch up
+<br>Review
+</td>
+</tr>
+
+</table>
+</ul>
+
+</font>
+
+</body>
+</html>
+
+

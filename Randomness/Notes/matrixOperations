@@ -1,0 +1,143 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Matrix operations
+
+	matrices can be used simply as organized data storage, but they are
+	more: matrices that store numbers have an arithmetic of their own,
+	and represent many useful transformations
+
+	matrices can represent images, networks, constraints
+
+	using matrices effectively requires a knowledge of matrix operations
+
+
+Transpose of matrix
+
+	if A is an nxm matrix (n rows, m columns), then its transpose, A', 
+	is the mxn matrix (note dimension change) that has as its i-th row 
+	the i-th column of A for i=1...m and has as its j-th column the j-th 
+	row of A, for j=1...n
+
+	elementwise: A'(i,j) = A(j,i)
+
+
+Addition of matrices, scaling
+
+	addition is defined for pairs of matrices of the same size;
+	it is simply done element by element (position by position):
+
+		(A + B)(i,j) = A(i,j) + B(i,j)
+
+		[1 2; 3 4; 5 6] + [a b; c d; e f] = [1+a 2+b; 3+c 4+d; 5+e 6+f]
+
+	a matrix may be multiplied by a number:
+
+		(c*A)(i,j) = c*A(i,j)
+
+	multiplication of two matrices is allowed in certain cases (see below)
+
+
+Inner product of vectors
+
+	row vector * column vector of equal lengths = a single number
+
+		[a b][x 1]' = ax + b	
+
+		sum k 2^k = [1 2 3 ... k ... n]*[2^0 2^1 2^2 ... 2^k ... 2^n]'
+
+		in general, if r is 1xn and c is nx1; then
+
+		r*n = sum of all products r(i)*c(i)
+
+		this number r*c is known as the dot product, or inner product, 
+		of the vectors r, c
+
+		it equals length(r)*length(c)*cos(angle between r, c)
+
+		if r,c are column vectors of the same length, then the
+		inner product of r, c is defined as r'*c
+
+
+Outer product of vectors
+
+	column vector * row vector of any lengths = a rectangular matrix
+		
+		[a b]'[x y z] = [ax ay az; bx by bz; cx cy cz]
+
+		in general, if c is nx1 and r is 1xm, then c*r is nxm, and
+
+		(c*r)(i,j) = c(i)*r(j)
+
+		this matrix c*r is known as the outer product of the vectors c,r
+
+		if r,c are column vectors, then the outer product of r, c 
+		is defined as r*c'
+
+		
+Multiplication of rectangular matrices
+
+	A*B is defined as long as A is nxm and B is mxp; the result is nxp
+
+	computation of A*B may be described in two alternative ways:
+
+	1) outer product method: A*B is the sum of the k outer products 
+	k-th col(A) * k-th row(B) for k=1...m
+
+	2) inner product method: (A*B)(i,j) is the inner product 
+	i-th row(A) * j-th col(B)
+
+
+Example of outer product method for multiplication of rectangular matrices
+
+	1 2		1		2		a  b  c    2d 2e 2f
+	3 4 * a b c  = 	3 * [a b c] + 	4 * [d e f] = 	3a 3b 3c + 4d 4e 4f
+	5 6   d e f	5		6		5a 5b 5c   6d 6e 6f
+
+
+			  a+2d b+2e c+2f
+			= 3a+4d 3b+4e 3c+4f
+			  5a+6d 5b+6e 5c+6f 
+
+
+Same example, now using inner product method
+
+	Let P denote the desired product matrix. Then:
+		(note transposes) 
+
+	P(1,1)=[1 2]*[a d]'=a+2d, P(1,2)=[1 2]*[b e]'=b+2e, P(1,3)=[1 2]*[c f]'=c+2f
+	P(2,1)=[3 4]*[a d]'=3a+4d, P(2,2)=[3 4]*[b e]'=3b+4e, P(2,3)=[3 4]*[c f]'=3c+4f
+	P(3,1)=[5 6]*[a d]'=5a+6d, P(3,2)=[5 6]*[b e]'=5b+6e, P(3,3)=[5 6]*[c f]'=5c+6f
+
+	This yields the same product matrix P as does the outer product method
+
+
+Example: covariance matrix in terms of matrix multiplication
+
+	if you have n experimental samples of X, Y, as rows of a nx2 matrix, 
+	with X values in the first column and Y values in the second column:
+
+		D = [x1 y1; x2 y2; x3 y3]
+
+	and you want to estimate the covariance matrix:
+
+		covM(X,Y) = 	[E((X-E(X)^2) 		E((X-E(X))(Y-E(Y)))
+
+		     		E((Y-E(Y))(X-E(X))) 	E((Y-E(Y))^2)]
+
+	you can rewrite in matrix multiplication terms as:
+
+		covM(X,Y) = E of [X-E(X), Y-E(Y)]'*[X-E(X) Y-E(Y)]
+
+	(show that this is the case, as an exercise)
+
+
+Special cases of matrix multiplication
+
+	matrix*column vector = weighted combination of matrix columns
+
+	row vector*matrix = weighted combination of matrix rows
+
+

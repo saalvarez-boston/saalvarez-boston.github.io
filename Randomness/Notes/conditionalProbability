@@ -1,0 +1,178 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Notes on conditional probability and independence (week 4)
+
+
+Conditional probability
+
+	measures the likelihood of the occurrence of an event, E,
+	relativized to the restricted sample space in which some
+	other event, F, is assumed to occur with certainty
+
+	example: conditional probability of busting (going over 21)
+	on the third card in blackjack, assuming that the first two cards 
+	are K and 5. We also assume a single player being dealt cards randomly 
+	from a single standard deck containing 52 cards in four suits, 
+	with the cards Ace,2,3,4,5,6,7,8,9,10,J,Q,K in each suit.
+
+		current value of hand = 10 + 5 = 15 points
+
+		therefore, bust if third card is worth 7 or more points
+
+		cards remaining after dealing K,5: total of 50 cards, of which 
+		any of the cards 7,8,9,10,J,Q,K are worth 7 points or more. 
+		Since there are 4 different suits, there are 27 such cards 
+		left in the deck (subtract 1 because a K is already in hand)
+
+		probability of busting on the third card, given current hand,
+		can be computed as a simple ratio of counts in this particular
+		context because all outcomes (cards) are equally likely:
+
+		P(bust on 3rd | K,5) = P(>=7 pts on 3rd | K,5) = 27/50 = 0.54
+
+	in general, compute conditional probability as following ratio:
+
+		P(E | F) = P(E and F) / P(F)
+
+Independence
+
+	two events are (probabilistically) independent if the occurrence
+	of one of them does not affect the probability of the other
+
+	E independent of F if P(E | F) = P(E | not F)
+
+	E independent of F is equivalent also to either of the following:
+
+		P(E and F) = P(E)*P(F) (product rule for independent events)
+
+		P(E | F) = P(E)
+
+	by the product rule, if E is independent of F, 
+	then F is also independent of E
+
+	the product rule extends to sets of more than two mutually independent
+	events: if E1, E2, ... En are random events for which each Ei is
+	independent of all of the others, then:
+
+		P(E1 and E2 and ... and En) = product of all of the P(Ei)
+
+Independent tosses of a loaded coin
+
+	Assume P(H) = p on each toss (same p for all tosses)
+
+	Consider n successive tosses of the coin
+
+	Sample space S is the set {(s1, s2, ... sn) | each si is H or T}
+	of all length-n ordered sequences of H, T
+
+	If the n tosses are independent, then the probability of any
+	specific elementary outcome in the sample space can be computed
+	using the product rule:
+
+		P(s1*,s2*,...sn*) = product from i=1 to n of P(si* on i-th toss)
+
+	each term in the product is either p if that slot in the selected
+	outcome is H, or 1-p if that slot is T.
+
+	therefore, the probability of observing the given outcome
+	depends only on the number of heads and tails that it contains:
+
+		P(s1*,s2*,...sn*) = p^k (1-p)^(n-k),
+
+	where k is the number of heads.
+
+	There are nCk different combinations of k of the n slots in which
+	exactly k heads can appear, and the elementary outcome associated
+	with each such combination is as given above. Therefore, the overall
+	probability of obtaining exactly k heads in n tosses is:
+
+		P(exactly k heas in n tosses) = nCk p^k (1-p)^(n-k)
+
+Randomized algorithms
+
+	Randomness can be used as the basis for faster algorithms
+
+	For example, consider the computational task of primality testing:
+
+		input: a positive integer, n
+
+		desired output: true if n is prime, false otherwise
+
+	Standard deterministic algorithms for solving this task require
+	enormous amounts of time for large integers of the sort needed
+	in applications such as RSA public key cryptography
+
+	The randomized primality testing approach is based on repeatedly
+	applying various independent "weak tests" to a candidate number, n
+
+	Each weak test T(r) eliminates over half of non-primes:
+
+		P(n passes test T(r) | n not prime) < 1/2
+
+	and is guaranteed to be correct when it identifies a non-prime:
+
+		P(n not prime | n fails test T(r)) = 1
+
+	The overall test of primality repeatedly applies the weak test with
+	a randomized parameter, r:
+
+		for i=1 to k
+			randomly generate parameter, r
+			apply resulting weak test T(r) to candidate n
+			if n fails T(r)
+				return false (no mistakes possible here)
+		end for
+		return true (only mistaken if non-prime n passes all k tests)
+
+	Assuming that each test is independent of the others:
+
+		P(algorithm returns true | n not prime) = 
+			product of all k probabilities
+				P(n passes T(r) | n not prime)
+
+	Each of these probabilities is less than 1/2, so
+
+		P(algorithm returns true | n not prime)  < 1/2^k
+
+	This error probability can be made as small as desired by increasing
+	the number of tests, k
+
+		example: with k=100 tests, the error probability is < 10^(-10)
+
+Chain rule of conditional probability
+
+	For any sequence of random events, E1, E2, ..., En,
+
+		P(E1 and E2 and ... and En) = the product over the
+		following chain of conditional probabilities:
+
+		P(E1)
+		P(E2 | E1)
+		P(E3 | E1 and E2)
+		P(E4 | E1 and E2 and E3)
+		...
+		P(En | E1 and E2 and ... and E(n-1))
+
+	Example: a very simple probabilistic model of text:
+
+		assume that words are selected randomly from a dictionary,
+		except that each word is conditioned by previous words.
+
+		for example, the probability of the sentence "the ball rolls"
+		would be computed as a product over the following chain:
+
+		P("the")
+		P("ball" | "the")
+		P("rolls" | "the" and "ball")
+
+		actually implementing a probabilistic text generator based on
+		these ideas requires an enormous amount of fodder for the 
+		estimation of the conditional probabilities; it is convenient 
+		to at least initially assume that all options are equally
+		likely; for example, if the dictionary contains 1000 words,
+		then one can guess that each word has probability 1/1000; 
+		any available text can then be used to update the probabilities
+

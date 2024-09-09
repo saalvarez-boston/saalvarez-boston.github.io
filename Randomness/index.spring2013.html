@@ -1,0 +1,812 @@
+<html>
+<head>
+<title>
+CS244, Randomness and Computation (Prof. Alvarez, Spring 2013)
+</title>
+</head>
+
+<body bgcolor="ffffff">
+<!--
+<body text="2A3C8A" link="#444444" vlink="#444444" bgcolor="ffffff">
+-->
+<!--background="http://www.bc.edu/HSP/s_bback2.gif">-->
+
+<font face="arial">
+
+<center>
+
+<h1>CS244, Spring 2013
+<br>Randomness and Computation
+<br>Course Homepage and Syllabus
+
+<!--
+<p>
+IMPORTANT: THIS PAGE IS BEING UPDATED<br>
+ALL INFORMATION ON THIS PAGE IS SUBJECT TO CHANGE
+-->
+
+</h1>
+
+<i>Note: The course syllabus will be modified slightly during the term.
+<br>Updates will be made only on the course web page, located at
+<br>http://www.cs.bc.edu/~alvarez/Randomness/</i>.
+
+<p>
+<font size=2>
+<a href="#people">Contact</a> | 
+<!--<a href="#times">Times</a> | -->
+<a href="#textbook">References</a> | 
+<a href="#topics">Objective</a> | 
+<a href="#grading">Grading</a> | 
+<!--<a href="#prereq">Background</a> | -->
+<!--<a href="downloads.html">Downloads</a> | -->
+<a href="#timeline">Schedule</a> 
+<!--|
+<a href="#labs">Assignments</a>
+-->
+</font>
+<p>
+
+</center>
+
+<p>
+
+<blockquote>
+<font face=arial size=4>
+Welcome to the CS244 homepage!
+<!--
+Here you'll find general information
+about the course, useful links, and downloadable materials that, 
+when combined with active participation,
+will help you benefit as much as possible from taking CS385.
+-->
+You may use the menu options above to find your way around,
+if you'd rather not scroll.
+</font>
+</blockquote>
+
+<ul>
+
+<!--
+
+<p><hr><p>
+
+<h3>Announcements</h3>
+
+Jan. 14:
+Problem Set 1 has been posted. As will future problem sets,
+Problem Set 1 appears in the Downloads and Schedule section 
+of this page, under the week before it is due (which is when 
+you are expected to be working on it).
+Enjoy!
+
+-->
+
+<p><hr><p>
+
+<a name="people">
+<h3>Who, where, and when</h3>
+</a>
+
+<h4>Instructor</h4>
+<dd><a href="http://www.cs.bc.edu/~alvarez/">Prof. Sergio A. Alvarez</a>
+<dd>alvarez@cs.bc.edu
+<dd>Office: Maloney 569
+
+<dd><i>Office hours:</i>
+Tu and Th, 1:30-3 pm or by appointment
+
+<h4>Teaching Assistants</h4>
+
+<dd>Matt Keemon
+<dd>matthew.keemon@bc.edu
+<dd>office hours M 9:30 pm - midnight, F noon-3 pm (Fulton 160)
+<p>
+<dd>Kevin Lamb
+<dd>lambkf@bc.edu
+<dd>office hours Tu 5-8 pm, W 3-5:30 pm (Fulton 160)
+
+<!--
+<dd>Jinho Kim
+<dd>jowkim91@gmail.com, kimahc@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Wed 2-4, Fr 3-6
+<p>
+<dd>Tim West
+<dd>timothy.west@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Sun 6-9pm, Th 6-8pm
+<dd>Hilary Fairchild-Carbonell
+<dd>hilary.fairchild-carbonell@bc.edu
+<dd><i>TA office hours (Fulton 160):</i>
+Sun 5:30 pm - 8 pm, Th 7 pm - 9 pm
+-->
+
+<a name="times">
+<h4>Lectures</h4>
+The class meets Tu Th 9-10:15 am in Fulton 250
+
+<h4>Course web page</h4> 
+This web page for CS244 is located at
+http://www.cs.bc.edu/~alvarez/Randomness/.
+You should check this page regularly for updates,
+including problem set statements.
+
+<p><hr><p>
+
+<a name="textbook">
+<h3>References</h3>
+</a>
+
+<h4>Textbook</h4>
+<!--
+(required; available at the 
+<a href="http://bcbookstore.collegestoreonline.com/">BC bookstore:</a>
+http://bcbookstore.collegestoreonline.com/)</h4> 
+-->
+There is no required textbook for this course. Notes will be provided.
+Attending class and conscientiously completing the problem sets will be
+crucial to understanding the core concepts.
+The following book is recommended as a supplementary reference.
+<ul>
+<p><li>Steven M. Kay,
+<br>
+<i>Intuitive Probability and Random Processes using MATLAB</i>,
+<br>Springer, 2006
+<p>
+A <a href="http://www.ele.uri.edu/faculty/kay/New%20web/downloadable%20files/book_total.pdf">free draft</a> is available from the author.
+</ul>
+
+<p>
+<h4>References on MATLAB</h4>
+<p>
+<ul>
+<p><li><i>Eindhoven University of Technology 
+Interactive MATLAB Course</i>,
+<br>
+<a href="http://www.imc.tue.nl/">http://www.imc.tue.nl/</a>
+<br>
+(especially chapters 1, 4, 6)
+<p><li>links to other MATLAB tutorials:
+<br>
+<a href="http://www.mathworks.com/academia/student_center/tutorials/launchpad.html">http://www.mathworks.com/academia/student_center/tutorials/launchpad.html</a>
+</ul>
+
+<h4>Software (required; <a href="http://www.bc.edu/software/applications/research/matlab.html">free download</a> for BC students)</h4>
+
+The scientific computing platform MATLAB will be used throughout
+the course. BC students may 
+<a href="http://www.bc.edu/software/applications/research/matlab.html">download 
+MATLAB</a> for their personal computers without charge, under the 
+university's site license.
+
+<!--
+<h4>Additional references</h4>
+
+<ul>
+<p><li>T. A. Sudkamp 
+<br><i>Languages and Machines</i>, 
+<br>2nd ed., Addison Wesley, 1997
+
+<p><li>J.E. Hopcroft, R. Motwani, J.D. Ullman
+<br><i>Introduction to Automata Theory, Languages, and Computation</i>, 
+<br>2nd ed., Addison Wesley, 2001
+</ul>
+-->
+
+<p><hr><p>
+
+<a name="topics">
+<h3>What this course is about</h3>
+</a>
+This course provides an introduction to fundamental concepts and tools that 
+enable advanced work in modeling and computation involving randomness. The 
+focus is on discrete probability. Selected topics in linear algebra are also 
+included. Randomness in the sense of algorithmic succintness (e.g., Kolmogorov 
+complexity) is mentioned in passing, but is not discussed at length in this 
+first course. MATLAB is used throughout for computational illustrations.
+
+<ul>
+<p><li>
+A
+<a href="http://www.bc.edu/crs/cs/course/cs24400.shtml">catalog description</a>
+is available at 
+http://www.bc.edu/crs/cs/course/cs24400.shtml.
+</ul>
+
+<p>
+
+<a name="prereq">
+<h3>Prerequisites / Required Background</h3>
+</a>
+The official prerequisites for CS244 are Computer Science I
+(CS101) and calculus.
+In particular, it is assumed that students taking CS244 are 
+comfortable with fundamental programming techniques, as well 
+as with basic concepts of differential and integral calculus.
+CS244 involves a considerable amount of programming in MATLAB.
+Prior MATLAB knowledge is not assumed.
+
+<p>
+
+<a name="strategy">
+<h3>How to do well in this course</h3>
+</a>
+This is a challenging course. Students should plan to work hard,
+to keep up with the reading assignments, and to start problem sets 
+early. 
+<!--
+are two key habits
+that should be developed (if necessary) and maintained for the 
+entirety of the course.
+-->
+Assigned reading will usually follow the in-lecture discussion
+fairly closely, but there may be a few exceptions to this rule.
+Therefore, it is important to make sure that you've understood 
+all of the the material covered in the lectures in addition to 
+that in the reading assignments. <i>I cannot stress too much the
+importance of conscientiously doing all of the problem sets
+in order to master the course material</i>.
+When preparing problem set solutions, you should strive for
+maximum clarity. Your write-ups should reveal the key ingredients 
+and the structure of your reasoning. Include detailed explanations.
+These comments apply equally to exam solutions.
+<p>
+I'll be happy to discuss any questions during my regular office hours. 
+If you can't make it to my office hours, please contact me by e-mail so 
+that we can try to schedule an appointment at a mutually convenient time.
+
+<p><hr><p>
+
+<a name="grading">
+<h3>Grading</h3>
+</a>
+
+The course grade will be based on problem sets, exams, and class participation.
+
+<ul>
+
+<p><li> Problem sets will be due most Fridays starting in the first week 
+of classes. Late submissions will receive no credit except in very unusual 
+circumstances (at the discretion of the instructor). On the other hand, I will 
+drop your lowest homework grade, such as a zero from a missed assignment, no 
+questions asked. Problem sets should be submitted at the beginning of class 
+on the due date unless otherwise indicated in the problem set statement. Each 
+problem set will be posted approximately one week before the due date. The 
+average score on the problem sets, together with my own assessment of your
+class participation (which may include an unannounced quiz or two), will 
+contribute 20% of your course grade. 
+<i>You must submit at least seven problem sets that demonstrate a serious 
+attempt at completion in order to be eligible for a passing grade in the 
+course.</i> 
+
+<p><li>Two in-class midterm exams will be given. See the schedule below 
+for exam dates.  All exams will be open book and open notes. No make-up 
+exams will be given. The average of the midterm exam scores will contribute 
+50% of your course grade.
+
+<p><li>A written final exam (see schedule below for
+date and time) will count as 30% of your course grade.
+
+<!--
+<p><li>In-class activities and participation will count as 
+10% of your course grade. Occasional pop quizzes or unannounced 
+discussions of the current reading assignment may be held and
+would contribute to this part of your grade.
+-->
+
+</ul>
+
+<p>
+
+<a name="honesty">
+<h3>Academic Honesty</h3>
+</a>
+You are encouraged to discuss assigned homework problems (but not exams) 
+with other people but you must individually design and write your own 
+solutions for all assignments. Furthermore, you should explicitly 
+acknowledge any sources of ideas used that are not your own; this includes 
+other people, books, web pages, etc. You should not discuss exam problems
+with anyone except the instructor. 
+Please also read the
+<!--
+<a href="
+http://www.bc.edu/offices/stserv/academic/resources/policy.html#integrity">
+-->
+<a href="http://www.bc.edu/publications/ucatalog/policy.shtml#integrity">
+Boston College academic integrity policy</a>.
+Behavior that is not in the spirit of 
+the above guidelines may be reported to the appropriate class dean for 
+review by the Academic Integrity Board.
+<!--will be considered to be a violation of the honor code.-->
+If you're in doubt about what constitutes academic dishonesty in a
+particular situation, talk to me.
+<p>
+
+<p><hr><p>
+
+<a name="timeline">
+<h3>Downloads and Approximate Schedule of Topics</h3>
+</a>
+<i>Notes: 
+<p>Deviations from the preliminary schedule below may occur.
+<br>Updates will normally appear only at 
+http://www.cs.bc.edu/~alvarez/Randomness/.
+
+<P>The reading assignments and materials provided below complement 
+the lectures, but are not intended to replace them. Students are 
+responsible for topics discussed in the lectures as well as those
+covered in the reading assignments.
+<p>
+<a href="#end">Jump</a> to the end of the schedule
+<p>
+<!--
+Go to the <a href="downloads.html">downloads page</a>
+<p>
+-->
+</i>
+<p>
+
+<table cellpadding=5 border=yes>
+<tr>
+<td><b>Week</b>
+</td> 
+<td><b>&nbsp Reading/Homework</b>
+</td> 
+<td><b>Topics</b>
+</td> 
+</tr>
+
+<tr>
+<td>Jan. 14-18</td>
+<td>
+<p>
+<b>IMPORTANT:</b> Download MATLAB from
+<a href="http://www.bc.edu/software/applications/research/matlab.html">
+http://www.bc.edu/software/applications/research/matlab.html</a>
+and install it on your computer
+<p>
+Read 
+<p>
+<a href="Notes/week1Summary">notes on week 1</a>
+<p>
+also read the Eindhoven MATLAB notes (chapters 1,2 of Kay optional)
+<p>
+PS1 due Jan. 22 on BB Vista
+<!--
+<a href="PS1/cs244.ps1.spring2012.pdf">PS1</a> due Jan. 20
+<br>(submit as a zipped folder on Blackboard Vista)
+<p>
+<a href="PS1/ps1.sol.html">
+PS1 solutions</a>
+-->
+<p>
+<a href="Code/compareRands.m">sample script M-file</a>
+<p>
+<a href="Code/randText.m">sample function M-file</a>
+<p>
+<a href="Code/iterateOrNot.m">iteration vs. vectorization</a>
+<p>
+<a href="Code/randWalks.m">randomness or structure?</a>
+</td>
+<td>Randomness
+<br>Probability
+<br>Modeling
+<br>Simulation
+</td>
+</tr>
+
+<tr>
+<td>Jan. 21-25</td>
+<td>
+sections 3.1-3.7
+<p>
+PS2 due Jan. 29
+<p>
+<a href="Notes/counting">notes on counting</a>
+<!--
+<a href="PS2/cs244.ps2.spring2012.pdf">PS2</a> due Jan. 27
+<p>
+<a href="PS2/ps2.sol.html">
+PS2 solutions</a>
+-->
+</td>
+<td>
+Probability axioms
+<br>Basic probability rules
+<br>Distributions
+<br>Equally likely outcomes
+<br>Basic counting principles
+<br>Permutations
+</td>
+</tr>
+
+<tr>
+<td>Jan. 28 - Feb. 1
+</td>
+<td>
+3.8-3.10
+<p>
+PS3 due Feb. 5
+<!--
+<p>
+<a href="PS3/cs244.ps3.spring2012.pdf">PS3</a> due Feb. 3
+<p>
+<a href="PS3/ps3.sol.html">
+PS3 solutions</a>
+-->
+<!--
+<a href="topics1">Topics for Test 1</a> (not exhaustive)
+<br>
+plus <a href="Exam1/exam1.practice.solution">solutions</a>
+<p>
+<a href="Exam1/exam1.solution">Solutions to Exam 1</a>
+-->
+<p>
+<a href="Notes/sumsAndHiddenFunctions">notes on sums and hidden functions</a>
+</td>
+<td>Combinations
+<br>Binomial distribution
+<br>Sums
+<br>Geometric series
+<br>"Hidden function trick"
+</td>
+</tr>
+
+<tr>
+<td>Feb. 4-8
+<!--
+<p>
+<b>Monday classes meet 
+<br>on Tuesday this week</b>
+-->
+</td>
+<td>
+4.1-4.4
+<!--
+<p>
+<a href="Notes/exam1Review">Review notes for the first midterm exam</a>
+<p>
+<a href="PS3/cs244.ps3.5.spring2011.pdf">PS3.5</a> not due Feb. 15 (but do it)
+-->
+<p>
+<a href="Notes/conditionalProbability">notes on conditional probability</a>
+</td>
+<td>
+Conditional probability
+<br>Independence
+</td>
+</tr>
+
+<tr>
+<td>Feb. 11-15
+<p><b>First midterm exam
+<br>In class, Tu. Feb. 12</b>
+</td>
+<td>
+4.5, 4.6
+<p>
+PS4 due Feb. 19
+<!--
+<a href="PS4/cs244.ps4.spring2012.pdf">PS4</a> due Feb. 12
+<p>
+<a href="PS4/ps4.sol.html">
+PS4 solutions</a>
+-->
+<p>
+<a href="Notes/exam1Review">Review notes for first exam</a>
+<p>
+<a href="Notes/diagnosis">notes on Bayes' rule</a>
+</td>
+<td>
+<br>Bayes' rule
+<br>Multiple experiments
+<br>Multinomial probability
+</td>
+</tr>
+
+<tr>
+<td>Feb. 18-22
+</td>
+<td>
+5.1-5.6, 6.1-6.5
+<p>
+PS5 due Feb. 26
+<!--
+<a href="PS5/cs244.ps5.spring2012.pdf">PS5</a> due Feb. 28
+<p>
+<a href="PS5/ps5.sol.html">
+PS5 solutions</a>
+-->
+<p>
+<a href="Notes/randomVariables">notes on random variables</a>
+</td>
+<td>
+<br>Discrete random variables
+<br>Distribution of RV: 
+<dd>PMF and PDF
+<br>Expected value
+<!--
+<br>Simulation of discrete RV's
+-->
+</td>
+</tr>
+
+<tr>
+<td>Feb. 25 - Mar. 1
+<!--
+<p>
+<b>
+Second midterm exam
+<br>In class, Th. Mar. 1
+</b>
+-->
+</td>
+<td>
+6.6,6.8
+<p>
+<a href="Code/mygeornd.m">generation of geometrically distributed values using CDF</a>
+</td>
+<td>
+<br>CDF
+<br>Variance and moments
+<br>Laws of large numbers
+<!--
+<br>Estimating mean and variance
+-->
+</td>
+</tr>
+
+<tr>
+<td>Mar. 4-8
+<p>
+<b>Spring Vacation</b>
+</td>
+<td>
+Book of your choice. 
+<p>
+If you like this "randomness" stuff, let me recommend
+<i>The Drunkard's Walk: How Randomness Rules Our Lives</i>,
+by Leonard Mlodinow (Pantheon, 2008). You can read it lightly, and it's fun
+that way. Try to pause now and then to see if you can do the actual
+calculations using the tools that you're picking up in this course.
+</td>
+<td>
+Relax
+</td>
+</tr>
+
+<tr>
+<td>Mar. 11-15</td>
+<td>
+7.1-7.5
+<p>
+<a href="Notes/2DRV">notes on 2D random variables</a>
+<p>
+PS6 due March 19
+<!--
+<a href="PS6/cs244.ps6.spring2012.pdf">PS6</a> due March 16
+<p><a href="PS6/ps6points.txt">ps6points.txt</a>
+<p>
+<a href="PS6/ps6.sol.html">PS6 solutions</a>
+-->
+</td>
+<td>
+<br>2D discrete RV
+<br>Joint distribution
+<br>Marginals
+</td>
+</tr>
+
+<tr>
+<td>Mar. 18-22
+<p>
+</td>
+<td>
+7.7-7.9
+<p>
+PS7 due March 26
+<p>
+<a href="Notes/covariance">notes on covariance</a>
+<p>
+<a href="Notes/cs244.BiasSampleVariance.pdf">bias in sample variance</a>
+<!--
+<a href="PS7/cs244.ps7.spring2012.pdf">PS7</a> due March 23
+<a href="PS7/cs244.ps7.spring2012.pdf">PS7</a> due March 23
+<p>
+<a href="PS7/ps7.sol.html">PS7 solutions</a>
+-->
+<!--
+Extra Credit Problem
+(due May 1 by 9 am)
+<dd><a href="http://www.cs.bc.edu/~alvarez/Theory/ExtraCredit/ec/">
+HTML</a> 
+<dd><a href="http://www.cs.bc.edu/~alvarez/Theory/ExtraCredit/ec.pdf">
+PDF</a> 
+<p>
+<a href="Exam2/exam2.practice">Practice problems for Exam 2</a>
+<br>(updated Apr. 29)
+<br>
+plus <a href="Exam2/exam2.practice.solution">solutions</a>
+<p>
+<a href="Exam2/exam2.solution.html">Solutions to Exam 2</a>
+-->
+</td>
+<td>
+<br>Expected values
+<br>Covariance
+<br>Correlation
+</td>
+</tr>
+
+<tr>
+<td>March 25-29
+<p>
+<b>
+No class on Thursday<br>
+(Holy Thursday)
+</b>
+</td>
+<td>
+7.11
+<p>
+Notes
+<!--
+<p>
+<a href="PS8/cs244.ps8.spring2012.pdf">PS8</a> due April 2
+PS8 due March 30
+<p>
+<a href="PS8/ps8.sol.html">PS8 solutions</a>
+-->
+</td>
+<td>
+<br>Simulation of 2D DRV
+</td>
+</tr>
+
+<tr>
+<td>April 1-5
+<p>
+<b>
+Second midterm exam
+<br>
+In class, Th. April 4</b>
+</td>
+<td>
+<p>
+<a href="Notes/exam2Review">Review notes for second exam</a>
+</td>
+<td>
+Catch up
+<br>Review
+</td>
+</tr>
+
+<tr>
+<td>Apr. 8-12
+</td>
+<td>
+9.1-9.5
+<p>
+PS8 due Apr. 16
+<p>
+<a href="Notes/matrixOperations">notes on matrix operations</a>
+<p>
+<a href="Notes/outerProductExamples">additional outer product examples</a>
+<!--
+<a href="PS9/cs244.ps9.spring2012.pdf">PS9</a> due April 17
+<a href="PS9/cs244.ps9.spring2011.pdf">PS9</a> due April 17
+<p>
+<p>
+<a href="PS9/ps9.sol.html">PS9 solutions</a>
+-->
+</td>
+<td>
+<br>Matrix operations
+<br>Matrix multiplication
+<br>Linear transformations
+<!--
+<br>Orthogonality
+<br>Least squares
+-->
+</td>
+</tr>
+
+<tr>
+<td>Apr. 15-19
+</td>
+<td>
+<a href="Notes/covAfterLinear">notes on covariance after linear transformation</a>
+<p>
+<a href="Notes/2DPCA">notes on principal axes in 2D</a>
+<p>
+PS9 due Apr. 23
+<!--
+<a href="PS10/cs244.ps10.spring2012.pdf">PS10</a> due Apr. 27
+PS10 due Apr. 20
+<br>(see BB Vista for data file)
+<p>
+<p>
+<a href="PS10/ps10.sol.html">PS10 solutions</a>
+-->
+</td>
+<td>
+Covariance after linear transformations
+<br>Decorrelating data
+<p>
+Eigenvectors
+<br>Diagonalization
+<br>Principal axes
+<br>Projections
+</td>
+</tr>
+
+<tr>
+<td>Apr. 22-26
+</td>
+<td>
+<p>
+<a href="Notes/highDPCA">notes on n-D RVs and high-D PCA</a>
+<p>
+PS10 due Apr. 28
+<!--
+<p>
+<br>see BB Vista for chars.mat file
+<a href="PS11/cs244.ps11.spring2012.pdf">PS11</a> (extra credit and practice) 
+due May 4
+<a href="PS10/cs244.ps10.spring2011.pdf">PS10</a> due May 1
+<br>(see BB Vista for data file)
+<p>
+<p>
+<a href="PS10/ps10.sol.html">PS10 solutions</a>
+-->
+</td>
+<td>
+n-D random vectors
+<br>high-D PCA
+<p>
+<!--
+<br>Laws of large numbers
+<br>Stationarity
+-->
+</td>
+</tr>
+
+<tr>
+<td>April 27 - May 3
+<p>
+<b>
+<a name="end">
+Last week of classes
+</a>
+<br>
+Finals held May 7-14
+<p>
+CS244 Final Exam: 
+<br>Th. May 9th, 2013 @ 9 am
+<br>In usual classroom
+</b>
+</td>
+<td>
+<a href="Notes/randomProcesses">notes on random processes</a>
+<p>
+<a href="Notes/markovChains">notes on Markov chains</a>
+<p>
+<a href="Notes/finalExamTopics">Topics for the final exam</a>
+</td>
+<td>
+Random processes
+<br>iid processes
+<br>Markov chains
+<p>Review for Final Exam
+</td>
+</tr>
+
+</table>
+</ul>
+
+</font>
+
+</body>
+</html>
+

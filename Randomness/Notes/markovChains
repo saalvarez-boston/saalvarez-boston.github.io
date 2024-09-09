@@ -1,0 +1,273 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Recap: Markov chains
+
+	Random processes model random sequences as sequences of random variables
+
+		X1, X2, X3 ...
+
+	Markov chains are a particular time of random process in which:
+
+		all of the Xt share the same set of possible values,
+		also known as states of the Markov chain
+
+		the probability that X(t)=vj is observed at time t is 
+		determined by what value X(t-1)=vi is observed at time t-1
+
+			p(i,j) = P(X(t)=j | X(t-1)=i)
+
+		we are assuming that states are positive integers (i and j here)
+
+	The transition matrix of a MC is the matrix A with (i,j) element p(i,j)
+	
+	The PMF of X(t) is obtained from that of X(t-1) by the chain rule of
+	conditional probability; we saw that this reduces to multiplying by A:
+
+		P_X(t) = P_X(t-1)*A
+
+	where the distributions are row vectors and A is the transition matrix
+
+
+Markov chain evolution example, continued from last time
+
+	Consider the Markov chain with the following transition matrix:
+
+		A = [0.75 0.25; 0.4 0.6]
+
+	Assume that the chain starts in state X(0)=1
+
+	Then the PMF of the state X(1) at the next time step is:
+
+		P(X(1)=j) = [1 0]*A = [0.75 0.25]
+
+	and the PMF of the state X(t) at time t is:
+
+		P(X(t)=j) = [1 0]*A^t
+
+	Do this for a few iterations
+
+		[1 0]*A^2 (then 3, then 4...)
+
+	Notice that the resulting PMF of X(t) is just the top row of A^t,
+	assuming that we start in state 1
+
+	After a few iterations, things seem to settle down
+
+
+Stationary behavior of a Markov chain
+
+	Continuing with this particular transiton matrix,
+
+		A = [0.75 0.25; 0.4 0.6]
+
+	Suppose that the starting state is now 2 instead of 1
+
+	Calculate the PMF of X(t) for larger values of t
+
+	Anything worth noting about the result?
+
+	It's essentially identical to the PMF that resulted when X(0)=1
+
+	"Typical" Markov chains exhibit this behavior
+	(it's enough for some power of A to have no zero elements)
+
+	The consequence is that the Markov chain settles into a "steady state"
+	or "stationary" or "equilibrium" PMF after a while
+
+		this doesn't mean that the state sequence is predictable
+
+		just that the probability distribution over states is known
+
+	By the Law of Large Numbers, the stationary distribution satisfies:
+
+		P_X(infinity)(i) = lim_{n -> infty} (number of steps in state i in first n steps))/n
+
+
+Stationarity and eigenvectors
+
+	Suppose that v is the stationary PMF (row vector) for A
+
+	Since v*A is the PMF for the next timestep, and since the next timestep
+	has the same PMF (this is what stationary means), we have:
+
+		v*A = v
+
+	In other words,
+
+		v is a left eigenvector of A with eigenvalue 1
+
+	In fact, this provides a way of determining the stationary PMF:
+
+		find the left eigenvectors of A
+
+		standardize (scale) the eigenvector with eigenvalue 1
+		so that its elements sum to 1 (so that it's a PMF)
+
+	This technique works because there is a unique left eigenvector
+	with eigenvalue 1 (up to scaling)
+
+
+Example of eigenvector determination of the stationary PMF of a Markov chain
+
+	Back to our 2x2 example
+
+		A = [0.75 0.25; 0.4 0.6]
+
+	We wish to compute the eigenvector-eigenvalue pairs 
+
+	However, note carefully that MATLAB defaults to right eigenvectors
+
+	How to get the left eigenvectors of A?
+
+		remember the following:
+
+			suppose v is a left eigenvector of A (which we seek)
+
+				v*A = cv
+
+			transpose the equation to find
+
+				A'*v' = cv'
+
+			which means that v' is a right eigenvector of A'
+ 
+	So, we can just compute the right eigenvectors of the transpose A'
+	and then transpose them to get the left eigenvectors of A
+
+		[vecs vals] = eig(A')
+
+		transpose the 1-eigenvector
+
+		compare it with the stationary PMF found by matrix powers
+
+
+Absorbing states in a Markov chain
+
+	Suppose that you toss a fair coin many times, sequentially
+
+	You are interested in a particular subsequence, say HTH
+
+	How many tosses are needed (HTH included) for the first occurrence of HTH?
+
+		since P(HTH)=1/8, a reasonable guess is 8 tosses
+
+		however, notice that this presupposes that consecutive 
+		length-3 sequences are independent, and they're not
+
+	Progress toward observing HTH can be modeled using a Markov chain
+
+		states are -, H, HT, HTH, with transition probabilities
+		assigned in the natural way
+
+			0.5	0.5	0	0
+
+			0	0.5	0.5	0
+
+			0.5	0	0	0.5
+
+			0.5	0.5	0	0
+
+	For the purpose of determining the first occurrence of HTH,
+	we may as well eliminate all transitions emanating from the HTH state
+	
+		HTH is now an "absorbing" state, with a probability 1 self-loop
+
+			0.5	0.5	0	0
+
+			0	0.5	0.5	0
+		A =
+			0.5	0	0	0.5
+
+			0	0	0	1
+
+	The question about the expected number of tosses to first observe HTH
+	becomes a question about the time needed to enter the absorbing state
+
+
+Block structure of the transition matrix if there are absorbing states
+
+	A technical point: the powers of the A matrix have the same block 
+	structure as A, and the top left 3x3 corner operates independently
+
+			0.5	0.5	0	|	0
+						|
+			0	0.5	0.5	|	0
+		A =				|
+			0.5	0	0	|	0.5
+			------------------------|----------
+			0	0	0	|	1
+
+	so that if Q is the 3x3 matrix in the top left, then:
+
+						|	
+						|
+				Q^k		|	R
+		A^k =				|
+						|	
+			------------------------|----------
+			0	0	0	|	1
+
+	You can see this by the outer product method for matrix multiplication
+
+
+Time for absorption
+
+	Since there's no leaving the absorbing state once it is entered,
+	the number of tosses needed for absorption is the same as the number
+	of steps spent in a state other than the absorbing state
+
+	The Markov chain starts in state -, corresponding to the distribution 
+
+		v0 = [1 0 0 0]
+
+	The state distribution at time t is 
+
+		P_X(t) = v0*A^t
+
+	The non-absorbing part of the state distribution at time t is therefore
+
+		P_X(t) = v0*Q^t
+
+	The probability P(X(t)=j) is the value in the j-th column of this matrix
+
+	Let Sj denote the number of steps spent in state j, for j=1,2,3. Then:
+
+		Sj = sum over all times t of Sjt, 
+
+			where Sjt=1 if X(t)=j and Sjt=0 otherwise
+
+			so that E(Sjt) = P(X(t)=j)
+
+		E(Sj) = sum over all times t of E(Sjt)
+
+			= sum over all times t of P(X(t)=j)
+
+			= sum over all times t of j-th column of v0*Q^t,
+
+			where you really want v0 = [1 0 0]
+			(no 4th column as we are ignoring the absorbing state)
+
+	Push the summation into the matrix portion:
+
+		E(Sj) = j-th column of v0*( matrix sum of Q^t over all times t )
+
+	The sum of the matrix powers is basically a geometric series:
+
+		sum of Q^t over all times t = 1 / (1-Q)
+
+	except that we use the identity matrix I instead of the numerator 1,
+	and matrix inverses instead of reciprocals:
+
+		sum of Q^t over all times t = inverse of (I - Q)
+
+	The expected number of steps before absorption is therefore:
+
+		sum of the E(Sj) from j=1 to j=3
+
+		= v0*inv(I-Q)*[1 1 1]'
+
+	Compute this in the case of HTH to get E(tosses to see HTH)
+

@@ -1,0 +1,247 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Notes on principal axes in 2D (basis for PCA in 2D)
+
+
+Best linear fit to a scatterplot, revisited
+
+	Consider a joint distribution over 2 RVs
+
+	For example,
+
+		xy = randn(10^3,2)*A;
+
+	where A is a 2x2 matrix that defines some linear transformation
+
+		A = [2 3; 0 5], say
+
+	Look at the scatterplot of xy and the least squares linear fit:
+
+		scatter(xy(:,1),xy(:,2));
+
+	By the way, can you predict the covariance matrix of xy?
+
+		recall that it should be A'cov(randn(.,2)A...
+
+		C = cov(xy)
+
+	Compare covariance to prediction, then continue to plot LS fit line:
+
+		x=-10:.1:10; 
+		y = C(1,2)/C(1,1)*x + mean(xy(:,2)-C(1,2)/C(1,1)*x);
+		hold on;
+		plot(x,y);
+
+	While this line minimizes the mean squared error measured vertically,
+	it doesn't appear to fit the geometry of the 2D scatterplot that well
+
+
+
+Matrix representations depend on the coordinate system
+
+	A given linear transformation is represented by different 
+	matrices in different coordinate systems
+
+	For example, consider the simple transformation that
+	scales the x axis by 2 and leaves y unchanged:
+
+		T([x y]) = [2x y]
+
+	Geometrically, it is clear that this transformation stretches
+	objects horizontally by a factor of 2
+
+	Represented as a matrix, we have:
+
+		T = T_A, where A = [2 0; 0 1]
+
+	Now view the same transformation after turning your head clockwise
+	by one quarter of a turn, so that the new first coordinate (new x axis) 
+	is what used to be the negative y axis, and the new second coordinate 
+	(new y axis) is what used to be the x axis
+
+	From the new point of view, the transformation T stretches the y axis
+	by a factor of two, and leaves the x axis unchanged:
+
+		T([x' y']) = [x 2y']
+
+	The corresponding matrix representation is:
+
+		T = T_B, where B = [1 0; 0 2]
+
+	Thus, the matrix representing T is different, as the transformation
+	appears to affect the axes differently (of course it's just that
+	we're using different axes)
+
+
+
+Improving the 2D fit by geometric transformation
+
+	We'll use the dependence of a matrix representation on the coordinates 
+	to find a better fit to a scatterplot
+
+	If the source data are Gaussian, the scatterplot will look elliptical
+
+	Imagine that you somehow find an ideal linear fit to the scatterplot
+
+	Imagine the appearance of the scatterplot as viewed from the fit line;
+	that is, tilt your head so that the fit line is horizontal
+
+	The scatterplot ellipse will be aligned with the new coordinate axes
+
+	What will the covariance matrix of the rotated data look like?
+
+		it should be diagonal, with 0 covariance between the new axes
+
+	So, we should be able to find the best fit by finding a rotated 
+	set of axes in which the covariance matrix is diagonal
+
+
+
+Diagonal matrices have simple eigenvectors
+
+	Consider a 2x2 matrix, A
+
+	View A as defining a linear transformation on points [x y]:
+
+		T_A([x y]) = [x y]*A
+
+	If A happens to be diagonal, say A = diag(d1,d2), then
+
+		T_A([x y]) = [x y]*diag(d1,d2) = [d1*x d2*y]
+
+	In particular, vectors of the special forms [x 0] and [0 y]
+	are transformed by A into multiples of themselves:
+
+		T_A([x 0]) = d1[x 0]
+
+		T_A([0 y]) = d2[0 y]
+
+	In other words, the axis vectors are eigenvectors of any diagonal matrix
+
+
+
+Matrices become diagonal if the coordinate axes are eigenvectors
+
+	So maybe the eigenvectors of a matrix A are the key to making A diagonal
+
+	Suppose that you have a matrix A and eigenvectors v, w of A, that is, 
+	v,w are nonzero and transformed by A into multiples of themselves:
+
+		v*A = T_A(v) = c*v for some constant c
+
+		w*A = T_A(v) = d*v for some constant d
+
+	Then if you consider v,w to define new axes for a coordinate system,
+	so that the new coordinates of a vector z are numbers a,b that satisfy:
+
+		z = a*v + b*w,
+
+	you will have by linearity:
+
+		T_A(z) = a*T_A(v) + b*T_A(w) = a*cv + b*dw = [a b]*diag(c,d),
+
+	which means that T_A is represented by the diagonal matrix diag(c,d)
+	in this new coordinate system
+
+
+
+Matrix diagonalization
+
+	A given linear transformations is represented by different matrices
+	in different coordinate systems
+
+	Given a particular matrix, A, we seek a coordinate system in which
+	the linear transformation T_A is represented by a diagonal matrix
+
+	By the above discussion, we know that the axes of such a coordinate
+	system will be eigenvectors of T_A
+
+	So, we find the eigenvectors, and we have our coordinate system!
+
+	By our initial discussion, if A happens to be the covariance matrix
+	of a pair of RVs, then these eigenvectors should be the geometric axes 
+	("principal axes") of the scatterplot of a large sample of these RVs
+
+
+
+Example in MATLAB
+
+	Use xy = randn(10^3,2)*[2 3; 0 5] as in the previous example
+
+	Calculate the eigenvectors of the covariance matrix
+
+		[vecs vals] = eig(cov(z));
+
+	Superimpose the lines defined by the eigenvectors on the scatterplot
+
+	These lines are precisely the principal axes, and provide a good fit
+
+	
+
+Subspace projections
+
+	In the above example, each vector in the scatterplot decomposes
+	into a sum of two parts, one along each principal axis
+
+		w = p1 v1 + p2 v2
+
+	How can one find the projection factors, p1 and p2?
+
+	We have the triangle interpretation of the inner product of two vectors:
+
+		a dot b = row a * col b = |a||b| cos angle(a,b)
+		
+	Dot of a vector a with itself is easy:
+
+		a dot a = |a|^2
+
+	as is the dot of two mutually orthogonal (perpendicular) vectors:
+
+		a dot b = 0 if a, b perpendicular to each other
+
+	Since v1 and v2 are orthogonal, they have 0 as their inner product:
+
+		v1 dot v2 = 0
+
+	Take dot of w with v1:
+
+		w dot v1 = p1 |v1|^2 
+
+	so, the projection factor pops out:
+
+		p1 = w dot v1 / |v1|^2
+
+	likewise,
+
+		p2 = w dot v2 / |v2|^2
+
+	These formulas simplify further if v1 and v2 have length 1, in which 
+	case the vector pair is called orthonormal (orthogonal, unit length):
+
+		pi = w dot vi
+
+
+
+Subspace projections example
+
+	Continue the previous MATLAB example with A = [2 3; 0 5]
+
+	We found the eigenvectors of the covariance matrix of randn(.,2)*A:
+
+		orthonormal pair v, w
+
+	What are the projections of the vector [1 2] onto these new axes?
+
+		cv = v-projection = [1 2]*v
+
+		cw = w-projection = [1 2]*w
+
+	Assemble the resulting combination:
+
+		z = cv*v + cw*w
+
+		this yields z = [1 2], as it should
+

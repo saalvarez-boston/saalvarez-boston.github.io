@@ -1,0 +1,314 @@
+
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	PS9 due Tuesday
+
+
+:02
+Quick recap: principal axes in 2D
+
+	If (X,Y) are RVs, then the "central axes" of the joint distribution
+	are aligned with the eigenvectors of the covariance matrix
+
+		because the covariance matrix is diagonal in the "eigenframe"
+
+	The eigenvalues give the variances of the projections on the axes
+
+		can use v dot axis to get projection because the eigenvctors 
+		of the covariance matrix form an orthonormal frame
+
+	The eigenvector with the largest eigenvalue describes most of the
+	variation, hence provides a good single dimension to keep if desired
+
+
+:05
+n-dimensional random variables
+
+	We can consider n RVs together: X1, X2, ... Xn, for n >= 3
+
+	Why would we care?
+
+	nD RV are natural models in several situations:
+
+		time-dependent sequences 
+
+		images
+
+	We can consider such a collection of RVs to be a single vector
+
+		X = [X1 X2 ... Xn]'
+
+	that is obtained as a function from a sample space to an nD space
+
+		X: S -> values^n
+
+
+:07
+Examples
+
+	Start with a 3D example in MATLAB
+
+		A = [1 2 3; 10 -5 -2; 1 4 5]
+
+		xyz = randn(10^3,3)*A;
+
+		scatter3 shows data nearly 2D within 3D
+
+		can find vectors that generate that plane by using PCA
+
+
+:10
+More examples
+
+	Show sample images from the Yale Face Database
+
+		clarify representation of images as nD vectors
+
+		point out high dimensionality
+
+		show specific image vectors
+
+
+:15
+Basic notions for nD RV
+
+	nD RV is a function X:S -> V1 x V2 x ... x Vn
+
+		S is the sample space for some random experiment
+
+		Vi is the set of values of the i-th component Xi of X
+	
+			f(s) = (X1(s), X2(s), ..., Xn(s))
+
+	The (joint) distribution of an nD RV X is the function
+
+		P_X(v1...vn) = P(X1=v1 and X2=v2 and ... and Xn=vn)
+
+	The marginal distributions of X are:
+
+		P_Xi(vi*) = P(Xi=vi) = sum_{all j not i} P_X(v1,v2,...vi*,...vn)
+
+	The expected value of an nD RV X is the expected average value of X
+	over a very large number of random observations of X
+
+		E(X) = sum_{(v1,v2,...vn)} P_X(v1...vn)*(v1,v2,...vn)
+
+			= (E(X1), E(X2), ... E(Xn))
+
+	The covariance matrix of an nD RV X is the matrix whose (i,j) entry is
+
+		C(i,j) = E( (Xi-E(Xi)(Xj-E(Xj)) )
+
+	The covariance matrix doesn't change if the Xi are shifted by constants
+
+	If all Xi have expected value 0, then covariance in matrix form is:
+
+		C = E( X'*X ),
+
+	where X is assumed to be a row vector
+
+
+:skip
+Independence for nD RV
+
+	If the Xi are independent, that is, if
+
+		P
+
+	Can X be independent of Y and independent of Z,
+	but not independent of (Y,Z)?
+
+	That would mean
+
+
+:22
+Covariance in very high-dimensional spaces
+
+	# variables (rows) in X may be much larger than # instances (columns)
+
+	then cov(X) is a huge matrix (e.g., for a 200x200 pixel image,
+	cov(X) would be of size 40000 x 40000, that is, 1.6 billion elements!)
+
+	it is cumbersome to manipulate cov(X) directly, but we're often
+	just interested in the eigenvectors of cov(X) (principal axes)
+
+	it turns out that there's a shortcut to computing these eigenvectors
+	by first computing the eigenvectors of a related smaller matrix
+
+
+:25
+Instancewise covariance
+
+	We'll assume that all variables (rows) of X have mean 0
+
+		if not, subtract the means first
+
+	notice that the covariance is a rescaled version of:
+
+		C = X*X'
+
+	so we are interested in vectors v that satisfy the following:
+
+		X*X'*v = c*v
+
+	we first compute the following matrix, called instancewise covariance:
+
+		B = X'*X
+
+	this would be the covariance matrix "if each instance were a variable"
+
+	Notice that B is a square matrix of size n x n, where n = # instances
+	and therefore is much smaller under the stated assumption
+
+
+:30
+Eigenvectors of covariance matrix from eigenvectors of instancewise covariance
+
+	Suppose that v is an eigenvector of the instancewise covariance matrix:
+
+		X'*X*v = cv and v nonzero
+
+	Consider the new vector w defined as follows:
+
+		w = X*v
+
+	Then
+
+		X*X'*w = X*X'*X*v = X*(cv) = cX*v = cw
+
+	In other words, w is an eigenvector of the covariance matrix X*X',
+	and with the same eigenvalue as v
+
+
+:35
+Principal Components Analysis for high-dimensional data
+
+	Idea is similar to 2D:
+
+		the principal axes are the eigenvectors of the covariance matrix
+
+	Implementation differs in that the trick explained above for reducing
+	the dimensionality is used to obtain the eigenvectors
+
+	Important points:
+
+		since data will be variable-normalized to mean 0,
+		one of the eigenvectors will correspondingly be 0
+		and should therefore be removed because of numerical
+		error when standardizing vector lengths (see below)
+
+
+:38
+Higher-D PCA by example: imagewise covariance
+
+	Use the images from the Yale Face Database
+
+	This produces a matrix X with one image per column:
+
+		[X w h] = load_images('facelist.txt');
+
+	Common width and height stored in variables w and h
+
+		showVectorAsImage(X(:,1), w, h);
+
+	Crop for improved results
+
+		X = crop(X, w, h, w/2, h);
+
+	Calculate mean for each pixel and examine mean image:
+
+		means = mean(X,2);
+	
+		showVectorAsImage(means, w, h);
+
+	Calculate eigenvectors of mean-centered imagewise covariance:
+
+		[vecs vals] = eig((X-means)'*(X-means));
+
+	Note that smallest eigenvalue is 0
+
+		vals
+
+	Sort in increasing order of eigenvalues:
+
+		vals = flipud(fliplr(vals));
+
+		vecs = fliplr(vecs);
+
+
+:45
+Higher-D PCA by example: eigenvectors of the pixelwise covariance
+
+	Transform into eigenvectors of the pixelwise covariance:
+
+		imvecs = (X-means)*vecs;
+
+	Pixelwise eigenvectors are already mutually orthogonal
+
+		sum(imvecs'*imvecs)
+
+	Normalize eigenvectors:
+
+		for i=1:15
+			imvecs(:,i) = imvecs(:,i) / norm(imvecs(:,i));
+		end
+
+	Now the pixelwise eigenvectors form an orthonormal set
+
+	Careful with the last eigenvector - you've normalized a "noise" vector,
+	so the values are not to be trusted
+
+		imvecs'*imvecs
+
+
+:50
+Higher-D PCA by example: projection and reconstruction
+
+	Pick an image and project it onto the eigenvectors:
+
+		v = X(:,1);
+
+		proj = imvecs(1:14)'*(v-means);
+
+	Reconstruct the image from its projections:
+
+		vrec = means + imvecs(:,1:14)*proj;
+
+	Compare with the original image:
+
+		subplot(1,2,1);
+		showVectorAsImage(v, w/2, h);
+		subplot(1,2,2);
+		showVectorAsImage(vrec, w/2, h);
+
+	Repeat, but using a smaller number of eigenvectors:
+
+		proj = imvecs(1:3)'*(v-means);
+
+	Reconstruct the image from its projections:
+
+		vrec = means + imvecs(:,1:3)*proj;
+
+	Compare with the original image:
+
+		subplot(1,2,1);
+		showVectorAsImage(v, w/2, h);
+		subplot(1,2,2);
+		showVectorAsImage(vrec, w/2, h);
+
+
+:55
+Higher-D PCA by example: compression by keeping only largest eigenvalues
+
+	Repeat above, but now using only the first k eigenvectors, k < 14
+
+	plotReconstructions(v....)
+
+
+:60
+PS9 questions?
+

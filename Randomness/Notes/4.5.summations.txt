@@ -1,0 +1,221 @@
+CS244, Randomness and Computation
+
+
+:00
+Recently: permutations and combinations
+
+	Given a set S with n elements
+
+		length-k permutations of S: ordered sequences of elements of S
+
+		size k combinations of S: (unordered) subsets of k elems of S
+
+	Counting permutations and combinations
+
+		P(n,k) = n! / (n-k)!
+
+		(n,k) = P(n,k)/k! since each combination can be ordered k! ways
+
+	Properties of combinatorial numbers:
+
+		boundary values: (n,0) = (n,n) = 1
+
+		symmetry: (n,k) = (n,n-k)
+
+		Pascal triangle recurrence: (n,k) = (n-1,k) + (n-1,k-1)
+
+	Binomial distribution, two equally likely outcomes case
+
+		P(k heads in n tosses) = (n,k) / 2^n
+
+
+:05
+A probability calculation using combinations and permutations
+
+	Given a group of n people,
+
+		P(two randomly selected people born same day of year) = ?
+
+	Think of people as slots (ordered, to differentiate among people)
+
+		and birthdays as values from 1:365
+
+	Collection of birthdays is ordered n-sequence from 1:365
+
+		sample space is (1:365)^n, with uniform probability
+
+	compute probability of all different days of year:
+
+	birthday assignment must be a permutation of 1:365
+
+		P(all n days different) = Perm(365,n) / 365^n
+
+			= 365*364* ... *(365-(n-1)) / 365^n
+
+			= 1 (1-1/365) (1-2/365) ... (1 - (n-1)/365)
+
+	Plot and look
+
+	>> probs = zeros(1,50);
+	>> for i=1:50
+	values(i) = prod(365:-1:365-i+1)/365^i;
+	end
+
+
+:10
+Another combinations-based calculation: number of subsets of a set of size n
+
+	is sum over all subset sizes of (n,k)
+
+	which is the binomial expansion of (1+1)^n = 2^n
+
+
+:15
+Summations
+
+	Probability calculations often involve adding expressions
+
+	We discuss some useful tools to compute summations in special cases
+
+		Geometric sums and series
+
+		Binomial expansion
+
+		Hidden function trick
+
+
+:16
+Geometric sums and series
+
+	These are sums of consecutive powers of the same base, b:
+
+		1 + b + b^2 + ... + b^k + ... + b^n
+
+	Let S(n) denote the value of the sum for powers 0 through n (above)
+
+	To get a formula for S(n), multiply S(n) by the base, b:
+
+		S(n)*b = b + b^2 + b^3 + ... + b^{n+1}
+
+	This just shifts the sum for S(n), so subtractiong cancels a lot out:
+
+		S(n)*b - S(n) = b^{n+1} - 1
+
+	Then just solve for S(n):
+
+		S(n) = (b^{n+1} - 1) / (b - 1)
+
+	A geometric series is the name given to the limit as n -> infinity:
+
+		S(infinity) = limit of S(n) as n -> infinity
+
+	Limit well-defined only if base, b, satisfies |b| < 1, so b^{n+1}-->0
+
+		S(infinity) = -1/(b-1) = 1/(1-b)
+
+
+:21
+Hidden function trick
+
+	Can one find a simple expression for the following sum (series)?
+
+		S = sum of k*b^k over all positive integers k
+
+	Let's rewrite the sum in terms of something more familiar:
+
+		S = b * sum of k*b^{k-1}
+
+	Recognize the derivative?
+
+		S = b * d/db[ sum of b^k ]
+
+	We know that inner sum:
+
+		S = b * d/db[ 1/(1-b) ]
+
+	Just compute the derivative:
+
+		S = b / (1-b)^2
+
+	Done!
+
+
+:30
+Another hidden function example
+
+	Consider the following binomial-looking sum:
+
+		10 + 2 C(10,2) + 3 C(10,3) + ... + k C(10,k) + ... + 10
+
+	If we had
+
+		10 + C(10,2) + C(10,3) + ... + C(10,k) + ... + 10
+
+	then the sum would just be
+
+		(1 + 1)^10 = 2^10 = 1024
+
+	With the k factors, not so obvious how to obtain the sum
+
+	However, notice that k factors are like those in d/dx (x^k) 
+
+	Maybe the target sum is related to the derivative of some function?
+
+	Define the following function:
+
+		f(x) = x^0 + C(10,1) x^1 + ... + C(10,k) x^k + ... + x^10
+
+	Then the derivative of f(x) is reminiscent of the original sum:
+
+		f'(x) = C(10,1) x^0 + ... + k C(10,k) x^{k-1} + ... + 10 x^9
+
+	Except that there's a pesky x in the way
+
+	Get rid of x by setting x=1 in the derivative expression:
+
+		f'(x) at x=1 is precisely equal to the original sum!
+
+	Does that help?
+
+	Yes, because we can find a simple ("closed form") expression for f(x),
+	and therefore for f'(x), by using the binomial expansion:
+
+		f(x) = (1 + x)^10
+
+		f'(x) = 10 (1 + x)^9
+
+		f'(x) at x=1 equals 10 2^9, so that's the value of the sum!
+
+
+:40
+Probability example
+
+	The waiting time at a server is distributed as follows:
+
+		P(n-cycle wait) = C 2^{-n}, where n is a non-negative integer
+
+	What is the average wait?
+
+	The average will be a weighted sum:
+
+		avg wait = 0*P(0 wait) + 1*P(1 wait) + ... + n*P(n wait) + ...
+
+	Plug in the probability values:
+
+		avg wait = sum of C*n*2^{-n}
+
+	This is just like the preceding example, except with 1/2 instead of x
+
+		avg wait = C*1/2 / (1-1/2)^2 = 2C
+
+	What is the value of C? How can you find it?
+
+
+:50
+Binomial distribution for unequally likely outcomes (loaded coin)
+
+	Suppose that you toss a coin 20 times, and suppose P(H) = 3/4
+
+	How likely is it that you will obtain precisely 15 heads?
+
+	

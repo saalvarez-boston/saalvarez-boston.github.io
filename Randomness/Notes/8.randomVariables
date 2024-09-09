@@ -1,0 +1,376 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS5 due on Tuesday
+
+
+:02
+Recall: random variables (RV)
+
+	RV is a function defined on the sample space of a probability space
+
+		X: S -> set of variable's values
+
+	RV deterministically assigns value to each outcome of random experiment
+
+		Randomness traced to generation process of outcomes
+
+	Distribution of RV X:S -> values relies on probability function on S:
+
+		P(X=v) is probability of event of outcomes s for which X(s) = v
+
+		Shorthand: P(X=v) is P(X^-1(v))
+
+
+:05
+Example of a continuous RV
+
+	4) Distance at which a dart lands from the target center
+	(assume overall circular target of radius 1, with no misses)
+
+		S = {(x,y) | x^2 + y^2 <= 1}
+
+		distance:S -> real numbers defined by
+
+			distance(x,y) = sqrt(x^2 + y^2)
+
+		This is a continuous random variable
+
+
+:08
+Probability density function (PDF) for contiunous RV
+
+	Probability of dart hitting a predetermined point is 0
+
+		alternative description of distribution for continuous RV:
+
+			probability density function (PDF)
+
+	Probability density of X at v is probability per unit length or area
+
+		pX(v) = lim P(X in length L interval around v) / L as L->0
+
+	The PDF is the function pX(.) defined on real numbers
+
+	Recover probability of a "fat" region by integrating PDF
+
+		P(X in E) = int_E pX dx
+
+
+:12
+Examples of PDF
+
+	exponential: a exp(-ax)
+
+	normal (Gaussian):  1/sqrt(pi 2 sigma^2) exp( -(x-mu)^2/(2 sigma^2) )
+
+	MATLAB provides these density functions through pdf function
+
+	and corresponding pseudorandom generators through exprnd, randn
+
+
+:15 (skip)
+Examples of distributions of RV's
+
+	1) X = number of successes in n indep Bernoulli trials with P(success)=p
+
+	Set of possible values of X = all integers in the range 0-n
+
+		P(X=k) = nCk p^k(1-p)^(n-k) (binomial distribution)
+
+	2) X = number of trials to first success in repeated Bernoulli trials
+	
+		P(X=k) = (1-p)^(k-1) p (geometric / discrete exp distribution)
+
+	3) X = number of draws no replacement from single deck to get an Ace 
+
+	Set of possible values of X = all integers between 1 and 49, inclusive
+
+		P(X=1) = 4/52 = 1/13
+
+		P(X=2) = 12/13*4/51
+
+		P(X=k) = 48/52*47/51*46/50*...*(48-k)/(52-k)*4/(53-k)
+
+	4) Poisson model of arrivals
+
+	X = arrivals count (service requests, customers, packets) per unit time,
+	assuming arrival probability lambda*dt in each infinitesimal interval dt
+
+	Approximate as binomial RV with very large n, very small p = lambda/n
+
+		P(X=k) = nCk p^k (1-p)^(n-k)
+
+	Only smaller values of k will have considerable probability, so:
+
+		nCk = n^k / k! (approx.) 
+
+	and 
+
+		(1-p)^(n-k) = (1-p)^n = (1-lambda/n)^n = e^(-lambda) (approx.)
+
+	Therefore, probability of exactly k arrivals in [0,1] is approximately:
+
+		P(X=k) = e^-lambda lambda^k / k!   (all non-negative integers k)
+
+	Note that the sum of all of these P(k) is 1
+
+
+:17
+Expected value of a random variable
+
+	If random experiment underlying random variable is repeated,
+	various (random) values of variable are observed
+
+	One might ask: can we predict anything about these values?
+
+	We know from our earlier experiments that there may be an overall 
+	pattern "in the large", that is, in the collection of all values
+
+	In particular, we may be able to say something about the average of
+	a large number of observed values of the random variable
+
+	This large scale average is called the expected value of the RV
+
+	Example: number of heads in 10 tosses of loaded coin with P(H) = 0.75
+
+		
+		>> tosses = (rand(10,10^3) < 0.75);
+		>> hist(sum(tosses,1))
+		>> hist(sum(tosses,1), 0:10)
+
+		average is essentially predictable, and becomes more so
+		the larger the number of observations we make, that is,
+		the greater the number of times we repeat the experiment
+
+	How could one have predicted the average?
+
+
+:25
+Formula for the expected value of a RV
+
+	Since the probability of an event measures the expected fraction of 
+	experimental repetitions in which the event occurs, we can compute
+	the expected average (expected value) of a RV, X
+
+	We will assume that X is discrete, defined over either a finite or 
+	countably infinite sample space (not the dart distance, for example)
+
+	Say that X has possible values v1, v2, ..., with probabilities pi
+
+	The i-th value, vi, occurs in about pi (as a fraction) of experiments
+
+	Therefore, in a large number n of repetitions, one expects about npi
+	occurrences of the value vi
+
+	Average of any collection of values is their sum divided by their number
+
+	The expected sum is np1 v1 + np2 v2 + ... + npi vi + ...
+
+	The number of values is n
+
+	The expected average is therefore the following:
+
+		E(X) = p1 v1 + p2 v2 + ... + pi vi + ...
+
+	
+:30
+Example of expected value calculation
+
+	1) number of heads in 10 tosses of a coin with P(H)=0.75
+
+	Possible values are 0,1,2,3,4,5,6,7,8,9,10,
+	with probabilities P(numHeads=k) = 10Ck 0.75^k 0.25^(10-k)
+
+	Expected value is therefore
+
+		E(numHeads) = sum_{i=k}^{10} 10Ck 0.75^k 0.25^(10-k) * k
+
+	Solve with hidden function trick to get
+
+		E(numHeads) = 7.5
+
+
+:40
+Another example of expected value calculation
+
+	2) number of tosses until the first occurrence of heads
+
+	Assume P(heads) = p
+
+	First heads occurs on toss i if and only if
+
+		first i-1 tosses are tails and i-th toss is heads
+
+	Therefore,
+
+		P(X=k) = (1-p)^(k-1) p
+
+	Expected value is:
+
+		E(X) = sum from k=1 to infinity of (1-p)^(k-1) p k
+
+	Define hidden function:
+
+		f(x) = sum over all k of p x^k = p / (1-x)
+
+	Then the derivative of the hidden function is:
+
+		f'(x) = sum over all k of k p x^(k-1),
+
+	so you recognize the target sum as a particular instance of f'(x):
+
+		E(X) = f'(1-p)
+
+	Derivative is (from geometric sum formula, above):
+
+		f'(x) = p / (1-x)^2
+
+	Substitute x by 1-p to get answer:
+
+		E(X) = p / (1-(1-p))^2 = p / p^2 = 1/p
+
+
+:50
+Cumulative distribution function (CDF) of a RV
+
+	Is the "running total" of the probability mass distribution of a RV
+
+	Let X:S -> numbers be a RV on S, with PMF p:set of values -> [0,1]
+
+	The CDF of X is F_X:real numbers -> [0,1] defined by:
+
+		F_X(x) = P(X <= x) = sum of P(v) for all v <= x
+
+		use integral instead of sum for continuous RV
+
+
+:55
+Example of CDF
+
+	X = sum on two dice
+
+	Set of possible values of X = {2,3,4,5,6,7,8,9,10,11,12}
+
+	PMF: P(X=i) = (6 - |i-7|) / 36
+
+	Plot in MATLAB
+
+		>> probs = (6 - abs((1:13) - 7))/36;
+		>> plot(1:13, probs);
+
+	Compute CDF in MATLAB, on, say [1,13]:
+
+		>> cprobs = cumsum(probs);
+		>> plot(1:13, cprobs);
+
+	By the way, one can show that:
+
+		F_X(i) = sum_{j<=i} P(X=j) 
+		= i(i-1)/72, for i<=7
+		= 1 - (i-12)(1-13)/72, for i>=7
+
+
+:if time allows
+Generation of pseudorandom numbers with prescribed distribution using the CDF
+
+	Given a PMF, f, how to generate values distributed according to f?
+
+		CDF comes in handy
+
+	Let F be the CDF corresponding to f, i.e., 
+
+		F(x) = P(set of all values <= x)
+
+	Imagine that a particular x0 satisfies
+
+		F(x0) = 0.7
+
+	We would like our pseudorandom generator to satisfy:
+
+		P(generated value <= x0) = 0.7
+
+	Assume that a generator for a uniform distribution on [0,1] is available
+
+	We know P(uniformly distributed value is in [0,0.7]) = 0.7
+
+	So, we just make each value in [0,0.7] correspond to a value in [0,x0]
+
+		the endpoint 0.7=F(x0) goes to x0
+
+		more generally, each point F(x) goes to x
+
+		in other words, each point y goes to F^-1(y)
+
+
+:if time allows
+Examples of pseudorandom number generation with a prescribed distribution
+
+	Use randGiven function, to be implemented in PS6
+
+
+:if time allows
+Properties of the CDF
+
+	If F is the CDF for some numerical RV, then:
+
+		1) F is monotone increasing, i.e., if a<b then F(a)<=F(b)
+
+		2) F is zero at -infty
+
+		3) F is 1 at +infty
+
+	The CDF is a monotone increasing function
+
+	It would be nice to say that any F with these properties is a CDF,
+	but notice that if F is the CDF for a discrete RV, then also:
+
+		D) F is piecewise constant, and jumps at the
+		points which represent values of the RV
+
+
+:next time
+Variation of a random variable
+
+	Consider the number of heads in 100 tosses of a fair coin
+
+	(do MATLAB simulation of multiple samples of this RV)
+
+	for i=1:100
+		hist( sum(randi(2,10^4,10^2)-1, 2) );
+		axis([20 80 0 3600]);
+		pause(0.1);
+	end
+
+	The average number of heads is around 50, as expected
+
+	However, there is considerable variation in the observed average
+
+	In fact, the observed distribution is about 10 units wide at half height
+
+	Another way of viewing this is as a plot instead of a histogram
+
+	We'd like to provide a measure of such variation
+
+
+:next time
+Variance
+
+	First try: measure the variation of a RV, X, as the expected average 
+	deviation of X from its expected (average) value
+
+	Since one expects that each value vi of X will appear proportionally
+	to its probability pi in a large sample of values, this yields:
+
+		linvar(X) := sum of pi (vi - E(X))
+
+	Exercise: show that linvar(X) doesn't provide any useful information
+	about the degree of variation of X
+
+	Instead, the variance of a RV, X, is defined as the expected average 
+	of the squared deviation of X from its expected (average) value:
+
+		var(X) := sum of pi (vi - E(X))^2

@@ -1,0 +1,284 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+One-Dimensional Random Processes
+
+	Some uncertain phenomena involve variation over time
+
+		heart rate signal
+
+		stock price
+
+		network traffic
+
+		web surfing
+
+	We can model such phenomena using sequences of RVs
+
+		X1, X2, ... Xt, ....
+
+	where Xt is a measurement of interest at time t
+
+	We will assume that time is discrete, with t a non-negative integer
+
+	Such a sequence is known as a random process (stochastic process)
+
+		
+Example of a random process: repeated measurement of a random variable
+
+	Any RV X produces randomly selected values according to some PMF
+
+	If X is sampled repeatedly, a sequence of such values is produced
+
+		for example, toss a coin 100 times
+
+		measure the length of the line 100 times
+
+		etc.
+
+	Assuming that this multiple sampling experiment is repeated many times,
+	the i-th value in the sequence may be viewed as a RV in its own right
+
+		X1, X2, ..., Xi, ... X100
+
+	Since each of these observations originates from the same original RV X,
+	the RVs Xi will all have the same PMF - the same one as X
+
+	We will assume that the various samples are taken independently,
+	so that the RVs Xi are independent of one another
+
+	The Xi are said to be independent, identically distributed (iid) RVs
+
+	This is the simplest example of a random process, an iid process
+
+
+Behavior of iid averages for large sample sizes
+
+	We have become accustomed to viewing the expected value of a RV X as 
+	the expected average value of a large number of observations of X
+
+	This idea can be formalized in terms of an iid sequence of RVs
+
+	Indeed, the observations of X are an iid sequence Xi as described above
+
+	We consider the relationship between the sample average
+
+		Xn~ = (X1 + X2 + ... + Xn) / n
+
+	and the expected value E(X)
+
+	We expect that the sample average will be close to the expected value,
+	especially if the number of samples, n, is very large
+
+
+Law of Large Numbers
+
+	(LLN, weak form) If Xi is an iid sequence of RVs with finite variance,
+	then the probability that Xn~ and E(X) are more than a distance d apart 
+	decreases toward 0 as n becomes very large:
+
+		lim_{n -> infinity} P(|Xn~ - E(X)| > d) = 0
+
+	(LLN, strong form) If Xi is an iid sequence of RVs with finite variance,
+	then the probability that Xn~ converges to E(X) as n -> infinity is 1
+
+		P( lim_{n -> infinity} Xn~ = E(X) ) = 1
+
+
+Why the LLN (weak form) is true
+
+	We will first establish a fact about any RV X with finite variance:
+
+		P( |X - E(X)| > d )  is no larger than var(X) / d^2
+
+	This is called Chebychev's inequality
+
+	To see that this is true, write out the formula for the variance:
+
+		var(X) = sum over i of P(X=vi)*| vi - E(X)|^2
+
+	Split the sum into two parts, the first over indices i for which
+	|X - E(X)| <= d, and the second over i's for which |X - E(X)| > d
+
+	The first sum is >=0 and the second is >= d^2 P( |X-E(X)| > d )
+	because each of its terms is >= P(X=vi)*d^2 (for the i's in that sum)
+
+	Therefore,
+
+		var(X) >= d^2 P(|X-E(X)| > d)
+
+	and so we get Chebychev's inequality:
+
+		P(|X-E(X)| > d) <= var(X) / d^2
+
+	The LLN follows from Chebychev's inequality applied to the average Xn~,
+	as we show below
+
+	By independence of the various Xi, 
+
+		var(X1 + X2 + ... + Xn) = n var(X)
+
+	and so the variance of the average is:
+
+		var(Xn~) = n var(X) / n^2 = var(X) / n
+
+	which implies that 
+
+		P( |Xn~ - E(X)| > d ) <= (var(x) / n) / d^2
+
+`	Therefore, for any fixed d, the probability on the left converges to 0
+	as n approaches infinity, which is the LLN
+
+
+Central Limit Theorem
+
+	Consider a simulation of repeated coin tosses (MATLAB exercise)
+
+	Examine histogram of average for large time (constant time section)
+
+	It will have a bell shape, reminiscent of a Gaussian distribution
+
+	The Central Limit Theorem describes the distribution of the limiting 
+	averages for iid RVs
+
+	It states that the PMF in the limit is in fact Gaussian, 
+	with mean E(X) and variance var(X)
+
+
+Non-IID random processes
+
+	It is more interesting to consider what happens when the various RV Xt
+	that comprise a random process are dependent in some way
+
+	We will study a particular form of dependence, namely that in which
+	each RV Xt depends on the value of the RV X(t-1) immediately before Xt
+
+		e.g., Xt = number of people in line at a store
+
+			more likely that Xt=10 if X(t-1)=9 than if X(t-1)=0
+
+
+Markov chains
+
+	We assume that there is a shared set of possible values of the Xt
+
+	and that the probability that X(t)=vj is observed at time t is 
+	determined by what value X(t-1) is observed at time t-1, according 
+	to the same table of conditional probabilities for all t:
+
+		p(i,j) = P(X(t)=j | X(t-1)=i)
+
+	The p(i,j) are known as transition probabilities, and are frequently
+	represented as arc weights on a graph that has the possible values vj
+	as its nodes
+
+	The nodes are usually referred to as the states of the Markov chain
+
+	
+Some applications of Markov chain models
+
+	Queueing theory (e.g., number of people in line at the DMV)
+
+		Possible states are the non-negative integers 0,1,2,...
+
+		Transition probabilities determined by arrival and service rates
+
+	Simple model of text
+
+		Possible states can be letters or words
+
+		Transition probabilities describe relative frequency of
+		various letter sequences or word sequences
+
+	Web surfing
+
+		Possible states are all pages on the web
+
+		Transition probabilities describe likelihood that an outgoing 
+		link will be followed, or that a jump to an unlinked page
+		will occur
+
+
+Generating the state sequence of a Markov chain
+
+	For notational convenience, we will assume that the states are
+	the positive integers in some range 1...n
+
+	If the state X(0)=i at time 0 is known, then the state X(1) at time 1
+	will not be determined, but we know its probability distribution:
+
+		P(X(1)=j) = P(X(1)=j | X(0)=i) = p(i, j) = row i of A,
+
+	where A is the transition probability matrix
+
+	Notice that this can be written as a matrix multiplication:
+
+		P(X(1)=j | X(0)=i) = [0s ... 1 in column i ... 0]*A,
+
+	We will represent distributions as row vectors
+
+		P_X(k) is a row vector with j-th column value equal to P(X(k)=j)
+
+	If the initial state X(0)=i0 is known, then the initial PMF is:
+
+		P_X(0) = [0s ... 1 in column i ... 0]
+
+
+Markov chain simulation example
+
+	Consider the Markov chain with the following transition matrix:
+
+		A = [0.75 0.25; 0.4 0.6]
+
+	Assume that the chain starts in state X(0)=1
+
+	Then the PMF of the state X(1) at the next time step is:
+
+		P(X(1)=j) = [1 0]*A = [0.75 0.25]
+
+	So, we don't actually know X(1), but we know that X(1) is three times
+	as likely to be 1 than it is to be 2
+
+	What about X(2)?
+
+	Well, we know its PMF too, by the chain rule of conditional probability:
+
+		P(X(2)=j) = P(X(1)=1)*P(X(2)=j|X(1)=1) + P(X(1)=2)*P(X(2)=j|X(1)=2)
+
+			= 0.75*0.25 + 0.25*0.6
+
+	Notice that this is also a matrix multiplication:
+
+		P(X(2)=j) = [0.75 0.25]*A = P_X(1)*A
+
+	In fact, we can continue generating the Markov chain PMFs in this way:
+
+		P_X(k+1) = P_X(k)*A
+
+	The matrix multiplications build up, so that we end up with:
+
+		P_X(k) = P_X(0)*A^k
+
+	Try this for a few dozen iterations
+
+
+Simulating a specific state sequence
+
+	Once we have the PMFs, simulating a state sequence is just a matter of
+	pseudorandom number generation according to those PMFs
+
+
+Temporal evolution of a Markov chain
+
+	In summary, we will know the PMF for X(k) from that for X(k-1),
+	so we can find P_X(k+1) as long as we know the PMF for X(0):
+
+		P_X(k) = P_X(0)*A^k
+
+	where P_X(t) is a row vector that gives the distribution of X(t)
+
+	If P_X(0) specifies a starting state i0, then P_X(k) will simply be
+	the i0-th row of the matrix A^k
+

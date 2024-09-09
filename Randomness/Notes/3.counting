@@ -1,0 +1,342 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS1 due by 9 pm tonight
+
+	Any questions now?
+
+	More questions? I'll be available in office hours, 1:30-3 today
+
+
+:03
+Recap: random experiment, sample space, probability function
+
+	A discrete random experiment is defined by: 
+
+		a sample space S of all possible outcomes of the experiment
+
+		a probability function P: S -> [0,1] that quantifies the
+		fraction of experimental trials in which each outcome occurs
+
+			P(x) measures the likelihood that x occurs
+
+			the sum P(x) over all x in S must be 1
+
+
+:06
+Random Events
+
+	A random event is a set E of none, some, or all of the outcomes in S
+
+	An event E occurs when one of the outcomes x in E occurs
+
+	Therefore, the likelihood that E occurs is the sum of the likelihoods
+	of its elements:
+
+		P(E) = sum of the values P(x) for all outcomes x in E
+
+	Example: rolling a prime number on a die
+
+		Sample space: S = {1,2,3,4,5,6}
+
+		Probability function: P(i)=1/6 for each i between 1 and 6
+
+		Event of interest: E = {2,3,5} has probability 3*1/6 = 1/2
+
+
+:10
+Law of large numbers, take 1
+
+	Probability of an event is the asymptotic fraction of experimental 
+	repetitions in which the event occurs
+
+	If E is an event in a probability space, and if the underlying
+	random experiment is repeated n times, then, as n -> infinity,
+
+		count(E in n tries) / n approaches the value P(E)
+
+	We will restate this law more precisely later in the semester
+
+	For now, we will interpret the LLN as justifying simulation:
+
+		if you repeat a random experiment enough times,
+		then the observed empirical relative frequencies
+		will be close to the actual probability values
+
+
+:14
+Simulation example: loaded coin
+
+	Simulate repeated flipping of a coin; track running fraction of heads
+
+	Write in class
+
+	function [ rolls headsFractions ] = loadedCoin( numRolls, pHeads )
+	%LOADEDCOIN returns numRolls results of loaded coin with given P(heads)
+	%and running fraction of heads in the sequence of rolls
+	%Sergio A. Alvarez
+    	if (nargin < 2)
+        	pHeads = 1/2;
+    	end
+    	rolls = (rand(numRolls,1) < pHeads);
+    	headsFractions = cumsum(rolls)./(1:numRolls)';
+	end
+
+
+:25
+Another example: probability of Ace of Hearts in two cards from one deck
+
+	First approach: simulation
+
+		suits = randi(4,10^4,1);
+		faces = randi(13,10^4,1);
+
+		sum(suits(:,1)==1 & faces(:,1)==1)
+		ans + sum(suits(:,2)==1 & faces(:,2)==1)
+		ans / 10^4
+
+	Second approach: analytical
+
+	Here, the sample space S consists of all pairs of cards
+		from a single deck. There are 1326 such pairs (why: later).
+		Each pair therefore has probability 1/1326
+
+		The Ace of Hearts appears in exactly 51 such hands. Why?
+
+		=> P(Ace of Hearts in hand) = 51/1326 = 1/26
+
+	Example: probability that you'll see tails at least once
+	in two flips of a fair coin
+
+		S = {(s,s') | s,s' in {H,T}}
+		P(s,s') = 1/4
+		P(tails at least once) = 1 - one outcome/4 = 3/4
+	
+
+:60
+Simulation example
+
+	Let's use MATLAB to check the above results
+
+	For Ace of Hearts, represent cards by index values between 1 and 52
+	Ace of Hearts is index 1
+	Hand is first two indices in a random shuffling of 1:52
+
+	hits = 0;
+    	for i=1:numTrials
+        	hand = randperm(52);
+        	hits = hits + (hand(1)==1) + (hand(2)==1);
+    	end
+    	p = hits / numTrials;
+
+
+:25
+Continuous sample spaces
+
+	A continuous sample space is one in which 
+
+		there are infintely many possible outcomes
+
+		outcomes are arbitrarily close to other outcomes
+
+	Examples:
+
+		dart landing location on a circular target
+
+		service times at a network node
+
+
+:27
+Probability functions in continuous sample spaces
+
+	If the sample space is continuous, P(x) is often 0 for many x in S
+	(e.g., sample space of dart landing points in continuous 2-D target)
+
+		this implies that the sum formula for P(E) no longer works
+
+	We "fix" this by defining the probability function P directly on 
+	events instead of individual outcomes
+	(e.g., the probability of a 2-D region instead of a single point)
+
+
+:30
+Probability density
+
+	One way of defining the probability function in the continous case
+	is in terms of the "probability per unit measure" (unit length, or
+	unit area, or unit volume)
+
+	This probability per unit measure can vary from point to point, for
+	example for a skilled dart thrower who tends to hit near center
+
+	Taken together, the variable probability per unit measure defines a
+	function, known as the probability density function, p(x)
+
+		p(x) dx is the probability that an outcome in an interval
+		of measure dx centered at x will occur
+
+	The probability density function p(x) has the property that you can
+	recover event probabilities from it by summing (integrating) over
+	the points of the event
+
+		P(E) = integral over E of p(x) dx 
+
+
+:34
+Example of probability density: Poisson arrivals in continuous time
+
+	Customers arrive in line at some time t
+
+	The probability that the first arrival in a time interval of length dt
+	centered at some time t could be:
+
+		p(t) dt = 1/mu exp(-t/mu) dt
+		
+	The probability density is
+
+		p(t) = 1/mu exp(-t/mu)
+
+
+:38
+Simulation example: exponential distribution
+
+	Use exprnd in MATLAB to simulate exponentially distributed quantity
+
+		times = exprnd(2, 10^4, 1);
+		hist(times);
+
+	What is the probability that the time is greater than 1?
+
+		sum(times > 1)/length(times)
+
+
+:43
+Analytical example: calculation of probability for exponential distribution
+
+	P(times > 1) = integral of probability density over times > 1
+
+			= integral of 1/2 exp(-x/2) dx from x=1 to x=infinity
+
+			= -exp(-x/2) _1^inf = exp(-1/2)
+
+			which is about what the simulation gives
+
+		(expect this by Law of Large Numbers)
+
+
+:50
+The general definition of probability space
+
+	In order to include both discrete and continuous cases under one roof:
+
+	A probability space consists of a set S, called the sample space, 
+	whose elements represent the possible experimental outcomes, together 
+	with a probability function P defined on subsets of S, and satisfying
+	the following properties:
+
+		P(E) >= 0 for all subsets E of S
+
+		P(A union B) = P(A) + P(B) if A and B don't intersect
+
+		P(S) = 1 (this replaces the summing to 1 property)
+
+
+:if time allows
+Fundamental principles of counting
+
+	1) Partition principle: 
+	if A1...An are nonoverlapping sets, then |U Ai| = sum of |Ai|
+
+	2) Multiplication principle: 
+	if A1...An are any sets (overlapping or not), then the set of all 
+	ordered n-tuples (a1...an), where each ai is in Ai, has exactly 
+	|A1| x |A2| x ... x |An| elements
+
+	2') Multiplication principle, extended version: 
+	if there are m1 different choices for the first element of a tuple,
+	and m2 different choices for the second element of the tuple,
+	and in general mi different choices for the i-th element, 1 <= i <= n,
+	then the total number of different possible n-tuples is the product
+	m1 x m2 x ... x mn
+
+
+:if time allows
+Example of the fundamental principles of counting
+
+	Number of different license plates of the form nnnn-LL
+	(four digits followed by two letters):
+
+		by the multiplication principle, this equals
+		10 x 10 x 10 x 10 x 26 x 26 = 5,760,000
+
+
+:if time allows
+Example of the fundamental principles of counting
+
+	Number of different five-letter "words" that start with "car":
+
+		by the multiplication principle, this equals
+		1 x 1 x 1 x 26 x 26 = 576
+
+
+:if time allows
+Example of the fundamental principles of counting
+
+	Probability that a randomly selected three-letter word is "car":
+
+		we consider the sample space of all three-letter "words"
+		
+		by the multiplication principle, this space contains
+		precisely 26 x 26 x 26 = 17,576 outcomes
+
+		random selection means that all of these outcomes are 
+		equally likely, hence each has probability 1/17576
+
+		"cat" is just one of these outcomes...
+
+		by the way, we therefore expect one occurrence of the
+		word "cat" in every 17576 repetitions of the random
+		experiment of selecting a random three-letter word
+
+		what if we consider a random sequence of one million letters?
+		looking for "cat" as a subsequence corresponds to approximately
+		one million repetitions of this experiment (one for each start
+		position between 1 and 999,998); hence, we expect to see "cat"
+		about 1,000,000 / 17,576 = 57 times, and we do!
+
+
+:if time allows
+Example of the fundamental principles of counting
+
+	Number of two-card hands, both of the same suit, drawn from the same deck:
+
+		A hand is not an ordered sequence, but rather an unordered set;
+		however, we can count ordered sequences of two Hearts and then
+		just divide by two at the end to account for the redundancy
+
+		By the additon principle, the number of single-suit hands is
+		the sum of the numbers of Hearts hands, Diamonds hands,
+		Spades hands, and Clubs hands
+
+		A single deck contains 13 cards of each of the four suits
+
+		Once a card of a given suit has been chosen for a hand,
+		there are only 12 other cards of that suit left
+	
+		Hence, by the multiplication principle, there are 13 x 12 = 156
+		different two-card sequences of each suit, or 156/2 = 78
+		different two-card hands
+
+		We conclude that the total number of single-suit two-card hands
+		taken from a single deck is 4 x 78 = 312
+		
+
+:next time
+Permutations and combinations
+
+	Do from my PDF notes
+
+

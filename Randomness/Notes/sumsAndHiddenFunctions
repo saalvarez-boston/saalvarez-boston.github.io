@@ -1,0 +1,154 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Summation and the hidden function trick (week 3-4)
+
+	Probability calculations often involve adding expressions
+
+	We discuss some useful tools to compute summations in special cases
+
+		Geometric sums and series
+
+		Binomial expansion
+
+		Hidden function trick
+
+
+Geometric sums and series
+
+	These are sums of consecutive powers of the same base, b:
+
+		1 + b + b^2 + ... + b^k + ... + b^n
+
+	Let S(n) denote the value of the sum for powers 0 through n
+	(recall that b^0 = 1, so that's just the first term above)
+
+	To get a formula for S(n), multiply S(n) by the base, b:
+
+		S(n)*b = b + b^2 + b^3 + ... + b^{n+1}
+
+	Notice that the result looks a lot like the sum for S(n),
+	so there will be a lot of cancellation if we subtract the two:
+
+		S(n)*b - S(n) = b^{n+1} - 1
+
+	Then just solve for S(n):
+
+		S(n) = (b^{n+1} - 1) / (b - 1)
+
+	A geometric series is the name given to the limit as n -> infinity:
+
+		S(infinity) = limit of S(n) as n -> infinity
+
+	This limit will only be a well-defined numerical value if the base, b,
+	is smaller than 1 in absolute value, in which case the term b^{n+1}
+	approaches 0 as n approaches infinity, so that the value is:
+
+		S(infinity) = -1/(b-1) = 1/(1-b)
+
+
+Binomial expansion
+
+	Counting shows that a power of a sum of two terms is related
+	to the combinatorial coefficients C(n,k) ("n choose k")
+
+		(a + b)^n = sum from k=0 to k=n of C(n,k) a^k b^{n-k}
+
+	This is because (a + b)^n is the product of n copies of (a + b)
+
+	If you imagine the n copies spread out in front of you,
+	you see that a term a^k b^{n-k} will result by choosing the a term
+	in exactly k of the copies, and the b term in the remaining n-k copies
+
+	There are precisely C(n,k) ways of choosing a different combination
+	of slots in that way
+
+	The "binomial expansion" formula involving C(n,k) is useful in
+	computing the values of sums
+
+	For example, consider the sum
+
+		1 + 10 + C(10,2) + C(10,3) + ... C(10,k) + ... + 10 + 1
+
+	If you realize that this sum is the same as the binomial expansion
+	of the expression (1 + 1)^10, then the value of the sum is clear:
+	it is just 2^10 (or 1024)
+
+
+Hidden function trick
+
+	Consider a minor variation of the sum used for the binomial expansion
+	example above:
+
+		10 + 2 C(10,2) + 3 C(10,3) + ... + k C(10,k) + ... + 10
+
+	It is not obvious how to obtain the value of this sum by using the
+	binomial expansion
+
+	However, notice that the k factors are curiously like the ones that
+	you get by differentiating the monomials x^k with respect to x
+
+	What if the target sum is the derivative of some function?
+
+	Define the following function:
+
+		f(x) = x^0 + C(10,1) x^1 + ... + C(10,k) x^k + ... + x^10
+
+	Then the derivative of f(x) is reminiscent of the original sum:
+
+		f'(x) = C(10,1) x^0 + ... + k C(10,k) x^{k-1} + ... + 10 x^9
+
+	Except that there's a pesky x in the way
+
+	Get rid of x by setting x=1 in the derivative expression:
+
+		f'(x) at x=1 is precisely equal to the original sum!
+
+	Does that help?
+
+	Yes, because we can find a simple ("closed form") expression for f(x),
+	and therefore for f'(x), by using the binomial expansion:
+
+		f(x) = (1 + x)^10
+
+		f'(x) = 10 (1 + x)^9
+
+		f'(x) at x=1 equals 10 2^9, so that's the value of the sum!
+
+
+A harder hidden function trick example (outline, meant for you to fill in)
+
+	Consider finding a simple expression for the sum
+
+		15 + 4 C(15,2) + ... + k^2 C(15,k) + ... + 15^2
+
+	The k^2 factor doesn't look like a derivative, but it would if
+	it were k(k-1) instead, since that would result from taking the
+	second derivative of x^k with respect to x
+
+	So, hoping that will bring us closer to a solution, try defining
+	the following hidden function (I'm skipping some steps, which you 
+	should fill in):
+
+		f(x) = (1 + x)^15
+
+	Then 
+
+		f"(x) at x=1 = 2(1) C(15,2) + ... + k(k-1) C(15,k) + ... + 15(14)
+
+	so that
+
+		target sum = (f"(x) at x=1) + (sum of k C(15,k) for k=1..15)
+
+	The second derivative term on the right-hand side is just
+
+		f"(x) at x=1 = 15(14)(1 + x)^13 at x=1, which is 210 2^13
+
+	Computing the sum of k C(15,k) for k=1..15 is a problem like the one
+	solved above; that sum equals 15 2^14
+
+	We conclude that the target sum (with the k^2 factors) equals
+
+		210 2^13 + 15 2^14 = 15 2^17

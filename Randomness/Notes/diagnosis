@@ -1,0 +1,207 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+Conditional Probability and Bayes' rule (week 5)
+
+
+Fair die problem
+
+	Consider the following procedure: you roll a fair four-sided die
+	with sides labeled 1,2,3,4
+
+	if 1 comes up on the first roll, you stop, otherwise you roll again 
+
+	if 2 comes up on the second roll, you stop, otherwise you roll again 
+	
+	if 3 comes up on the third roll, you stop, otherwise you roll again 
+	
+	if 4 comes up on the fourth roll, you stop, otherwise you roll again (and stop)
+	
+	What is the probability that you will stop on the 3rd roll?
+
+
+Solution to the die problem
+
+	Draw a tree diagram that represents the possible outcomes as leaves
+
+	Label each edge with the corresponding conditional probability
+
+	Notice that the chain rule of conditional probability implies that the 
+	probability of any leaf is the product of the probabilities across
+	the arcs that lead to that leaf
+
+				*
+
+	1/4	/				\  3/4
+
+		1				2,3,4
+
+				1/4	/		\  3/4
+
+					2		1,3,4
+
+						1/4	/ \  3/4
+
+						     3 		1,2,4
+
+	In particular, the probability of stopping on the third roll is
+
+		P(1st not 1)*P(2nd not 2 | 1st not 1)*P(3rd 3 | 1st not 1, 2nd not 2)
+			= 3/4 * 3/4 * 1/4
+			= 9/64
+			= .14 (approx.)
+
+
+Diagnosis
+
+	Given n observations x1...xn and m explanatory hypotheses h1...hm,
+	together with the following probabilistic information:
+
+		prior probabilities: P(hi) for each hypothesis
+
+		generative probabilities: P(x1...xn | hi) for all hi
+
+	determine the most probable hypothesis given the observations
+
+	We considered the following example with n=1, m=2:
+
+		h1 = sick, h2 = not sick
+
+		x = lab test result, with possible outcomes + and -
+
+		P(h1) = 0.01	P(h2) = 0.99
+
+		P(+ | h1) = 0.9		P(- | h1) = 0.1 
+
+		P(+ | h2) = 0.2		P(- | h2) = 0.8 
+
+	The question now is: if a patient presents with a + lab result,
+	what is the probability that he/she is sick?
+
+
+Exploratory simulation
+
+	Let's design an experiment in MATLAB that simulates the diagnosis scenario
+
+	We will use the prior and generative probabilities as the latter name suggests,
+	that is, as a generative model
+
+	Here is the basic procedure:
+
+		1) Generate patient instances according to the prior probabilities:
+		Represent sick as 1, not sick as 0
+
+			truth = (rand(20000,1) < 0.01);
+
+		2) Generate lab results for the patients based on their health status,
+		according to the conditional probabilities:
+
+			if (truth(i))
+				tests(i) = (rand() < 0.9);
+			else
+				tests(i) = (rand() < 0.2);
+			
+		this version requires a loop, but we can vectorize as follows:
+
+			tests = truth.*(rand(20000,1) < 0.9) + (1.-truth).*(rand(20000,1) < 0.2);
+
+
+Simulation results
+
+	We can count true and false positives:
+
+		tp = sum( truth.*tests );
+		fp = sum( (1.-truth).*tests );
+
+	and true and false negatives:
+
+		tn = sum( (1.-truth).*(1.-tests) );
+		fn = sum( truth.*(1.-tests) );
+
+	Probability estimates follow from a simple normalization. In particular:
+
+		P(sick | +) = tp / length(truth)
+			= 0.05 (approx.)
+
+	This means that about 95% of patients with + lab results are not sick!
+
+	But the point of the lab test is to pick up the presence of the disease
+
+	Can this be correct?
+
+	HW: do this again, and check your work carefully
+
+	For now, we will switch to analytics and try to make progress on that front...
+
+	
+Bayes' rule
+
+	Diagnostic reasoning requires "changing the order" in 
+	conditional probabiility expressions:
+
+		From P(x | h)
+
+		we must derive P(h | x)
+
+	Letting A and B be general random events, this is the same as:
+
+		From P(B | A)
+
+		derive P(A | B)
+
+	This is addressed nicely by a simple rule (Bayes' rule), as follows:
+
+		P(A | B) = P(A and B) / P(B)
+
+	But the numerator can also be written in terms of the known quantity as
+
+		P(A and B) = P(B | A) P(A)
+
+	Therefore, we find:
+
+		P(A | B) = P(B | A) P(A)/P(B)
+
+
+Solution of the medical diagnosis example
+
+	We need to compute P(sick | +)
+
+	Apply Bayes' rule:
+
+		P(sick | +) = P(+ | sick) P(sick)/P(+)
+
+	We know that
+
+		P(+ | sick) = 0.9  and  P(sick) = 0.01
+
+	We need to compute P(+)
+
+	We can do this by partitioning the target event (+ lab result)
+	into the union of mutually exclusive events + and sick, + and not sick:
+
+		P(+) = P(sick)P(+|sick) + P(not sick)P(+ | not sick)
+			= 0.01*0.9 + 0.99*0.2
+			= 0.009 + 0.198
+			= 0.207
+
+	We therefore find the following "posterior" probability:
+
+		P(sick | +) = P(+ | sick) P(sick)/P(+)
+			= 0.9*0.01 / 0.207
+			= 0.009 / 0.207
+			= .0435 
+
+	In particular, it is over 20 times as likely that the person is 
+	not sick as compared with the likelihood that the person is sick!
+
+
+Moral of the diagnosis story
+
+	Observations provide evidence, but prior probabilities must also 
+	be taken into account
+
+	In the medical diagnosis example, the net effect of a + lab result
+	is a 4.35-fold increase in the likelihood that the patient is sick,
+	as compared with a missing lab result
+

@@ -1,0 +1,42 @@
+
+CS244, Randomness and Computation
+
+
+Another discrete probability distribution: hypergeometric
+
+	Consider a finite collection of N objects, of which M are "special"
+
+		for example, M=4 Aces within a deck of N=52 cards
+
+	If objects drawn sequentially from collection with replacement, success 
+	defined as drawing special object, then this is sequence of independent 	Bernoulli trials; total number of successes has binomial distribution
+
+	However, if objects drawn without replacement, then the trials are
+	not independent (why?), and we have a different situation altogether
+
+	What is the probability of exactly k successes in n trials then?
+
+	We consider the sample space
+
+		S = all combinations of n objects taken from the N
+
+		which has NCn equally probable elements
+
+	Then:
+
+		P(k successes) = # combinations with k successes / NCn
+
+	A combination is considered when it contains exactly k special objects
+
+	There are MCk ways of selecting k special objects from the M available
+
+	Having selected the k special objects, there are (N-M)C(n-k) ways of
+	selecting n-k of N-M non-special objects to complete a set of n objects
+
+	Therefore,
+
+		P(k successes) = MCk*(N-M)C(n-k)
+
+	This is called a hypergeometric distribution
+
+

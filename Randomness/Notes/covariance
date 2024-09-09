@@ -1,0 +1,285 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Covariance: a measure of dependence between two RV
+
+	Recall that the variance of a RV Z is the expected average of 
+	the squared deviation of Z from its mean:
+
+		var(Z) = E( (Z-E(Z))(Z-E(Z)) )
+
+	Similarly, the covariance of two RV X and Y is the expected average of 
+	the product of their deviations from their respective means:
+
+		cov(X,Y) = E( (X-E(X))(Y-E(Y)) )
+
+	In particular,
+
+		cov(X,X) = var(X)
+
+	The covariance matrix for two RV is the following 2x2 matrix:
+
+		cov(X,X)	cov(X,Y)
+
+		cov(Y,X)	cov(Y,Y)
+
+	This matrix is computed by the MATLAB function cov.
+
+
+cov(X,Y) measures the "linear co-variation" of the two RV's X, Y
+
+	cov(X,Y) > 0 if an increase in X is associated with an increase in Y
+
+	cov(X,Y) < 0 if an increase in X is associated with a decrease in Y
+
+	cov(X,Y) = 0 if an increase in X is not associated with a change in Y
+
+
+Covariance in terms of two expected values
+
+	Since 
+
+		(X - E(X))(Y - E(Y)) = XY - XE(Y) - E(X)Y + E(X)E(Y)
+
+	and since the expected value is linear,
+	the covariance of X, Y may be written as
+
+		E( (X-E(X))(Y-E(Y)) ) = E(XY) - E(X)E(Y) 
+
+	Notice that the covariance of two independent RV X,Y is therefore 0
+
+	The last term in the var(X+Y) formula is just the covariance:
+
+		var(X + Y) = var(X) + var(Y) + 2cov(X,Y)
+
+
+Covariance and independence
+
+	If X, Y are independent, then E(XY) = E(X)E(Y)
+
+	Therefore, cov(X,Y) = E(XY) - E(X)E(Y) = 0
+
+	Conversely, if cov(X,Y)=0, then E(XY) = E(X)E(Y)
+
+	Does this imply that X and Y are independent?
+
+	No. Consider X,Y that occupy the circumference of a circle in (x,y)-space
+
+		the inside of the circle has positive projections on x,y
+
+		but its probability is 0, so no independence...
+
+
+Predictive value of the covariance
+
+	The covariance of X,Y provides a way of predicting one RV from the other
+
+	The best linear prediction of Y, given X, can be shown to be:
+
+		Y - E(Y) = slope*(X - E(X)),
+
+	where the slope of the prediction line is given by a covariance ratio:
+
+		slope = cov(X,Y) / cov(X,X)
+
+
+Standardized covariance: correlation
+
+	cov(X,Y) scales linearly with each of X, Y
+
+		the magnitude of cov(X,Y) depends on the system of units
+		(e.g., change length unit ft to m -> cov changes)
+
+	The following "standardized" covariance does not depend on units:
+
+		corr(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This measure is called the (Pearson) correlation of X and Y
+
+		its values range between -1 and +1
+
+	If the LS regression line for Y in terms of X is rewritten
+	in terms of standardized versions of X, Y (mean 0, variance 1):
+
+		Y^ = slope' * X'
+
+	then the new slope is:
+
+		slope' = cov(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This quantity is known as the correlation of X and Y
+
+	It is the expected value of the cosine of the angle between two random
+	sample sequences of the RV's X and Y (shifted to have mean 0), viewed as vectors
+
+	That is, sample X n times: x1, x2, x3, ... xn (and subtract avg(xi))
+
+	and sample y n times: y1, y2, y3, ...yn (and subtract avg(yi))
+
+	Then the expected (average) value of cos((x1...xn),(y1...yn)) is
+	the correlation of the RV X and Y
+
+
+Sample covariance vs distribution covariance
+
+	cov(X,Y) = E((X-E(X))(Y-E(Y))) is based on the joint distribution of X,Y
+
+	as with any expected value, the RHS just means a weighted sum of all
+	possible values of (X-E(X))(Y-E(Y)) weighted by their probabilities
+
+	E((X-E(X)(Y-E(Y)) means sum of P(X=vi ^ Y=wj)*(vi-E(X))(wj-E(Y))
+
+	if we have n sample points (xk,yk), we assume that the various values
+	occur among the samples in proportion to their actual probabilities
+
+	E((X-E(X)(Y-E(Y)) is close to 1/n times sum of (xk-E(X))(yk-E(Y))
+
+	that's called the sample covariance; it's what MATLAB cov computes
+
+
+Variance of a sum
+
+	Recall that var(Z) = E(Z^2) - E(Z)^2
+
+	Consider the variance of a sum of two RV's X, Y:
+
+		var(X+Y) = E((X+Y)^2 - E(X+Y)^2
+
+			= E(X^2 + Y^2 + 2XY) - (E(X)^2 + E(Y)^2 + 2E(X)E(Y))
+
+			= var(X) + var(Y) + 2(E(XY)-E(X)E(Y))
+
+	The last term in the var(X+Y) formula is just the covariance:
+
+		var(X + Y) = var(X) + var(Y) + 2cov(X,Y)
+
+
+Geometric interpretation of covariance
+
+	The formula for the covariance of a sum may remind you of 
+	something from high school geometry: the cosine rule 
+	for the lengths of the sides of a triangle
+
+		c^2 = a^2 + b^2 - 2 ab cos(a,b)	
+
+	Notice the discrepancy in the sign;
+	this is just a matter of convention regarding how to measure angles:
+
+		triangle version measures from common vertex of a,b
+
+		variance version orients sides (arrows) end to end
+
+	The interpretation is that RV's are vectors; their individual variances 	
+	correspond to their lengths, and their covariance has something to do 
+	with the cosine of the angle between them
+
+		cov(X,Y) = a b cos(a,b) = sqrt(var(X))sqrt(var(Y)) cos(X,Y)
+
+	If this is correct, then the cosine of the angle between X, Y is:
+
+		cosine(X,Y) = cov(X,Y) / sqrt(var(X)var(Y))
+
+	In fact, the quantity on the RHS varies between -1 and +1 and is
+	indeed the cosine of an angle in an abstract space
+
+		it is usually called the correlation of X and Y
+	
+
+Predictive value of the covariance
+
+	Suppose that one wishes to predict values of Y from values of X
+
+		if Y is a RV, this can't be done exactly, of course
+
+		but if cov(X,Y) is nonzero, some dependence exists between X,Y
+
+		maybe we can exploit that
+
+	One can build a simple predictive linear model for Y as a function of X:
+
+		Y = aX + b
+
+	The issue is how to find good values for the values a and b
+
+	A reasonable approach is to minimize the expected predictive error:
+
+		error(a,b) = E( (Y - (aX + b))^2 )
+
+	which can be done through calculus (by differentiating wrt a, b)
+
+	The optimal value of the slope term, a, is related to the covariance:
+
+		a = cov(X,Y) / cov(X,X)
+
+	and the b term just makes sure the expected values are equal:
+
+		Y = aX + E(Y-aX)
+
+	or, equivalently,
+
+		Y - E(Y) = a(X - E(X))
+
+
+Example of linear prediction using covariance
+
+	Let's generate some data based on linear model + noise
+
+		x = randn(100,1); y = 3.75*x + 5*randn(100,1);
+
+	This is a lot of noise - 5 times the size of the "signal". Plot:
+
+		scatter(x,y);
+
+	To get the best linear prediction, compute the covariance matrix:
+
+		C = cov(x,y)
+
+	and define
+
+		a = C(1,2)/C(1,1); b = mean(y - a*x);
+
+	Compare the value of a to the generative slope, and compare b to 0
+
+	and plot:
+
+		hold on;
+		plot(x, a*x + b);
+
+	Results are not bad, considering the poor signal/noise ratio
+
+
+Standardized covariance: correlation
+
+	cov(X,Y) scales linearly with each of X, Y
+
+		so the magnitude of cov(X,Y) depends on the system of units
+		(e.g., change length unit ft to m -> cov changes)
+
+	The following "standardized" covariance does not depend on units:
+
+		corr(X,Y) = cov(X,Y) / sqrt(cov(X,X)cov(Y,Y))
+
+	This measure is called the (Pearson) correlation of X and Y
+
+		its values range between -1 and +1
+
+	If the LS regression line for Y in terms of X is rewritten
+	in terms of standardized versions of X, Y (mean 0, variance 1):
+
+		Y^ = slope' * X'
+
+	then the new slope is just the correlation of X, Y
+
+	It is the expected value of the cosine of the angle between two random
+	sample sequences of the RV's X and Y (shifted to have mean 0), viewed as vectors
+
+	That is, sample X n times: x1, x2, x3, ... xn (and subtract avg(xi))
+
+	and sample y n times: y1, y2, y3, ...yn (and subtract avg(yi))
+
+	Then the expected (average) value of cos((x1...xn),(y1...yn)) is
+	the correlation of the RV X and Y
+
+

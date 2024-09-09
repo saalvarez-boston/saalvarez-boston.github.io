@@ -1,0 +1,319 @@
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	PS2 due tonight
+
+		Questions? Office hours, 1:30-4 (extra hour today)
+
+	First midterm exam: in class, Tuesday, Feb. 12 (two weeks from now)
+
+
+:01
+Permutations and combinations
+
+	if a probability space has equally likely outcomes,
+	computation of probability reduces to counting
+
+		so we're looking at ways of counting things now
+
+	one issue is counting ordered sequences vs unordered sets
+
+	a set can be reordered in many ways
+
+	a 3-card hand produces six 3-card ordered sequences
+
+		abc, acb, bac, bca, cab, cba
+
+	reorderings of a set are called (full length) permutations
+
+	How many permutations does a given set S have?
+
+	Answer depends on the size, n, of S
+
+	We'll let PermSet(S) denote the set of all permutations of a set S
+	and Perm(n) denote the number of permutations of any set of size n
+
+
+:05
+Permutations in MATLAB: the perms function
+
+	perms(A) lists all permutations of the elements of A
+
+	therefore, perms(A) has length Perms(|A|)
+
+	perms('a':'c')
+
+		so Perms(3) = 6
+
+	perms(1:4)
+
+		so Perms(4) = 24
+
+
+:08
+A formula for Perm(m)
+
+	List elements of S as a1, a2, ..., an
+
+	split permutations into disjoint subsets depending on first element
+
+		PermSet(S) = U Si, where Si has all sequences that start with ai
+
+	by the addition principle:
+
+		|PermSet(S)| = sum of all of the |Si|
+
+	Since all Si have the same size, we see that
+
+		|PermSet(S)| = n times number of elements of any one of the Si
+
+	Each Si has as many elements as permutations of a set of n-1 elements:
+
+		|Si| = Perm(n-1)
+
+	so we get the following relationship:
+
+		Perm(n) = n Perm(n-1)
+
+	If you reason along the same lines again, you unravel Perm(n-1):
+
+		Perm(n) = n (n-1) Perm(n-2)
+
+	Keep doing this, and you get
+
+		Perm(n) = n(n-1)(n-2) ... Perm(1) = n(n-1)...1
+
+	The product on the right is called "n factorial" and is also denoted n!
+
+
+:15
+Short permutations
+
+	Consider ordered sequences of k elements from a set of size n
+
+		called permutations of n objects taken k at a time
+
+	For example, five-letter words with no repeated letters over A-Z
+
+		these are permutations of 26 letters taken 5 at a time
+
+	If you repeat letters, you're not considering permutations
+
+
+:17
+Example of short permutations
+
+	length 2 permutations of the set {Peter, Paul, Mary} are:
+
+		Peter, Paul
+		Peter, Mary
+		Paul, Peter
+		Paul, Mary
+		Mary, Peter
+		Mary, Paul
+
+
+:20
+Counting short permutations
+
+	Let Perm(n,k) denote number of permutations of n taken k at a time
+
+		e.g., Perm(26,5) for 5-letter words without repetitions
+
+	How to compute the numerical value of Perm(n,k)?
+
+	Multiplication principle again:
+
+		n choices for first
+
+		n-1 choices for second
+
+		...
+
+	so total number is product n(n-1)...(n-k+1)
+
+	e.g., for Peter, Paul, Mary example:
+
+		Perm(3,2) = 3(3-2) = 6
+
+	You can also express perm(n,k) using factorials:
+
+	just need to cancel a few terms off end of n!, as follows:
+
+		Perm(n,k) = n! / (n-k)!
+
+
+:20
+Random short permutations in MATLAB
+
+	randperm(n,k) generates length-k permutations of 1:n (equal likelihood)
+
+	Revisit Prob( Ace of Hearts in random two-card hand from single deck )
+
+	View (ordered) two-card hands as length-2 short permutations of deck 
+
+	Represent cards by integers 1 through 52
+
+	Ace of Hearts is index 1
+
+	>> hits = 0;
+	>> for i=1:10^5
+		hits = hits + sum(randperm(52,2)==1);
+	end
+	>> hits/10^5
+
+	ans =
+
+    	0.0382
+
+
+:25
+Combinations
+
+	What if you don't care about the order?
+
+	For example, pick two people from {Peter,Paul,Mary} for committee
+
+	How many such combinations are there?
+
+	The possible such unordered pairs are:
+
+		Peter, Paul
+		Peter, Mary
+		Paul, Mary
+
+	Notice that each such combination yields two different permutations
+
+	which gives us a general way to compute the number of combinations
+
+
+:30
+A formula for the number of combinations
+
+	Let (n,k) denote the number of different size-k (unordered) subsets
+	of a set of n elements, and call this "n choose k"
+
+		e.g. (3,2) is number of pairs from {Peter,Paul,Mary}, so (3,2)=3
+
+	We need a formula for (n,k)
+
+	We get it by counting how many permutations you can get
+	from any one given combination:
+
+	given k elements, you can reorder them in k! ways, so:
+
+		Perm(n,k) = k! (n,k)
+
+	so
+
+		(n,k) = Perm(n,k) / k! 
+
+	By the way, notice that
+
+		Perm(n,k) = n! / (n-k)!
+
+	so
+
+		(n,k) = n! / (k!(n-k)!)
+
+
+:35
+n choose k in MATLAB
+
+	use nchoosek(n,k)
+
+
+:37
+Properties of combinatorial numbers
+
+	(n,0) = 1 and (n,n) = 1
+
+	symmetry
+
+		let's plot n choose k for n=10, k=0:10
+
+		looks like it's symmetrical; is it?
+
+		check that
+
+			(n,k) = (n, n-k)
+
+	Pascal's triangle
+
+		(n,k) = (n,k-1) + (n-1,k)
+
+
+:42
+Binomial expansion
+
+	look at (a + b)^n
+
+	if you expand it, you get products of terms taken n at a time
+
+	some terms are a, the rest are b
+
+	if k are a's and n-k are b's, then get product a^k b^(n-k)
+
+	there are exactly (n,k) ways of getting that particular result
+
+	therefore,
+
+		(a + b)^n = sum from k=0 to n of (n,k) a^k b^(n-k)
+
+
+:48
+Binomial distribution, equally likely outcomes case
+
+	consider total number of heads in n tosses of a fair coin
+
+	model in terms of probabillity space with equally likely outcomes
+
+	each outcome is ordered sequence of n heads, tails
+
+	total of 2^n outcomes by multiplication principle
+
+	all outcomes equally likely by fairness assumption
+
+	P(precisely k heads in n tosses) = # outcomes with k heads / 2^n
+
+	How many ways of getting precisely k heads?
+
+		same as ways of placing k heads among k slots, 
+
+			= (n,k)
+
+	P(precisely k heads in n tosses) = # outcomes with k heads / 2^n
+
+		= (n,k) / 2^k
+
+	As a function of k, this is the symmetric binomial distribution
+
+
+:55
+Another probability calculation using combinations and permutations
+
+	probability that two randomly selected people born on same day of year
+
+	compute probability of different days of year:
+
+	sample space is all days of year with P(i)=1/365 for each i=1...365
+
+	P(all n days different) = Perm(365,n) / 365^n
+
+				= 365*364* ... *(365-(n-1)) / 365^n
+
+				= 1 (1-1/365) (1-2/365) ... (1 - (n-1)/365)
+
+	Plot and look
+
+
+:60
+Another combinations-based calculation: number of subsets of a set of size n
+
+	is sum over all subset sizes of (n,k)
+
+	which is the binomial expansion of (1+1)^n = 2^n
+

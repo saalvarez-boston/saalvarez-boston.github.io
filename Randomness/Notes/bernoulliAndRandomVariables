@@ -1,0 +1,306 @@
+
+CS244, Randomness and Computation
+
+
+:00
+Reminders
+
+	PS4 due tonight by 9 pm
+
+	Questions? Office hours today
+
+
+:01
+Repeated Bernoulli trials
+
+	"Bernoulli trial" is traditional name of single trial of an experiment 
+	with two outcomes, with a selected one of these two labeled "success"
+
+		like tossing a coin once
+
+			success could mean heads
+
+		or simulating fallible network operation for one time period
+
+			success could mean that critical component fails
+
+	Assume P(sucess) = p, so that P(failure) = 1-p
+
+	One can model repeating the experiment n times, with a new sample space
+
+	The new sample space models n ordered copies of the single trial space:
+
+		S_n = {all sequences of S,F of length n}, which has size 2^n
+
+	If repetitions are independent, then these new elementary outcomes have 
+	probabilities that depend on the number of successes (or failures):
+
+		P(a specific sequence of length n in S) = p^k (1-p)^(n-k),
+
+		where k is the number of successes in the sequence
+
+
+:07
+Probability distributions related to repeated Bernoulli trials
+
+	Different measurements of a Bernoulli sequence ("process")
+	have different probability distributions
+
+	1) For example, what is the probability that the first success occurs 
+	after exactly k trials, that is, the probability that the first k-1 
+	results are failures and the k-th is a success?
+
+	2) Second question concerns probability of precise number of successes:
+	what is the probability of k successes in n trials?
+
+
+:08
+Trials to first success
+
+	From mutual independence of the various trials,
+
+		P(1st success on k-th trial) 
+		= P(fail on 1)*P(fail on 2)*...*P(fail on k-1)*P(success on k)
+		= (1-p)^(k-1)*p
+
+	Plot in MATLAB. 
+
+	This is known as a geometric (discrete exponential) probability 
+	distribution with parameter p
+
+
+:11
+Probability of a precise number of successes
+
+		P(exactly k successes in n trials) = nCk p^k (1-p)^(n-k)
+
+	This is known as a binomial distribution with parameters n and p
+
+	We encountered it earlier in the specific context of coin tossing.
+
+
+:15
+Related: expected behavior of simulations
+
+	How often should a "collision" occur in the game rock, paper, scissors?
+
+		about 1/3 of the time, right?
+
+	If you simulate 100 RPS trials, what should the results look like?
+
+	Each such run will give different number of collisions (close to 100/3)
+
+	How should these counts be distributed?
+
+
+:17
+Solution of the rock, paper, scissors collision distribution question
+
+	Think of a collision as a "success"
+
+	The collision count is the number of successes in a Bernoulli trial
+
+	The probability of success, p, is the probability of a collision, 1/3
+
+	The number of trials, n, is the number of repetitions, 100
+
+	Thus, the actual number of successes (collisions) in 100 repetitions 
+	should have a binomial distribution with parameters n=100, p=1/3.
+
+	Therefore, we should have:
+
+		P(k collisions in 100) = 100Ck (1/3)^k (1-1/3)^(100-k)
+
+
+:20
+MATLAB simulation
+
+		plays = randi(3,100,2,10^3);
+
+		collisions = sum(plays(:,1,:)==plays(:,2,:), 1);
+
+		hist(collisions(:));
+
+		values = zeros(1,101);
+
+		for k=0:100
+			values(k) = 100*nchoosek(100,k)*(1/3)^k*(2/3)^(100-k);
+		end
+
+		figure;
+
+		plot(0:100, values);
+
+
+:30
+Random variables
+
+	Quantities such as the number of successes in repeated Bernoulli trials
+	or number of trials until first success are examples of random variables
+
+	A random variable is, intuitively, a randomly varying quantity
+
+	Relative to a given probability space, a random variable is a
+	function defined on the sample space
+
+		X: S -> set of variable's values
+
+	A random variable assigns some value to each possible outcome of
+	a random experiment, deterministically
+
+	Randomness occurs because the generation process that selects an
+	outcome is random
+
+
+:33
+More examples of random variables
+
+	1) Number of draws, without replacement, to get Ace of Diamonds
+
+		sample space S = all permutations of the full deck of 52 cards,
+		i.e., all ordered sequences of the 52 cards without repetitions
+
+		nDraws: S -> integers defined by
+
+			nDraws(s1...s52) = i, where s(i) = Ace of Diamonds
+
+	2) The sum of the faces on two playing dice
+
+		S = {(d1,d2) | each di is in {1,2,3,4,5,6}}
+
+		SumFaces:S -> {1,2,...12} defined by
+
+			SumFaces((d1,d2)) = d1+d2
+
+	3) The number of tosses of a coin until the first occurrence of heads
+
+		S = all countably infinite sequences of H,T
+
+		numTosses:S -> integers defined by
+
+			numTosses(s1...) = i, where i = min j such that s(j)=H
+
+	4) Distance at which a dart lands from the target center
+	(assume overall circular target of radius 1, with no misses)
+
+		S = {(x,y) | x^2 + y^2 <= 1}
+
+		distance:S -> real numbers defined by
+
+			distance(x,y) = sqrt(x^2 + y^2)
+
+		This is a continuous random variable
+
+
+:45
+Expected value of a random variable
+
+	If the random experiment underlying a random variable is repeated,
+	various (random) values of the variable are observed
+
+	One might ask: can we predict anything about these values?
+
+	We know from our early random walk experiments that even if individual 
+	values are randomly generated, there may be an overall pattern "in the 
+	large", that is, in the collection of all values
+
+	In particular, we may be able to say something about the average of
+	a large number of observed values of the random variable
+
+	This large scale average is called the xpected value of the RV
+
+	For example, consider the number of heads in 10 tosses of a loaded coin
+	with P(H) = 0.75
+
+		write simulation as function M-file in MATLAB
+
+		run several times
+
+		average is essentialy predictable, and becomes more so
+		the larger the number of observations we make, that is,
+		the greater the number of times we repeat the experiment
+
+	Could you have predicted the average?
+
+
+:50
+Formula for the expected value of a RV
+
+	Since the probability of an event measures the expected fraction of 
+	experimental repetitions in which the event occurs, we can compute
+	the expected average (expected value) of a RV, X
+
+	We will assume that X is discrete, defined over either a finite or 
+	countably infinite sample space (not the dart distance, for example)
+
+	Say that X has possible values v1, v2, ..., with probabilities pi
+
+	The i-th value, vi, occurs in about pi (as a fraction) of experiments
+
+	Therefore, in a large number n of repetitions, one expects about npi
+	occurrences of the value vi
+
+	Average of any collection of values is their sum divided by their number
+
+	The expected sum is np1 v1 + np2 v2 + ... + npi vi + ...
+
+	The number of values is n
+
+	The expected average is therefore the following:
+
+		E(X) = p1 v1 + p2 v2 + ... + pi vi + ...
+
+	
+:55
+Examples of expected value calculations
+
+	1) number of heads in 10 tosses of a coin with P(H)=0.75
+
+	Possible values are 0,1,2,3,4,5,6,7,8,9,10,
+	with probabilities P(numHeads=i) = 10Ci 0.75^i 0.25^(10-i)
+
+	Expected value is therefore
+
+		E(numHeads) = sum_{i=1}^{10} 10Ci 0.75^i 0.25^(10-i) * i
+
+	Solve with hidden function trick to get
+
+		E(numHeads) = 7.5
+
+	2) number of tosses until the first occurrence of heads
+
+	Assume P(heads) = p
+
+	First heads occurs on toss i if and only if
+
+		first i-1 tosses are tails
+		and
+		i-th toss is heads
+
+	Therefore,
+
+		P(X=i) = (1-p)^(i-1) p
+
+	Expected value is:
+
+		E(X) = sum from i=1 to infinity of (1-p)^(i-1) p i
+
+	Define hidden function:
+
+		f(x) = sum over all i of p x^i = p / (1-x)
+
+	Then the derivative of the hidden function is:
+
+		f'(x) = sum over all i of i p x^(i-1),
+
+	so you recognize the target sum as a particular instance of f'(x):
+
+		E(X) = f'(1-p)
+
+	Derivative is (from geometric sum formula, above):
+
+		f'(x) = p / (1-x)^2
+
+	Substitute x by 1-p to get answer:
+
+		E(X) = p / (1-(1-p))^2 = p / p^2 = 1/p

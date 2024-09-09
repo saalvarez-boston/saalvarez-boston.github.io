@@ -1,0 +1,128 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Review of selected topics for the first midterm exam, with sample problems
+
+	Also see PS1, PS2 and their solutions on BB Vista,
+	the week 1 summary notes, and the textbook
+
+
+1) Random experiments as specified by a sample space of all possible outcomes
+and a probability function on the sample space
+
+	sample task format 1) for a given informal description of a random 
+	experiment or a random event, specify a sample space that provides 
+	a good model for the given situation; perhaps choose a sample space 
+	for which all outcomes are equally likely to occur
+
+	example: consider the random event "a two-card hand dealt from 
+	a single standard deck of 52 cards in four suits contains cards 
+	from two different suits"
+
+	here are two sample spaces S that are reasonable models of the 
+	associated random experiment:
+
+	option A) Consider outcomes to be all unordered sets of two cards 
+	taken from a single deck; there are "52 choose 2" such sets, 
+	abbreviated 52C2, all of which are equally likely.
+
+	option B) Consider outcomes to be all ordered sequences of two cards 
+	taken from a single deck; there are 52*51 such permutations,
+	abbreviated 52P2, all of which are equally likely.
+
+	By the way, notice that sample space B is twice the size of
+	sample space A, so that its outcomes are one-half as likely 
+	to occur. Why would this not lead to different values for the 
+	probability of the event of interest in the two models?
+
+	Also see PS1, task 1; PS2, tasks 2a and 4a.
+
+
+2) Random events as collections of outcomes in some sample space
+
+	sample task format 2) Given the description of a sample space and
+	an event of interest, specify the outcomes of the sample space that
+	contribute to (i.e., belong to) the event of interest.
+
+	example: Consider the above example. Let E be the event of interest,
+	that is, E is the event that exactly two suits are represented in a
+	random two-card hand drawn from a single deck. What outcomes are in 
+	the set that defines this event? The answer depends on what sample 
+	space is being used. We consider options A and B as described above.
+
+	option A) If the outcomes are unordered pairs of cards, then E is the 
+	set of unordered pairs of cards of different suits. How many such 
+	unordered pairs are there? First, there are 4C2 = 6 ways to select two 
+	suits from among the four possible suits; having selected a pair of 
+	suits, there are 13 x 13 pairs of cards of those particular suits.
+
+	option B) If the outcomes are ordered pairs of cards, then E is the 
+	set of ordered pairs of cards of different suits. How many such ordered 
+	pairs are there? First, there are 4C2 = 6 ways to select two suits from 
+	among the four possible suits; having selected a pair of suits, there 
+	are 2P2 = 2 ways to order those two suits; having selected and ordered 
+	the two suits, there are 13 x 13 pairs of cards of those particular 
+	suits in that particular order.
+
+	As you can see, the event E as represented in sample space B is twice 
+	the size of the event E as represented in sample space A. Therefore,
+	the probability of event E is the same when computed in either of the
+	two sample spaces, since the sizes of the sample spaces are in the
+	same 1:2 ratio.
+
+	Also see PS2, tasks 2b and 4b.
+
+
+3) Calculation of probabilities
+
+	sample task format 3) given an informal description of a random
+	event E, first find a suitable sample space that models the associated
+	random experiment (as in task format 1, above), then find the outcomes
+	that corrsepond to the specific event E (as in task format 2, above),
+	and then calculate the probability of the event E.
+
+	example: consider the probability of getting two different suits in a
+	random pair of cards drawn from a single deck. We can model the random
+	experiment using either of the two sample spaces A, B described above.
+	As we saw, the choice of a sample space also affects the specific
+	makeup of the set that represents the event of interest: the set E
+	consists of half as many outcomes in sample space A than in sample
+	space B. We pick one of these two sample spaces, say A, in which
+	outcomes are unordered pairs of two different cards. As discussed
+	above, we know the following facts:
+
+		the size of sample space A is 52C2 = 52 * 51 / 2 = 26 * 51
+
+		the size of event E is 4C2 * 13 * 13 = 6 * 13 * 13
+
+	Since all outcomes in A are equally likely, the probability of E is:
+
+		P(E) = |E| / |A| = 6 * 13 * 13 / (26 * 51)
+
+	If you want to distill this expression down to a numerical value,
+	simplification is in order:
+
+		P(E) = 3 * 26 * 13 / (26 * 51) = 39 / 51 = 13 / 17
+
+	Since 17 is about 4/3 of 13, a rough estimate of this value is 0.75.
+	
+	Also see PS2, tasks 1, 2c, and 4b.
+
+
+4) MATLAB basics
+
+	sample task format 4) write a single MATLAB statement (or perhaps 
+	a short MATLAB script) that performs a given computational task
+
+	example: simulate a sequence of 100 trials, each consisting of 20
+	tosses of a loaded coin with P(heads) = 0.7, using the rand function;
+	the result should be a vector named sim of size 100 x 20.
+
+	Here is a single MATLAB statement that achieves the desired goal:
+
+		sim = (rand(100,20) < 0.7);
+
+	Also see PS1, tasks 2 and 3a, 3b; PS2, tasks 3a and 4c.
+

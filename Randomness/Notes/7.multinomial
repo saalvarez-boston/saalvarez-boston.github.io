@@ -1,0 +1,371 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	PS4 due Tuesday before 10 AM
+
+	Second midterm exam: in class two weeks from today
+
+
+:01
+Repeated Bernoulli trials
+
+	"Bernoulli trial" is traditional name of single trial of an experiment 
+	with two outcomes, with a selected one of these two labeled "success"
+
+		like tossing a coin once
+
+	Assume P(sucess) = p, so that P(failure) = 1-p
+
+	One can model repeating the experiment n times, with a new sample space
+
+	The new sample space models n ordered copies of the single trial space:
+
+		S_n = {all sequences of S,F of length n}, which has size 2^n
+
+	If repetitions are independent, then these new elementary outcomes have 
+	probabilities that depend on the number of successes (or failures):
+
+		P(a specific sequence of length n in S) = p^k (1-p)^(n-k),
+
+		where k is the number of successes in the sequence
+
+
+:07
+Probability distributions related to repeated Bernoulli trials
+
+	Different measurements of a Bernoulli sequence ("process")
+	have different probability distributions
+
+	For example, suppose we want to know the probability that
+	the first success occurs after exactly k trials, that is,
+	the probability that the first k-1 results are failures
+	and the k-th is a success
+
+	From mutual independence of the various trials,
+
+		P(1st success on k-th trial) 
+		= P(fail on 1)*P(fail on 2)*...*P(fail on k-1)*P(success on k)
+		= (1-p)^(k-1)*p
+
+	Plot in MATLAB. 
+
+	This is known as a geometric (exponential) probability distribution
+
+	A second question regards the probability of obtaining some
+	precise number of successes. Again, we find:
+
+		P(exactly k successes in n trials) = nCk p^k (1-p)^(n-k)
+
+	This is known as a binomial distribution.
+
+	We encountered it earlier in the specific context of coin tossing.
+
+
+:15
+Generalized Bernoulli trials with more than two outcomes in each trial
+
+	What if each trial allows 3 outcomes instead of 2?
+
+	An example is randomly generated text, with 26 outcomes per trial
+
+	A single trial example with fewer outcomes is die rolling (6 outcomes)
+
+	Card dealing with replacement yields 52 outcomes per trial
+
+	We assume that there are m possible outcomes per trial,
+	with probabilities p1, p2, ..., pm (that sum to 1)
+
+	We consider n independent repetitions of the basic trial
+
+	We ask the same questions as before:
+
+	1) What is the probability of each individual outcome in the new 
+	sample space coresponding to a specific sequence of n trial outcomes?
+
+	2) What is the probability that a specified number of each of the
+	various possible individual trial outcomes will occur in n trials?
+
+
+:20
+Individual outcome probability for repeated m-ary Bernoulli trials
+
+	For m possible outcomes per trial, and n repetitions,
+	consider a specific sequence s1 s2 ... sn
+
+	What is its probability?
+
+	Assuming independent trials, this just involves a product:
+
+		P(s1 s2 ... sn) = product of all of the P(si) 
+				= p1^k1 p2^k2 ... pm^km
+
+		where ki is the number of occurrences of the i-th
+		possible individual trial outcome (that sum to n)
+
+	This is a natural extension of the geometric / exponential distribution
+
+
+:25
+Probability of specific counts in repeated m-ary Bernoulli trials
+
+	Likewise, the probability of obtaining exactly ki occurrences
+	of the i-th possible individual trial outcome in n repetitions is
+	just the above geometric probability multiplied by the number of
+	different elementary outcomes (sequences of length n) that have
+	the particular individual outcome counts k1, k2, ..., km
+
+	The number of such outcomes is, by the multiplication principle:
+
+		|{exactly ki of the i-th outcome, i=1...m}|
+		= nCk1 * (n-k1)Ck2 * (n-k1-k2)Ck3 * ... * kmCkm
+		= n! divided by the product of all of the factorials ki!
+
+	This is known as a multinomial distribution
+
+	By the way, the reason for the name is that these values occur as the 
+	coefficients in the expansion of a multinomial power of the form
+
+		(x1 + x2 + ... + xm)^n
+
+
+:30
+Example
+
+	What is the probability that a randomly generated "word" of
+	length 5 will include 2 A's, 2 B's, and 1 C?
+
+	Any individual "word" of length 5 occurs with probability 1/26^5
+
+	The computation of the target probability reduces to counting the
+	number of such elementary outcomes:
+
+		|{2A's, 2B's 1 C}| = 5C(2,2,1,0...0) = 30
+
+	The target probability is just
+
+		30*1/26^5,
+
+	which is approximately 2.5 millionths, or 1 / 400,000.
+	Thus, one should expect these counts approximately once
+	in every 400,000 randomly generated words of length 5.
+
+	Care to verify? It's an interesting MATLAB exercise.
+
+
+:35
+Aside: expected behavior of simulations
+
+	Consider the question just posed: how often should one expect 
+	a randomly generated word to have 2 A's, 2 B's, and 1 C?
+
+	We computed the probability of the event in question as 1/400,000
+
+	If this is actually true, what can we predict regarding simulation?
+
+	Consider multiple simulation runs, each consisting of, say,
+	one million repetitions of the subexperiment of generating 
+	a 5-letter word
+
+	What sort of behavior should be expected from the empirically
+	observed count of the number of words with 2 A's, 2 B's, 1 C?
+
+	Well, this count is the number of successes in a Bernoulli trial
+
+	The probability of success, p, is the probability of obtaining the
+	desired letter count, which we believe to be about 1/400,000
+
+	The number of trials, n, is the number of simulation runs, which 
+	we are stating to be 1,000,000
+
+	Thus, the actual number of successes (words with the right counts)
+	in the 1,000,000 repetitions should have a binomial distribution
+	with parameters n=1,000,000, p=1/400,000.
+
+	Therefore, we should have:
+
+		P(exactly k good words in 10^6) = 10^6Ck (1/400,000)^k (1-p)^(10^6-k)
+
+	Intuitively, these probability values will only be non-negligible
+	for smaller values of k, since we expect around 2.5 hits on average
+
+	Can you plot a few value of the distribution?
+
+	Can you carry out a simulation and check how the actual results
+	compare with these predictions?
+
+
+:45
+Random variables
+
+	Quantities such as the number of successes in repeated Bernoulli trials
+	or the number of trials until the first success are examples of random variables
+
+	A random variable is, intuitively, a randomly varying quantity
+
+	Relative to a given probability space, a random variable is a
+	function defined on the sample space
+
+		X: S -> set of variable's values
+
+	A random variable assigns some value to each possible outcome of
+	a random experiment, deterministically
+
+	Randomness occurs because the generation process that selects an
+	outcome is random
+
+
+:48
+More examples of random variables
+
+	1) The number of draws, without replacement, to get the Ace of Diamonds
+	from a standard 52 card deck
+
+		sample space S = all permutations of the full deck of 52 cards,
+		that is, all ordered sequences of the 52 cards without repetitions
+		nDraws: S -> integers defined by
+
+			nDraws(s1...s52) = i, where s(i) = Ace of Diamonds
+
+	2) The sum of the faces on two playing dice
+
+		S = {(d1,d2) | each di is in {1,2,3,4,5,6}}
+
+		SumFaces:S -> {1,2,...12} defined by
+
+			SumFaces((d1,d2)) = d1+d2
+
+	3) The number of tosses of a coin until the first occurrence of heads
+
+		S = all countably infinite sequences of H,T
+
+		numTosses:S -> integers defined by
+
+			numTosses(s1...) = i, where i = min j such that s(j)=H
+
+	4) Distance at which a dart lands from the target center
+	(assume overall circular target of radius 1, with no misses)
+
+		S = {(x,y) | x^2 + y^2 <= 1}
+
+		distance:S -> real numbers defined by
+
+			distance(x,y) = sqrt(x^2 + y^2)
+
+		This is a continuous random variable
+
+
+:60
+Expected value of a random variable
+
+	If the random experiment underlying a random variable is repeated,
+	various (random) values of the variable are observed
+
+	One might ask: can we predict anything about these values?
+
+	We know from our early random walk experiments that even if individual 
+	values are randomly generated, there may be an overall pattern "in the 
+	large", that is, in the collection of all values
+
+	In particular, we may be able to say something about the average of
+	a large number of observed values of the random variable
+
+	This large scale average is called the xpected value of the RV
+
+	For example, consider the number of heads in 10 tosses of a loaded coin
+	with P(H) = 0.75
+
+		write simulation as function M-file in MATLAB
+
+		run several times
+
+		average is essentialy predictable, and becomes more so
+		the larger the number of observations we make, that is,
+		the greater the number of times we repeat the experiment
+
+	Could you have predicted the average?
+
+
+:65
+Formula for the expected value of a RV
+
+	Since the probability of an event measures the expected fraction of 
+	experimental repetitions in which the event occurs, we can compute
+	the expected average (expected value) of a RV, X
+
+	We will assume that X is discrete, defined over either a finite or 
+	countably infinite sample space (not the dart distance, for example)
+
+	Say that X has possible values v1, v2, ..., with probabilities pi
+
+	The i-th value, vi, occurs in about pi (as a fraction) of experiments
+
+	Therefore, in a large number n of repetitions, one expects about npi
+	occurrences of the value vi
+
+	The average of any collection of values is just their sum divided by their number
+
+	The expected sum is np1 v1 + np2 v2 + ... + npi vi + ...
+
+	The number of values is n
+
+	The expected average is therefore the following:
+
+		E(X) = p1 v1 + p2 v2 + ... + pi vi + ...
+
+	
+:70
+Examples of expected value calculations
+
+	1) number of heads in 10 tosses of a coin with P(H)=0.75
+
+	Possible values are 0,1,2,3,4,5,6,7,8,9,10,
+	with probabilities P(numHeads=i) = 10Ci 0.75^i 0.25^(10-i)
+
+	Expected value is therefore
+
+		E(numHeads) = sum_{i=1}^{10} 10Ci 0.75^i 0.25^(10-i) * i
+
+	Solve with hidden function trick to get
+
+		E(numHeads) = 7.5
+
+	2) number of tosses until the first occurrence of heads
+
+	Assume P(heads) = p
+
+	First heads occurs on toss i if and only if
+
+		first i-1 tosses are tails
+		and
+		i-th toss is heads
+
+	Therefore,
+
+		P(X=i) = (1-p)^(i-1) p
+
+	Expected value is:
+
+		E(X) = sum from i=1 to infinity of (1-p)^(i-1) p i
+
+	Define hidden function:
+
+		f(x) = sum over all i of p x^i = p / (1-x)
+
+	Then the derivative of the hidden function is:
+
+		f'(x) = sum over all i of i p x^(i-1),
+
+	so you recognize the target sum as a particular instance of f'(x):
+
+		E(X) = f'(1-p)
+
+	Derivative is (from geometric sum formula, above):
+
+		f'(x) = p / (1-x)^2
+
+	Substitute x by 1-p to get answer:
+
+		E(X) = p / (1-(1-p))^2 = p / p^2 = 1/p

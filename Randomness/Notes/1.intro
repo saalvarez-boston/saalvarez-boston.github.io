@@ -1,0 +1,376 @@
+
+CS244, Randomness and Computation
+
+:00
+Welcome!
+
+
+:01
+Self-introductions by students and me
+
+	Prof. Sergio A. Alvarez
+
+		research in data mining and machine learning
+
+		teaching in randomness, data mining, ...
+
+	How about you?
+
+		please state name, major, interests, why you're here
+
+
+:10
+Course logistics
+
+	Web page is the best source of information for this course
+
+		www.cs.bc.edu/~alvarez/Randomness
+
+	Course staff:
+
+		Prof. Alvarez, course instructor
+
+			office hours Tu, Th 1:30-3, Maloney 569
+
+		Matt Keemon and Kevin Lamb, TAs
+
+			office hours TBD, Fulton 160
+
+	Best way of contacting me outside of office hours:
+
+		e-mail alvarez@bc.edu
+
+		I check my e-mail frequently, but my voicemail only rarely
+
+	Syllabus highlights:
+
+		Download and install MATLAB immediately
+
+		I'll provide notes as we go
+
+		Recommended: download the free draft of Kay's book
+
+		Grades will be based on 
+
+			homework and class participation (20%)
+			midterm exam 1 (25%)
+			midterm exam 2 (25%)
+			final exam (30%)
+
+		You must submit at least 2 out of every 3 HW assignments
+		that show an honest attempt at completion in order to pass
+
+		More importantly, doing the HW is crucial to doing well
+
+
+:15
+Let's get started: randomness ...
+
+	What does "random" mean?
+
+	You may hear "I ran into a random person on the street"
+
+	Randomness here refers to lack of preference for anyone in particular
+
+	Jury selection is an example of a task in which it is desirable 
+	to make an unbiased choice of a person.
+
+	In ancient Athens, an ingenious procedure was used to select
+	jury members in this sense of "randomness"
+
+		show kleroterion image
+
+		describe procedure
+
+	Another model for the random element in this procedure is a coin toss
+
+		heads <=> white ball
+
+		tails <=> black ball
+
+
+:20
+Some examples of randomness in computation
+
+	Deterministic choice may lead to deadlock in distributed systems
+
+		randomization is an easy way to make simultaneity less likely
+
+		example: collision resolution in Ethernet networks
+
+	A computational problem may be very hard to solve deterministically
+
+		randomness can be used as the basis for an algorithm
+		that almost certainly solves the problem, and that
+		does so much faster than a deterministic approach
+		
+		example: generation of large keys for RSA encryption / security
+
+	A suboptimal search algorithm may produce results that depend on 
+	the starting conditions
+
+		randomizing the starting conditions allows
+		finding solutions that are closer to optimal
+
+		example: random seed in backpropagation training of neural nets
+
+	Input data for a program may not be known in advance
+
+		randomness can be used to model the data, and to 
+		estimate the resulting performance of the program
+
+		example: average case analysis of sorting
+
+	IBM's Watson system, the one that beat the human Jeopardy champions,
+	uses probability to measure uncertainty and optimize decision making
+
+
+:25
+Properties of a random procedure (e.g., coin toss)
+
+	1) Equally likely outcomes: we discussed this above
+
+		all possible outcomes of a random procedure
+		should be equally likely to occur
+
+	What else? Well, consider a coin that lands heads and tails
+	on alternate tosses (h, t, h, t, h, t, h...)
+
+		The two possible outcomes are equally likely here,
+		but this does not correspond to "random" behavior
+
+	2) Randomness also requires unpredictability
+
+	Note that merely discussing predictability requires that
+	the random procedure be repeatable in principle
+
+		E.g., whether or not a particular once-in-a-lifetime event
+		occurred "randomly" is not a meaningful question here
+
+
+:28
+Neither equal likelihood nor unpredictability implies the other
+
+	We already saw the see-saw coin that exhibits
+	equally likely outcomes but not unpredictability
+
+	On the other hand, one can imagine a "loaded" coin that
+	lands heads 70% of the time and tails 30% of the time,
+	without this allowing one to anticipate the next result
+
+
+:30
+... and computation
+
+	The ancient Athenian kleroterion provides an example
+	of mechanical computation involving randomness
+
+	We'll be doing computational examples in MATLAB
+
+		Don't forget to download and install it right away
+
+	MATLAB provides an environment for data analysis and visualization
+	plus a general-purpose interpreted programming language
+
+	MATLAB stands for "MATrix LABoratory"
+
+		It uses matrices (vectors) as the basic data objects
+
+	We'll use vectors as we go, and focus on them toward end of the course
+
+
+:33
+First steps in MATLAB
+
+	Defining a "row vector": comma- or space-separated list in [ ] brackets
+
+		times = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+	The semicolon at the right end is optional;
+	including it simply prevents echoing the result to the screen
+
+	You can access the i-th element of an existing vector by indexing:
+
+		times(3)
+
+		ans = 2
+
+	Defining a "column vector" using semicommas instead of commas or spaces:
+
+		times = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10];
+
+	You can also transpose a row to a column and vice-versa, using ':
+
+		times = times';
+
+	A shortcut for defining a range is the colon operator:
+
+		times = 0:10
+
+	You can specify the stepsize between consecutive values also:
+
+		times = 0:2:10
+
+	Sometimes you just need a certain number of zeros in a table:
+
+		times = zeros(10,1)  % column vector
+
+		times = zeros(1,10)  % row vector
+
+		times = zeros(3,5)  % three rows and five columns
+
+	or ones:
+
+		times = ones(2,3)   % two rows and three columns
+
+
+:38
+MATLAB's randi() and rand() functions
+
+	MATLAB provides a function, randi(), that returns a
+	"random" integer in a specified range
+
+		randi([a b], n, m) returns n x m matrix of rand ints in [a b]
+
+	and a basic function, rand(), that returns a
+	"random" floating-point number between 0 and 1
+
+		like random number generator in Python or Java
+
+
+:40
+rand() example
+
+	Generate 10000 random reals between 0 and 1 as shown below:
+
+	Standard iterative code:
+
+		values = zeros(10000,1); % 10000 rows and 1 column
+		for i=1:10000
+			values(i) = rand();
+		end
+
+	You can make this code into a reusable script by placing in an "M-file"
+
+	Some scripts define functions that return values
+
+		just write function outParam = functionName(paramList) as header
+
+	Run the M-file manyRands.m by writing its name on the command line:
+
+		values = manyRands
+
+	We can examine the distribution of the results using a histogram:
+
+		hist(values)
+
+	They look pretty uniformly distributed between 0 and 1, that is, 
+	all regions of [0,1] are equally likely to occur as outcomes
+
+
+:45
+Vectorizing MATLAB code
+
+	MATLAB operates most efficiently using vector operations, not loops
+
+	Removing loops from code is called "vectorizing" the code
+
+	Here's vectorized code that generates 10000 random reals:
+
+		values = rand(10000,1);  % 10000 rows and 1 column
+
+	This code runs twice as fast as the non-vectorized version
+
+	A real no-no, however, is allocating array memory iteratively:
+
+		values = [];
+		for i=1:10000
+			values(i) = [values; rand()];
+		end
+
+	show compareRands
+
+	run compareRands
+
+
+:50
+Randomness connotes unpredictability at the micro level: the random walk
+(less politically correct term is "drunken sailor")
+
+	Repeatedly flip a coin to decide whether to step right or left
+
+	show a few sample trajectories in MATLAB
+
+	As you may expect, there is little structure to such paths
+
+	Some paths drift right (positive), some left (negative), some not at all
+
+
+:53
+Large-scale behavior of random phenomena
+
+	Do more and more random walkers, say 500
+
+	They start out at same place (y=0), and perform individual random walks
+
+	Run MATLAB script (note that this is my script, not included in MATLAB)
+
+		randomWalkMotion(1000,500);
+
+	The walkers drift away from their starting point
+
+		uncertainty increases with time
+
+	Zoom out and look at them from further and further away as they walk
+
+		randomWalkZoomed(1000,500);
+
+	In this view, uncertainty doesn't seem quite as bad
+
+		in fact, the walkers basically appear to be nearly still
+
+	If we use a loaded coin that slightly prefers one direction, then
+	from afar, the walkers appear to move in unison, at constant speed
+
+
+:60
+Large-scale behavior of random phenomena, take 2
+
+	Our results suggest that despite the "local" unpredictability 
+	of individual random outcomes (walks), the averages taken over 
+	many outcomes may have some structure.
+
+	Let's draw the 500 random walks as functions of time
+
+		run my randomWalk MATLAB script
+
+		randomWalk(1000,500);
+
+	We see a pattern emerge...
+
+		So, there is some determinism under the random surface!
+
+	Questions:
+
+		how wide is the region at the far right end?
+
+		what is its shape, exactly?
+
+		is shape always the same, or different for different "batches"?
+
+
+:65
+Guiding themes for this course
+
+	Randomness models certain experiments that are repeatable in principle
+
+	Individual outcomes will be unpredictable (and often equally likely)
+
+	Collective (average) behavior may allow nearly deterministic description
+
+	Randomness and computation interact naturally
+
+		Computation facilitates an understanding of randomness
+
+		Randomness can be useful in computation
+

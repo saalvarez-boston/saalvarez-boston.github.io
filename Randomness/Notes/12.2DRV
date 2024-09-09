@@ -1,0 +1,218 @@
+
+CS244, Randomness and Computation
+
+:00
+Announcements
+
+	PS6 due on Tuesday
+
+
+:02
+2D RV
+
+	RV often come in pairs
+
+	For example, bats may have a color and a speed
+
+	If the possible colors are red and blue and speeds are fast and slow,
+	one could tabulate the probabilities of the various combinations:
+
+				color
+			blue		red
+
+		fast	0.56		0.12
+
+	speed
+
+		slow	0.14		0.18
+
+	This is an empirical version of what is called the joint distribution 
+	of the pair of random variables speed, color
+
+	In general, the joint distribution of RV X, Y is the collection of
+	probabilities P(X=vi and Y=wj) for all values vi of X, wj of Y
+
+
+:10
+Another example of a joint probability distribution
+
+	Let's consider a continuous example
+
+	We give the joint PDF instead of the joint PMF
+
+	This PDF looks like a single hill in 2D (v,w) space
+
+		f(v,w) = 1/(2 pi) * exp(-(v^2+w^2)/2)
+
+	MATLAB will generate 2D data distributed according to this PDF:
+
+		values = randn(10^5, 2);
+
+	Plot
+		scatter(values(:,1),values(:,2))
+
+
+:15
+Independence for RV, revisited
+
+	If X, Y are independent RV, then
+
+		P(X=v and Y=w) = P(X=v)*P(Y=w) for all possible values v,w
+
+	Therefore, in this case the joint probability distribution of X,Y
+	factors into the product of the distributions of X and Y respectively
+
+	In the case of continuous RV, pointwise probabilities are zero, so 
+	we instead define independence using the probability density functions:
+	
+		fXY(v,w) = fX(v)*fY(w) at all points (v,w)
+
+
+:18
+Marginal distributions of a 2D RV
+
+	Suppose that f(v,w) is the joint distribution of X, Y, that is:
+
+		P(X=v and Y=w) = f(v,w)
+
+	We can then extract the PMF of each of X, Y from f:
+
+		P(X=v) = sum_w P(X=v and Y=w) by the partition principle
+			= sum_w f(v,w)
+
+		P(Y=w) = sum_v P(X=v and Y=w) by the partition principle
+			= sum_v f(v,w)
+
+	These summed functions are known as the marginal distributions
+	("written in the margins")
+
+	One says that Y is "marginalized out" from f(v,w) in order to get fX(v),
+	and, likewise, that X is marginalized out from f(v,w) to get fY(w)
+
+	Marginalization is similar for continuous RV, with integrals instead
+
+
+:25
+An example of discrete marginal distributions and independence
+
+	1) Bats: recall the joint distribution of speed and color:
+
+				color
+			blue		red
+
+		fast	0.56		0.12
+
+	speed
+
+		slow	0.14		0.18
+
+
+	marginal distribution of speed: marginalize color out, fixing speed:
+
+		P(fast) = P(fast and blue) + P(fast and red)
+			= 0.56 + 0.12 = 0.68
+
+		P(slow) = P(slow and blue) + P(slow and red)
+			= 0.14 + 0.18 = 0.32
+
+	marginal distribution of color: marginalize speed out, fixing color:
+
+		P(blue) = P(fast and blue) + P(slow and blue)
+			= 0.56 + 0.14 = 0.70
+
+		P(red) = P(fast and red) + P(slow and red)
+			= 0.12 + 0.18 = 0.30
+
+	you can now easily verify that speed and color are not independent here
+
+
+:32
+An example of continuous marginal distributions and independence
+
+	Consider the particular 2D Gaussian distribution discussed earlier:
+
+		f(v,w) = 1/(2 pi) * exp(-(v^2+w^2)/2)
+
+	We extract fX(v) by marginalizing out w (i.e., integrating out w):
+
+		fX(v) = 1/(2 pi) * int_{-infty,infty} exp(-(v^2+w^2)/2) dw
+
+			= 1/(2 pi) * exp(-(v^2/2) int_{-infty,infty} exp(-(w^2)/2)
+
+	We know the form of a 1D Gaussian distribution with variance 1:
+
+		1/sqrt(2 pi) exp(-(w^2/2))
+
+	Therefore, that part integrates to 1, leaving the following:
+
+		fX(v) = 1/sqrt(2 pi) * exp(-(v^2/2))
+
+	which is just a 1D Gaussian with mean 0 and variance 1
+
+	Similarly, integrating v out yields:
+
+		fY(w) = 1/sqrt(2 pi) * exp(-(w^2/2))
+
+	We see also that X and Y are independent here
+
+
+:40
+If the joint distribution factors into functions of a single variable,
+are X, Y necessarily independent?
+
+	Let's answer this...
+
+	Suppose that the joint distribution P(X=v and Y=w) of X, Y factors
+	into the product of two distributions, one dependent on v, and the
+	other on w. Are X and Y necessarily independent? 
+
+		First ask whether P(X=v,Y=w) = f(v)*g(w) implies that
+		X, Y must have the PMF f, g respectively
+
+		P(X=v) = sum_w P(X=v,Y=w) by partition principle
+			= sum_w f(v)*g(w)
+			= f(v)*sum_w g(w)
+			= f(v)
+
+		so, yes!
+
+		Therefore, if P(X=v,Y=w) = f(v)*g(w), then f is the PMF of X,
+		and g is the PMF of Y, and X,Y are independent
+
+
+:48
+Covariance: a measure of dependence between two RV
+
+	Recall that the variance of a RV Z is the expected average of 
+	the squared deviation of Z from its mean:
+
+		var(Z) = E( (Z-E(Z))(Z-E(Z)) )
+
+	Similarly, the covariance of two RV X and Y is the expected average of 
+	the product of their deviations from their respective means:
+
+		cov(X,Y) = E( (X-E(X))(Y-E(Y)) )
+
+	In particular,
+
+		cov(X,X) = var(X)
+
+
+:55
+Covariance in terms of two expected values
+
+	Since 
+
+		(X - E(X))(Y - E(Y)) = XY - XE(Y) - E(X)Y + E(X)E(Y)
+
+	and since the expected value is linear,
+	the covariance of X, Y may be written as
+
+		E( (X-E(X))(Y-E(Y)) ) = E(XY) - E(X)E(Y) 
+
+	Notice that the covariance of two independent RV X,Y is therefore 0
+
+	The last term in the var(X+Y) formula is just the covariance:
+
+		var(X + Y) = var(X) + var(Y) + 2cov(X,Y)
+

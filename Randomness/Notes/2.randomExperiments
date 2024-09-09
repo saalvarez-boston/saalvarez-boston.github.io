@@ -1,0 +1,398 @@
+
+CS244, Randomness and Computation
+
+:00
+Reminders
+
+	You should have installed MATLAB by now
+
+	Remember to read the MATLAB tutorial(s) linked from the course page
+
+	PS1 is due Tuesday on BB Vista
+
+	Let me know if you have any questions (Tu Th 1:30-3, or e-mail)
+
+
+:01
+Last time 
+
+	We discussed the notion of randomness
+
+		basically an unpredictable choice among alternatives
+
+		often with no bias, sometimes with (loaded die)
+
+	We considered examples of random processes
+
+		black balls and white balls in a funnel
+
+		coin toss
+
+		random walk
+
+	Randomness is not the same as total disorder, or unknowability
+
+	We gleaned that randomness at the "micro" level of individual samples
+	may be consistent with near-determinism at the "macro" level of large 
+	collections of samples
+
+		recall the emergent pattern over many random walks
+
+
+:05
+Another random experiment
+
+	Consider the random experiment consisting of randomly generating
+	a sequence of length 1 million of letters of the alphabet
+
+	The sample space is the set of all (A-Z) strings of length 1 million
+
+	How can we simulate this experiment in MATLAB?
+
+	We need to generate letters randomly
+
+	We have at our disposal a random number generator
+
+	We can translate as follows:
+
+		alpha = 'a':'z'
+
+	Then we just index into alpha with a random integer index in 1:26
+
+		alpha( randi(26) )
+	
+	For a random sequence of 1 million letters, we need 1 million indices:
+
+		randletters = alpha( randi(26,1,10^6) );
+
+
+:10
+Quantifying randomness
+
+	Since the letters are generated randomly, we con't expect any
+	particular patterns to occur in the generated strings
+
+	Let's look for some words:
+
+		findstr( randletters, 'potato' );
+
+		findstr( randletters, 'dog' );
+
+	We get some hits, but are these reasonable hit counts, or not?
+
+	We need some way to do quantitative calculations in randomness
+
+	If we really believe that random text should be generated as we did
+	here, so that all letters are equally likely, then it stands to reason
+	that all words of any given length should also be equally likely
+
+		in particular, all 3-letter words should be equally likely
+
+		since there are 26^3 such words, each one should occur about
+		1/26^3 of the time, which means about 57 times. Nice!
+
+	Nice sanity check, that is
+
+	"Real" text doesn't contain all letters in the same proportions
+
+	We would like to be able to model such text better, and to make
+	quantitative predictions about what to expect in random experiments
+	involving more realistic random text, for example
+
+	In order to get there, we'll need to start by adding a metric 
+	to the most basic parts of the random experiments
+
+
+:15
+Random experiments, outcomes, and probability functions
+
+	Today, we'll begin formalizing our models of random phenomena
+
+	The most basic notion is that of "random experiment"
+
+		examples are as before
+
+	Any random experiment must define two things:
+
+		the set of possible outcomes in any instance of the experiment
+
+		for each possible outcome, a measure of its likelihood
+		(probability), that is, the expected relative frequency of the 
+		outcome's occurrence in many repetitions of the random experiment
+
+			the probability of each outcome is non-negative 
+
+			the probabilities of all outcomes sum to 1
+	
+	A random experiment that has a precisely defined sample space
+	and probability function is often called a probability space
+
+	The probability function is also called a probability distribution,
+	as it describes how the likelihood is distributed among alternatives
+
+
+:20
+Law of Large Numbers
+
+	A key mathematical result about probability is the Law of Large Numbers
+
+		I'll state a slightly imprecise version
+
+		we'll comment on the correct statement and proof idea 
+		later in the semester
+
+	(LLN, weak form) If an outcome of a random experiment has probability p,
+	and if the experiment is repeated n times, then the observed fraction of
+	repetitions in which the outcome is observed will converge to p as	
+	n approaches infinity
+
+
+:23
+Examples of probability spaces
+
+	Selecting the next ball from the funnel in a kleroterion
+
+		Possible outcomes: white, black
+
+		Probability measure: P(white) = 1/2, P(black) = 1/2
+
+		Simulation of single experimental sample: randi(2)
+
+		Simulation of multiple experimental samples: randi(2,1,n)
+
+	Rolling a fair die
+
+		Possible outcomes: 1, 2, 3, 4, 5, 6
+
+		Probability measure: P(i)=1/6 for each i=1,2,3,4,5,6
+
+		Simulation of single experimental sample: randi(6)
+
+		Simulation of multiple experimental samples: randi(6,1,n)
+
+	Tossing a loaded coin that is twice as likely to land Heads than Tails
+
+		Possible outcomes: Heads, Tails
+
+		Probability measure: P(Heads) = 2/3, P(Tails) = 1/3
+
+		Simulation of single experimental sample: 
+		(interpret 1 as heads, 0 as tails)
+
+			(rand() < 2/3)  
+
+		Simulation of multiple experimental samples: 
+
+			(rand(1,n) < 2/3)
+
+	Counting the number of people in line at the DMV
+
+		Possible outcomes: 0,1,2,3,4,5,...
+
+		Probability measure: 1 / infinity for all outcomes?
+
+
+:30
+Discrete probability
+
+	A random experiment is discrete if it is finite or countably infinite
+
+	A finite example is rolling a die once
+
+	An example that is best modeled as being infinite is 
+	counting orders on a website (in a given month, say)
+
+		possible outcomes = 0,1,2,3,4,5,...
+
+	Note that if the number of possible outcomes is infinite,
+	then the various outcomes cannot all have the same probability
+	(because the probabilities wouldn't add up to 1)
+
+	One could instead (just an example) have something like
+
+		P(i) = 2^(-1-1)
+
+	Another countably infinite example is random arrivals of requests at 
+	a server (e.g., customers at a register, or data packets at a network 
+	node); a classical model involves the Poisson probability function:
+
+		P(i) = e^{-r} r^i / i!
+
+
+:33
+MATLAB verification that the Poisson function is a probability function
+
+	A symbolic calculation is really needed, but MATLAB
+	allows us to provide an approximate calculation
+
+	For example, consider the case r=1, and look at the
+	probabilities for line lengths between 0 and 10
+
+		exp(-1) ./ factorial(0:10)
+
+	Notice the period before the division operator;
+	this denotes the elementwise division, which means that
+	the operation is performed on each element individually,
+	yielding in this particular case a vector of length 11
+
+	MATLAB computes this sequence of values, showing that the 
+	probabilities have decayed to essentially 0 by line length 10
+
+		sum( ans )
+
+	Their sum is essentially 1, which is all we need
+
+
+:40
+Random events
+
+	Often, one is interested in a set of outcomes as a whole
+
+		for example, one may be interested in knowing if the
+		die comes up a prime number (2, 3, or 5)
+
+		or if there are at least 10 people in line
+
+	Such sets of outcomes are called random events
+
+	A random event has a probability of occurrence, which
+	measures its expected relative frequency in many repetitions
+	of the random experiment
+
+
+:42
+Probabililty of an event
+
+	Since an event E occurs precisely when one of its constituent 
+	outcomes occurs, and since elementary outcomes are mutually
+	exclusive, E its expected relative frequency is the sum of 
+	the relative frequencies of the outcomes in E:
+
+		P(E) = sum of P(x), over all outcomes x in E
+	
+	For example:
+
+		P(die comes up prime) = P(2) + P(3) + P(5)
+
+		if the die is fair, then this probability is 1/2
+
+		Simulation: 
+
+			rolls = randi(6,1,10^4);
+			sum( rolls==2 | rolls==3 | rolls==5 ) / length(rolls)
+
+	Another example:
+
+		P(at least 8 people in line) = sum_{i>=8} e^{-r} r^i / i!
+
+		Simulation: assume r=5
+
+			examine probability values
+
+			exp(-5)*5.^(0:20)./factorial(0:20)
+
+			since values very small at upper end,
+			we estimate the desired probability by:
+
+			sum( exp(-5)*5.^(8:20)./factorial(8:20) )
+
+
+:50 (briefly mention, then go on to continuous probability)
+Equally likely outcomes
+
+	Suppose that a sample space, S, consists of a finite number, n, 
+	of equally likely outcomes
+
+		each outcome has probability 1/n (why?)
+
+	The probability of any event E then reduces to counting, because:
+
+		P(E) = sum over x in E of P(x) = sum over x of 1/n = |E|/n
+
+	Example: what is the probability of getting the Ace of Hearts
+	in a random two-card hand dealt from a single deck?
+
+		Here, the sample space S consists of all pairs of cards
+		from a single deck. There are 1326 such pairs (why: later).
+		Each pair therefore has probability 1/1326
+
+		The Ace of Hearts appears in exactly 51 such hands. Why?
+
+		=> P(Ace of Hearts in hand) = 51/1326 = 1/26
+
+	Example: probability that you'll see tails at least once
+	in two flips of a fair coin
+
+		S = {(s,s') | s,s' in {H,T}}
+		P(s,s') = 1/4
+		P(tails at least once) = 1 - one outcome/4 = 3/4
+	
+	Simulation: use MATLAB to check the above results
+
+
+:60
+Continuous probability
+
+	A random experiment is continuous if it involves an uncountable 
+	infinity of outcomes, such as a continous range of real numbers
+
+		examples include measuring the temperature of a mixture
+
+			possible outcomes = all real numbers between 0 and 400
+
+		and throwing a dart at a target
+
+			possible outcomes = all points on the wall
+
+		continuous probability requires rethinking the nature of the
+		probability function, because the probability of an individual
+		outcome of a continuous random experiment is typically zero!
+
+
+:65
+Redefining the notion of probability function for continuous sample spaces
+
+	if the set of outcomes is an interval of real numbers,
+	then one can state the probability of every subinterval
+
+		for instance, if one is randomly throwing darts at the
+		interval [0,10], then the probability of a subinterval 
+		[a,b] should be proportional to the length b-a: 
+
+			P([a,b]) = C*(b-a), where C is some fixed value
+
+		In order for the set of all outcomes, [0,10], to have
+		probability 1, as it should:
+
+			1 = C*(10-0) = 10C => C = 1/10
+
+			=> P([a,b]) = (b-a)/10
+
+
+:70
+The general definition of probability space
+
+	We had started by stating that a random experiment is defined by
+	a sample space S of all possible experimental outcomes together with
+	a non-negative probability function P on the sample space S, with the
+	only additional restriction that
+
+		sum of P(x) over all x in S equals 1
+
+	However, we know that if the sample space is continuous then
+	each P(x) could actually be 0.
+
+	We dealt with this case by instead viewing the probability function 
+	as being defined on certain sets of outcomes, like intervals,
+	instead of on individual outcomes. In the special case of discrete
+	probability, this new definition is consistent with the old one.
+
+	This leads to the general definition of probability space as
+	consisting of a set S, called the sample space, whose elements
+	represent the possible experimental outcomes, together with a
+	probability function P defined on subsets of S, and satisfying
+	the following properties:
+
+		P(E) >= 0 for all subsets E of S
+		P(S) = 1 (this replaces the summing to 1 property)
+

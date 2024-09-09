@@ -1,0 +1,455 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+:00
+Reminders
+
+	First midterm exam on Tuesday
+
+	Last office hours before then: today, 2:30-4 pm
+
+
+:02
+Canines and felines and the importance of context (continued)
+
+	Half of the pets in a town are dogs and the other half are cats
+
+	1) A family in town has two pets, of which one is known to be a cat
+
+		what is the probability that the other pet is also a cat?
+
+		Discuss
+
+		Simulate
+
+		>> a = randi(2,10^5,2)-1;
+		>> length(find(sum(a,2)==2)) / length(find(sum(a,2) > 0))
+	
+		ans =
+	
+    			0.3318
+
+	2) Another family also has two pets, of which one is a dog given to them
+	as a present by their friends. Their other pet is a stray that they
+	picked up and nursed back to health. 
+
+		what is the probability that the stray is also a dog?
+
+		Discuss
+
+		Simulate
+
+		>> a = randi(2,10^5,2)-1;
+		>> length(find(sum(a,2)==2)) / length(find(a(:,1)==1))
+		
+		ans =
+		
+    			0.4993
+
+
+:08
+Important concept: conditional probability
+
+	measures the likelihood of the occurrence of an event, E,
+	relativized to the restricted sample space in which some
+	other event, F, is assumed to occur with certainty
+
+	in general, compute conditional probability as following ratio:
+
+		P(E | F) = P(E and F) / P(F)
+
+
+:10
+Another example: probability of busting (over 21) in blackjack 
+
+	single player dealt cards randomly from standard deck of 52 cards 
+
+		four suits, with Ace,2,3,4,5,6,7,8,9,10,J,Q,K in each suit
+
+	assume player has two cards in hand already: K and 5
+
+	current value of hand = 10 + 5 = 15 points
+
+	therefore, bust if third card is worth 7 or more points
+
+		cards in deck after dealing K,5: total of 50 cards,
+		of which 4x7 - 1 = 27 are worth 7 points or more
+		(subtract 1 because a K is already in hand)
+
+		probability of busting on third card, given current hand, is 
+		ratio of counts because all outcomes (cards) are equally likely:
+
+		P(bust on 3rd | K,5) = P(>=7 pts on 3rd | K,5) = 27/50 = 0.54
+
+
+:15
+Independence
+
+	two events are (probabilistically) independent if occurrence
+	of one of them does not affect the probability of the other
+
+	E independent of F if P(E | F) = P(E | not F)
+
+	E independent of F is equivalent also to either of the following:
+
+		P(E and F) = P(E)*P(F) (product rule for independent events)
+
+		P(E | F) = P(E)
+
+	by product rule, if E independent of F, then F also independent of E
+
+	product rule extends to more than two mutually independent events: 
+	if E1, E2, ... En are random events for which each Ei is independent 
+	of all of the others, then:
+
+		P(E1 and E2 and ... and En) = product of all of the P(Ei)
+
+
+:18
+Example: independent tosses of a loaded coin
+
+	Assume P(H) = p on each toss (same p for all tosses)
+
+	Consider n successive tosses of the coin
+
+	Sample space S is {(s1,s2,...sn) | each si is H or T} of length-n seqs
+
+	If tosses independent, probability of each outcome follows product rule:
+
+		P(s1*,s2*,...sn*) = product from i=1 to n of P(si* on i-th toss)
+
+	each term in product is either p for H-slots, or 1-p for T-slots
+
+	therefore, probability of outcome depends only on numbers of H, T in it:
+
+		P(s1*,s2*,...sn*) = p^k (1-p)^(n-k),
+
+	where k is the number of heads.
+
+	nCk different choices of k of n slots for exactly k heads 
+
+	overall probability of obtaining exactly k heads in n tosses:
+
+		P(exactly k heas in n tosses) = nCk p^k (1-p)^(n-k)
+
+	This is a much easier derivation than our bins argument last week
+
+
+:25
+Application: randomized algorithms
+
+	Randomness can be used as the basis for faster algorithms
+
+	For example, consider the computational task of primality testing:
+
+		input: a positive integer, n
+
+		desired output: true if n is prime, false otherwise
+
+	Deterministic algorithms for this task are extremely slow 
+	for large integers as in RSA public key cryptography
+
+
+:27
+Randomized primality testing 
+
+	based on repeated independent "weak primality tests" on candidate, n
+
+	Have one weak test T(r) for each choice of a parmeter, r
+
+	Each weak test eliminates over half of non-primes:
+
+		P(n passes test T(r) | n not prime) < 1/2
+
+	Any number that fails the test is guaranteed not to be prime:
+
+		P(n prime | n fails test T(r)) = 0
+
+	Strong primality test repeats weak test with randomized parameter, r:
+
+		for i=1 to k
+			randomly generate parameter, r_i
+			apply resulting weak test T(r_i) to candidate n
+			if n fails T(r_i)
+				return false (no mistakes possible here)
+		end for
+		return true (only mistaken if non-prime n passes all k tests)
+
+
+:32
+Reliability of strong primality test
+
+	What can we say if strong test returns false on input n?
+
+		n guaranteted non-prime since it failed a weak test
+		
+	What can we say about n if the strong test returns true on input n?
+
+		P(true | not prime) = P(all k tests true | not prime)
+
+			= P(all k tests true and not prime) / P(not prime)
+
+	Denominator is about 1
+
+		P(true | not prime) approx. = P(all k true and not prime)
+
+			approx. = P(all k true)
+
+	Assuming that each test is independent of the others:
+
+		P(all k true) = prod_{i=1:k} P(passes T(r_i)) | not prime)
+
+	Each of these probabilities is less than 1/2, so
+
+		P(n not prime | algorithm returns true)  < 1/2^k
+
+	This error probability can be made as small as desired by increasing
+	the number of tests, k
+
+		example: with k=100 tests, the error probability is < 10^(-10)
+
+
+:40
+Chain rule of conditional probability
+
+	For any sequence of random events, E1, E2, ..., En,
+
+		P(E1 and E2 and ... and En) = the product over the
+		following chain of conditional probabilities:
+
+		P(E1)
+		P(E2 | E1)
+		P(E3 | E1 and E2)
+		P(E4 | E1 and E2 and E3)
+		...
+		P(En | E1 and E2 and ... and E(n-1))
+
+	Example: a very simple probabilistic model of text:
+
+		assume that words are selected randomly from a dictionary,
+		except that each word is conditioned by previous words.
+
+		for example, the probability of the sentence "the ball rolls"
+		would be computed as a product over the following chain:
+
+		P("the")
+		P("ball" | "the")
+		P("rolls" | "the" and "ball")
+
+		actually implementing a probabilistic text generator based on
+		these ideas requires an enormous amount of fodder for the 
+		estimation of the conditional probabilities; it is convenient 
+		to at least initially assume that all options are equally
+		likely; for example, if the dictionary contains 1000 words,
+		then one can guess that each word has probability 1/1000; 
+		any available text can then be used to update the probabilities
+
+
+:45
+Another conditional probability example
+
+	Roll a fair four-sided die with sides labeled 1,2,3,4
+
+	if 1 comes up on first roll, stop, otherwise roll again 
+
+	if 2 comes up on second roll, stop, otherwise roll again 
+	
+	if 3 comes up on third roll, stop, otherwise roll again 
+	
+	if 4 comes up on fourth roll, stop, otherwise roll again (and stop)
+	
+	What is the probability that you will stop on the 3rd roll?
+
+
+:48
+Solution to the die problem
+
+	Draw a tree diagram that represents the possible outcomes as leaves
+
+	Label each edge with the corresponding conditional probability
+
+	Notice that the chain rule of conditional probability implies that the 
+	probability of any leaf is the product of the probabilities across
+	the arcs that lead to that leaf
+
+				*
+
+	1/4	/				\  3/4
+
+		1				2,3,4
+
+				1/4	/		\  3/4
+
+					2		1,3,4
+
+						1/4	/ \  3/4
+
+							3 1,2,4
+
+	In particular, the probability of stopping on the third roll is
+
+		P(1st not 1)*P(2nd not 2 | 1st not 1)*P(3rd 3 | 1st not 1, 2nd not 2)
+			= 3/4 * 3/4 * 1/4
+			= 9/64
+			= .14 (approx.)
+
+
+:55 (skip today - discuss exam topics, answer questions, exam practice)
+Diagnosis
+
+	Given n observations x1...xn and m explanatory hypotheses h1...hm,
+	together with the following probabilistic information:
+
+		prior probabilities: P(hi) for each hypothesis
+
+		generative probabilities: P(x1...xn | hi) for all hi
+
+	determine the most probable hypothesis given the observations
+
+	We considered the following example with n=1, m=2:
+
+		h1 = sick, h2 = not sick
+
+		x = lab test result, with possible outcomes + and -
+
+		P(h1) = 0.01	P(h2) = 0.99
+
+		P(+ | h1) = 0.9		P(- | h1) = 0.1 
+
+		P(+ | h2) = 0.2		P(- | h2) = 0.8 
+
+	The question now is: if a patient presents with a + lab result,
+	what is the probability that he/she is sick?
+
+
+:58
+Exploratory simulation
+
+	Let's design experiment in MATLAB that simulates diagnosis scenario
+
+	Use prior and generative probabilities as a generative model
+
+	Here is the basic procedure:
+
+		1) Generate patient instances according to prior probabilities:
+		Represent sick as 1, not sick as 0
+
+			truth = (rand(20000,1) < 0.01);
+
+		2) Generate lab results for patients based on health status,
+		according to the conditional probabilities:
+
+			if (truth(i))
+				tests(i) = (rand() < 0.9);
+			else
+				tests(i) = (rand() < 0.2);
+			
+		this version requires loop, but can vectorize tests as follows:
+
+			tests = truth.*(rand(20000,1) < 0.9) 
+				+ (1.-truth).*(rand(20000,1) < 0.2);
+
+
+:65
+Simulation results
+
+	We can count true and false positives:
+
+		tp = sum( truth.*tests );
+		fp = sum( (1.-truth).*tests );
+
+	and true and false negatives:
+
+		tn = sum( (1.-truth).*(1.-tests) );
+		fn = sum( truth.*(1.-tests) );
+
+	Probability estimates follow from a simple normalization. In particular:
+
+		P(sick | +) = tp / length(truth)
+			= 0.05 (approx.)
+
+	This means that about 95% of patients with + lab results are not sick!
+
+	But the point of the lab test is to pick up the presence of the disease
+
+	Can this be correct?
+
+	HW: do this again, and check your work carefully
+
+	Next time, switch to analytics and make progress on that front...
+
+	
+:if time allows
+Bayes' rule
+
+	Diagnostic reasoning requires "changing the order" in 
+	conditional probabiility expressions:
+
+		From P(x | h)
+
+		we must derive P(h | x)
+
+	Letting A and B be general random events, this is the same as:
+
+		From P(B | A)
+
+		derive P(A | B)
+
+	This is addressed nicely by a simple rule (Bayes' rule), as follows:
+
+		P(A | B) = P(A and B) / P(B)
+
+	But the numerator can also be written in terms of the known quantity as
+
+		P(A and B) = P(B | A) P(A)
+
+	Therefore, we find:
+
+		P(A | B) = P(B | A) P(A)/P(B)
+
+
+:if time allows
+Solution of the medical diagnosis example
+
+	We need to compute P(sick | +)
+
+	Apply Bayes' rule:
+
+		P(sick | +) = P(+ | sick) P(sick)/P(+)
+
+	We know that
+
+		P(+ | sick) = 0.9  and  P(sick) = 0.01
+
+	We need to compute P(+)
+
+	We can do this by partitioning the target event (+ lab result)
+	into the union of mutually exclusive events + and sick, + and not sick:
+
+		P(+) = P(sick)P(+|sick) + P(not sick)P(+ | not sick)
+			= 0.01*0.9 + 0.99*0.2
+			= 0.009 + 0.198
+			= 0.207
+
+	We therefore find the following "posterior" probability:
+
+		P(sick | +) = P(+ | sick) P(sick)/P(+)
+			= 0.9*0.01 / 0.207
+			= 0.009 / 0.207
+			= .0435 
+
+	In particular, it is over 20 times as likely that the person is 
+	not sick as compared with the likelihood that the person is sick!
+
+
+:if time allows
+Moral of the diagnosis story
+
+	Observations provide evidence
+
+		but prior probabilities must also be taken into account
+
+	In medical diagnosis example, effect of + lab result is 4.35-fold 
+	increase in likelihood patient is sick, compared with missing lab result

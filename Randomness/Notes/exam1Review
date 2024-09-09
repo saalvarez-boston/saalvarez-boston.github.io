@@ -1,0 +1,261 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+
+Selected topics and sample problems for the first midterm exam
+
+	Also see PS1, PS2, PS3, their solutions on BB Vista,
+	and the notes on the course homepage
+
+
+1) Random experiments as specified by a sample space of all possible outcomes
+and a probability function on the sample space
+
+	sample task format 1) for a given informal description of a random 
+	experiment or a random event, specify a sample space that provides 
+	a good model for the given situation; perhaps choose a sample space 
+	for which all outcomes are equally likely to occur
+
+	example: consider the random event "a two-card hand dealt from 
+	a single standard deck of 52 cards in four suits contains cards 
+	from two different suits"
+
+	here are two sample spaces S that are reasonable models of the 
+	associated random experiment:
+
+	option A) Consider outcomes to be all unordered sets of two cards 
+	taken from a single deck; there are "52 choose 2" such sets, 
+	abbreviated 52C2, all of which are equally likely.
+
+	option B) Consider outcomes to be all ordered sequences of two cards 
+	taken from a single deck; there are 52*51 such permutations,
+	abbreviated 52P2, all of which are equally likely.
+
+	By the way, notice that sample space B is twice the size of
+	sample space A, so that its outcomes are one-half as likely 
+	to occur. Why would this not lead to different values for the 
+	probability of the event of interest in the two models?
+
+
+2) Random events as collections of outcomes in some sample space
+
+	sample task format 2) Given the description of a sample space and
+	an event of interest, specify the outcomes of the sample space that
+	contribute to (i.e., belong to) the event of interest.
+
+	example: Consider the above example. Let E be the event of interest,
+	that is, E is the event that exactly two suits are represented in a
+	random two-card hand drawn from a single deck. What outcomes are in 
+	the set that defines this event? The answer depends on what sample 
+	space is being used. We consider options A and B as described above.
+
+	option A) If the outcomes are unordered pairs of cards, then E is the 
+	set of unordered pairs of cards of different suits. How many such 
+	unordered pairs are there? First, there are 4C2 = 6 ways to select two 
+	suits from among the four possible suits; having selected a pair of 
+	suits, there are 13 x 13 pairs of cards of those particular suits.
+
+	option B) If the outcomes are ordered pairs of cards, then E is the 
+	set of ordered pairs of cards of different suits. How many such ordered 
+	pairs are there? First, there are 4C2 = 6 ways to select two suits from 
+	among the four possible suits; having selected a pair of suits, there 
+	are 2P2 = 2 ways to order those two suits; having selected and ordered 
+	the two suits, there are 13 x 13 pairs of cards of those particular 
+	suits in that particular order.
+
+	As you can see, the event E as represented in sample space B is twice 
+	the size of the event E as represented in sample space A. Therefore,
+	the probability of event E is the same when computed in either of the
+	two sample spaces, since the sizes of the sample spaces are in the
+	same 1:2 ratio.
+
+
+3) Calculation of probabilities
+
+	sample task format 3) given an informal description of a random
+	event E, first find a suitable sample space that models the associated
+	random experiment (as in task format 1, above), then find the outcomes
+	that correspond to the specific event E (as in task format 2, above),
+	and then calculate the probability of the event E.
+
+	example: consider the probability of getting two different suits in a
+	random pair of cards drawn from a single deck. We can model the random
+	experiment using either of the two sample spaces A, B described above.
+	As we saw, the choice of a sample space also affects the specific
+	makeup of the set that represents the event of interest: the set E
+	consists of half as many outcomes in sample space A than in sample
+	space B. We pick one of these two sample spaces, say A, in which
+	outcomes are unordered pairs of two different cards. As discussed
+	above, we know the following facts:
+
+		the size of sample space A is 52C2 = 52 * 51 / 2 = 26 * 51
+
+		the size of event E is 4C2 * 13 * 13 = 6 * 13 * 13
+
+	Since all outcomes in A are equally likely, the probability of E is:
+
+		P(E) = |E| / |A| = 6 * 13 * 13 / (26 * 51)
+
+	If you want to distill this expression down to a numerical value,
+	simplification is in order:
+
+		P(E) = 3 * 26 * 13 / (26 * 51) = 39 / 51 = 13 / 17
+
+	Since 17 is about 4/3 of 13, a rough estimate of this value is 0.75.
+	
+
+4) MATLAB basics
+
+	sample task format 4) write a single MATLAB statement (or perhaps 
+	a short MATLAB script) that performs a given computational task
+
+	example: simulate a sequence of 100 trials, each consisting of 20
+	tosses of a loaded coin with P(heads) = 0.7, using the rand function;
+	the result should be a vector named sim of size 100 x 20.
+
+	Here is a single MATLAB statement that achieves the desired goal:
+
+		sim = (rand(100,20) < 0.7);
+
+	Determine the average number of heads obtained in each 20-toss run,
+	yielding a vector of size 100 x 1, with the mean of the i-th run
+	in the i-th row of the result vector:
+
+		mean(sim,2)
+
+
+5) Counting, combinations and permutations, sums
+
+	sample task format 5a) determine the number of objects that satisfy
+	a stated condition
+
+	example: how many different length-6 sequences of letters (A-Z)
+	contain precisely three different letters?
+
+	Let S denote the set of all length-6 A-Z sequences that include
+	precisely three different letters. Each sequence in S is determined 
+	uniquely by a choice of three different letters of the alphabet 
+	(e.g., a,b,c), followed by six ordered choices among those letters, 
+	with the requirement that each of the three selected letters be used 
+	at least once (e.g., abcabc, cbabbb are ok, but not abbbaa). There are 
+	C(26,3) = 26*25*24/6 = 2600 different combinations of three letters 
+	of the alphabet. By the multiplication principle, |S| therefore equals 
+	C(26,3) * |S(a,b,c)|, where S(a,b,c) is the set of all elements of S 
+	that include only the specific letters a,b,c (any other choice of three 
+	letters of the alphabet would serve just as well here).
+
+	Now we need to count the elements of S(a,b,c). By the multiplication 
+	principle, there are 3^6 = 729 different ordered sequences of length 6 
+	over the alphabet {a,b,c}. Of these sequences, only the ones that use 
+	each of the letters a,b,c at least once are in S(a,b,c).
+	It is easier to count the sequences that use two or fewer of these
+	three letters: 
+	
+		the words aaaaaa, bbbbbb, cccccc use precisely one letter.
+
+		using a specific pair of the three letters, say a and b,
+		but not the third letter (c in this case), there are 2^6
+		possible (unallowed) words by the multiplication principle,
+		except that you have to be careful not to count aaaaaa and
+		bbbbbb again, so 2^6 - 2 = 62 possible words that use both
+		of the letters of a given pair such as a, b; since there are
+		C(3,2) = 3 different such pairs of letters, the total number
+		of unallowed words that use precisely two of the letters a,b,c
+		is C(3,2)*(2^6 - 2) = 3*62 = 186.
+
+		combining the two ingredients above, se see that there are
+		3 + 186 = 189 words among the 729 different length-6 words
+		over {a,b,c} that do not use all three letters; therefore,
+		the remaining 729 - 189 = 540 words use each of the letters
+		a,b,c at least once. That is, |S({a,b,c})| = 540.
+
+		We conclude that the total number of length-6 words that use
+		a total of three diffreent letters is C(26,3)*540 = 2600*540.
+
+	sample task format 5b) compute the value of a sum in closed form
+
+	example: reduce the sum 1 + 2/2 + 3/4 + ... + n/2^(n-1) to closed form
+
+	Use the hidden function trick. Why, do you ask? Well, the sum is very 
+	much like the simpler sum 1 + 1/2 + 1/4 + ... + 1/2^(n-1),
+	except for the telltale multiplicative factors 1,2,3,...n, which I
+	will interpret as coming from the derivatives of x, x^2, x^3, ... x^n.
+
+	So, define the function 
+
+		f(x) = 1 + x + x^2 + ... + x^n, 
+
+	where the 1 has been included because it completes the geometric sum 
+	nicely, without changing the x-derivative in the slightest. 
+	The derivative is:
+
+		f'(x) = 1 + 2x + 3x^2 + ... + nx^{n-1}
+
+	Since we really want to see powers of 1/2 instead of xs, plug in x=1/2:
+
+		f'(x) at x=1/2 equals  1 + 2/2 + 3/4 + ... + n/2^(n-1), 
+
+	which is precisely the target sum.
+
+	The closed form for the sum results from the fact that f(x) itself
+	a geometric sum with the following closed form:
+
+		f(x) = (x^{n+1}-1) / (x-1)
+
+	The derivative therefore has a closed form as well:
+
+		f'(x) = ((n+1)x^n (x-1) - (x^{n+1}-1)) / (x-1)^2
+
+	Plug in x=1/2 now, and simplify (do it) to find:
+
+		f'(x) at x=1/2 equals 4 - (n+2)/2^(n-1)
+
+	There you go. 
+
+
+6) Conditional probability and independence
+
+	sample task format 6) determine if two specific events are independent
+
+	example: a word of length 5 over the alphabet a-z is randomly selected.
+	Are the following two events independent, or not?
+	
+		A = {the word contains the letter a exactly three times} 
+
+	and
+
+		B = {the word contains the letter b exactly two times} 
+
+	Intuitively, A and B are dependent, because if, say, A is known to
+	occur, then 3 of the 5 slots of the randomly selected word must be as;
+	if so, only two slots remain to be filled, making it very unlikely
+	that both slots will be filled with bs.
+
+	Detailed calculation:
+
+	compare the probabilities of B under two assumptions: first, 
+	no assumption whatsoever ("prior probability"), and second,
+	the assumption that A is known to occur
+
+		P(B) = C(5,2) 25^3 / 26^5 = 10 25^3 / 26^5
+
+		P(B | A) = P(B and A) / P(A)
+			= P(exactly two bs and three as) / P(exactly three as)
+			= (C(5,2)/26^5) / (C(5,3) 25^2 / 26^5)
+			= C(5,2) / (C(5,3) 25^2)
+			= 1 / 25^2
+
+	How do these compare? You can certainly ask MATLAB. However, note
+	that it is easy to guess which is larger:
+
+		P(B) = 10 25^3 / 26^5 is close to 10 26^3 / 26^5, which is
+		10 times P(B | A)
+
+	Thus, the probability that B will be observed is much reduced if A 
+	is known to occur, so that A has a definite conditioning effect on B
+
+	In other words, A and B are not independent
+
+
+

@@ -1,0 +1,239 @@
+
+CS244, Randomness and Computation
+Prof. Alvarez
+
+Selected topics and additional practice problems for the second midterm exam
+
+	Key sources to study from: 
+
+	PS4, PS5, PS6, PS7, their solutions on BB Vista,
+	and the notes on the course homepage
+
+
+1) Random variables, distribution, expected value
+
+	example: consider the random variable V equal to the number of Aces
+	among four cards drawn with replacement from a standard deck
+
+	solution strategy A: muscle through
+
+		first, determine the set of possible values of V; here, that 
+		set is {0,1,2,3,4}; 
+
+		next, calculate the distribution of V: for each possible value 
+		n of V, calculate the probability P(V=n); notice that each of 
+		the 13 face values has probability 1/13 on each draw and that
+		draws are mutually independent; hence, V is just the total
+		number of successes in four independent Bernoulli trials with 
+		success probability 1/13, and so the probability of drawing 
+		precisely n Aces is C(4,n)(1/13)^n(12/13)^(4-n)
+
+		next, calculate the expected value of V as the weighted sum of
+		the possible values of V, each weighted by its probability:
+
+		E(V) = sum from n=0 to n=4 of n*C(4,n)*(1/13)^n*(12/13)^(4-n)
+
+		to calculate the sum, use the hidden function trick;
+		as preparation, massage the n-th term by combining powers:
+
+			(1/13)^n*(12/13)^(4-n) = (1/12)^n * (12/13)^4
+
+		and pull out one copy of the (1/12)^n to make what's left look 
+		like a derivative (calculus):
+
+			E(V) = (12/13)^4(1/12)sum n=0..4 n*C(4,n)*(1/12)^(n-1)
+
+		now define a function f(x) to match the derivative in E(V):
+
+			f(x) = sum n=0 to n=4 of C(4,n)*x^n = (1 + x)^4
+
+		then recognize E(V) as the derivative at a suitable location:
+
+			E(V) = (12/13)^4 (1/12) * df/dx evaluated at x = 1/12
+
+		evaluate the derivative using the binomial expression for f(x):
+
+			df/dx = 4(1 + x)^3
+
+		and conclude that
+
+			E(V) = (12/13)^4 (1/12) * 4 * (13/12)^3 = 4/13
+
+
+	solution strategy B: break the problem down into easier chunks
+
+		notice that V can be written as 
+
+			V = V1 + V2 + V3 + V4,
+
+		where Vi is the number of Aces on the i-th card; therefore, 
+
+			E(V) = sum i=1..4 of E(Vi)
+
+		all of the Vi have the same distribution, with 0, 1 as possible 
+		values, P(Vi=1) = 1/13, and P(Vi=0) = 12/13; it follows that 
+
+			E(Vi) = 1*1/13 + 0*12/13 = 1/13
+
+		we conclude by adding up the four E(Vi) that 
+
+			E(V) = 4/13
+
+		isn't that easier than strategy A?
+
+
+2) Variance and standard deviation; Chebyshev's inequality
+
+	example: 
+
+	a) calculate the standard deviation of V from the above example
+
+	solution:
+
+		we'll skip strategy A since we know better now
+
+		write V = sum i=1..4 of Vi as before (strategy B above)
+
+		since the Vi are mutually independent,
+
+			var(V) = sum i=1..4 of var(Vi)
+
+		for any given i,
+
+			var(Vi) = E(Vi^2) - E(Vi)^2
+
+		but Vi^2 and Vi are the same, since x^2=x if x=0 or 1, so:
+
+			var(Vi) = E(Vi) - E(Vi)^2 = 1/13 - 1/13^2 = 12/13^2
+
+		and therefore
+
+			var(V) = 48/13^2
+
+		the standard deviation is just the square root of the variance:
+
+			std(V) = 4/13*sqrt(3)	(approx. 0.5)
+
+	b) using only E(V) = 4/13, std(V) = 0.5, but not the detailed PMF of V,
+	find an upper bound on the probability that V is 3 or greater
+
+	solution:
+
+		3 - 4/13 is about 5 standard deviations of V; by Chebyshev,
+
+		P(V >= 3) = P(|V-4/13| > 2 + 9/13) < 1/25 = 0.04
+
+		(actual probability is less than 0.002, five times smaller)
+	
+
+3) Jointly distributed pairs of random variables
+
+	example: determine the joint distribution of the following RVs X and Y,
+	both defined on the random experiment of rolling two fair dice; are X
+	and Y independent?
+
+	X = total points on the two dice,  Y = points on the first die
+
+	solution:
+
+		The possible values of X are the integers 2...12
+		The possible values of Y are the integers 1...6
+
+		For s in the range 2...12 and any n in the range 1...6,
+
+			P(X=s and Y=n) = P(first=n and second=s-n)
+
+			= 1/6 * 1/6 = 1/36 by independence of tosses
+
+		This assumes that s-n is also between 1 and 6, so the above
+		holds in the trapezoid {(s,n) | 1<=s<=12, 1<=n<=6, 1<=s-n<=6}
+
+		For (s,n) outside the trapezoid described above,
+
+			P(X=s and Y=n) = 0
+
+		Notice that there are many (s,n), such as (11,3),
+		for which the joint distribution P(X=s and Y=n) is zero at (s,n)
+		but both P(X=s) and P(Y=n) are nonzero 
+
+		Therefore, the joint distribution cannot be reconstructed as
+		the product of the marginal distributions of X and Y
+
+		This shows that X and Y are not independent
+
+		By the way, the reconstruction fails even inside the trapezoid:
+
+			P(X=s) = (6 - abs(s-7)) / 36, which is < 1/6 unless s=7
+
+			P(Y=n) = 1/6
+
+		Therefore, the product P(X=s)*P(Y=n) only equals 1/36 if s=7
+
+
+4) Covariance and independence
+
+	example: two random variables, X and Y, are known to be independent;
+	what is the covariance of the random variables aX + bY and bX - aY?
+
+	solution: use bilinearity of covariance:
+
+		cov(aX+bY,bX-aY) = abcov(X,X)-a^2cov(X,Y)+b^2cov(Y,X)-bacov(Y,Y)
+
+	by symmetry of covariance, the above becomes
+
+		cov(aX+bY,bX-aY) = ab (var(X)-var(Y)) + (b^2 - a^2) cov(X,Y) 
+
+	by independence of X, Y, cov(X,Y) is 0, so:
+
+		cov(aX+bY,bX-aY) = ab (var(X)-var(Y))
+
+
+5) Gaussian random variables
+
+	example a) suppose that Z is a standard normal RV (E(Z)=0, var(Z)=1).
+	use Z to define a normal RV Y with expected value 3 and standard
+	deviation 5.
+
+	solution:
+
+		Y = 5*Z + 3
+
+		E(Y) = 5*E(Z) + E(3) 
+
+			= 5*0 + 3 = 3
+
+		Since the RVs 5Z and 3 are independent,
+
+			var(Y) = var(5*Z) + var(3)
+
+			= 5^2 * var(Z) + 0
+
+			= 25*1 = 25
+
+		so that
+
+			stdev(Y) = sqrt(var(Y)) = 5
+
+
+	example b) Use built-in MATLAB functions to compute the probability
+	that the RV Y described in example a above will have a value greater
+	than 10.
+
+	solution:
+
+		You get a standard normal RV Z from Y as follows:
+
+			Z = (Y - 3) / 5
+
+		In terms of Z, the desired probability is:
+
+			P(Z > (10-3)/5) = P(Z > 7/5)
+
+		This translates to an expression in terms of the CDF F of Z:
+
+			1 - F(7/5)
+
+		The following computation in MATLAB therefore does the job:
+
+			normcdf(7/5)
+
